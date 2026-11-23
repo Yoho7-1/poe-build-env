@@ -6,14 +6,14 @@
 // Existing data, PoB and builds are never overwritten.
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { dbRoot, projectRoot, readJson, hashFile } from './workspace.mjs';
 
 const args = process.argv.slice(2);
 const option = name => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };
 const step = message => console.log(`\n== ${message}`);
 const run = (command, commandArgs, cwd = dbRoot) =>
-  execFileSync(command, commandArgs, { cwd, stdio: 'inherit', windowsHide: true, shell: process.platform === 'win32' && command === 'npm' });
+  execFileSync(command, commandArgs, { cwd, stdio: 'inherit', windowsHide: true });
 
 if (Number(process.versions.node.split('.')[0]) < 24) throw new Error('Node.js >=24 required');
 
@@ -60,7 +60,8 @@ step('npm dependencies');
 const lock = readJson(path.join(dbRoot, 'environment.lock.json'));
 const parser = path.join(dbRoot, 'node_modules/fast-xml-parser/package.json');
 if (fs.existsSync(parser) && readJson(parser).version === lock.versions.xml_parser) console.log('Already installed.');
-else run('npm', ['ci', '--ignore-scripts']);
+// npm is a .cmd on Windows and needs a shell; a fixed command string avoids passing an argument array to a shell (DEP0190).
+else execSync('npm ci --ignore-scripts', { cwd: dbRoot, stdio: 'inherit', windowsHide: true });
 
 step('Build state');
 if (fs.existsSync(path.join(projectRoot, 'builds/main/build.json'))) console.log('builds/main exists; left unchanged.');

@@ -86,7 +86,8 @@ export function analyzeStats({ file, scenario = 'sustained', metric = 'dps', can
 
 function quoteFor(price, db) {
   if (!price) return null;
-  return priceQuery('get', price.name, db, { platform: price.platform ?? 'pc', limit: 1, history: false, filters: price.variant ? { variant: price.variant } : {} });
+  // price.filters (e.g. { links: 6 }) narrows variants that differ by links or gem level; variant stays exact.
+  return priceQuery('get', price.name, db, { platform: price.platform ?? 'pc', limit: 1, history: false, filters: { ...(price.filters ?? {}), ...(price.variant ? { variant: price.variant } : {}) } });
 }
 
 export function analyzeUpgrades({ file, scenario = 'sustained', metric = 'dps', candidates, base = {}, top = 20, concurrency = defaultConcurrency }) {

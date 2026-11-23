@@ -9,6 +9,8 @@ Run the same input with and without the change, preserving the engine version, b
 
 Compare relevant damage, resources, max hit, recovery, requirements, buttons and dependency costs. If one upgrade forces other changes, evaluate that complete package separately. Data lookups and custom-mod experiments do not establish item craftability or acquisition.
 
+Generate candidates instead of writing them by hand: `agent.mjs analyze candidates <xml> --kind supports|uniques|anoints [--slot X] --plan` lists them, `analyze upgrades <xml> --auto <kind>` runs and ranks them. For a rare item build its text with `agent.mjs item build|pool|check` (legal pool by base and item level; `--check <xml> --slot X` must show no unparsed modifiers). Check `agent.mjs price status` before quoting prices; refresh with `price refresh` only when the user wants current prices (network). Rares have no price source.
+
 Use dated local price observations only when their league, platform and variant match. Missing prices remain missing. A stored craft plan checks identifiers; it does not establish legal steps, probabilities or expected cost. To check whether a rare upgrade is craftable and at what currency spend, use `agent.mjs craftsim` (tiers, pool odds, step/replay, train for policies); report its rule confidences (`approximations_used`) and treat results as a model, not a game test. Export the crafted item (`craftsim export`) and verify it with `pob run --changes replace_items` before calling it an upgrade.
 
 Record the selected/rejected upgrade, reason, calculation IDs and remaining uncertainty with the revision guard. Expand full data only when the compact result leaves a material question unresolved.

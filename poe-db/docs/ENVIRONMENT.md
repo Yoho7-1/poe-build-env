@@ -91,8 +91,120 @@ node scripts/agent.mjs pob import-code builds/x/act2.code.txt --save-xml builds/
 
 - Сценарии боссов: `scenarios/bosses.json` (отслеживается в git) собран `analyze bosses build` из закреплённых данных PoB (`BossSkills`, `Bosses`, `monsterDamageTable`) с хешами источников. Урон повторяет арифметику пресета PoB (уровень врага 84 pinnacle / 85 uber, roll range 70%). У 7 боссов есть реальные пресеты скиллов (Shaper, Maven, Sirus, Exarch, Eater, Atziri, Cortex), остальные — только generic-профиль.
 - `analyze boss-changes <boss> --tier uber --out-dir d` пишет по одному `--changes` на скилл; `pob run x.xml --scenario sustained --changes f --out r.json`; `analyze survive --boss X --tier uber --results d` — доля max hit по типам и «что убивает первым». Смешанные удары суммируются линейно (приближение), DoT-скиллы без вердикта, уклонение/восстановление между ударами не учтены; результаты с разным baseline/контрактом/сценарием отвергаются.
+- **Исправление адаптера (24.11.2026)**: PoB читает тип босса для пресетов скиллов (`enemyIsBoss`) и тир модов карт (`multiplierMapModTier`) из состояния выпадающего списка, а не из `input`. Раньше `pob-worker.lua` менял только `input`, поэтому uber-пресеты считались с уроном Pinnacle (Uber Shaper Slam: 14 388 вместо 23 980), а моды карт — всегда как красные. Теперь для DropDown вызывается `SelByValue`, неизвестное значение списка — ошибка. Результаты `analyze survive --tier uber` до этой даты считать неверными. Контракт расчёта изменился, старый кэш не используется.
+- **Новые изменения `pob run`**: `enemy_mods` — моды противника в словаре PoB (`{name, type: BASE|INC|MORE|FLAG|OVERRIDE, value, condition?, source?}`), добавляются после каждого `BuildModList`, как это делают map-аффиксы PoB. В результате появилось поле `unparsed_custom_mods`: строки `custom_mods`, которые PoB не распознал (раньше они молча отбрасывались).
+- **База противников** `scenarios/enemies.json` (в git; `analyze enemies build` из `cache/knowledge` и закреплённого PoB, хеши источников, `doctor` сверяет версии, `--deep` — хеши):
+  - Архетипы: `normal|magic|rare|unique` по конвенции PoB «No» плюс множители редкости из RePoE (`MonsterMagic/Rare/Unique`: здоровье +148/+390/+698% more, урон +30/50/70% more и −20/−33/−33% less при +20/33/33% скорости). Кроме того, `map_boss` (PoB Standard Boss), `pinnacle`, `uber`.
+  - Таблицы монстров по уровням 1–100 (PoB `monster*Table`, `mapLevel(Boss)LifeMult` и RePoE `default_monster_stats`).
+  - Тиры карт: white T1–5 / yellow T6–10 / red T11–16 / t17; уровень зоны = 67 + тир, T17 = 84 совпадает с `world_areas`.
+  - 111 модов карт из RePoE 3.30 (area prefix/suffix с весом на low/mid/top/uber_tier_map или default). У каждого тира мода указан способ расчёта:
+    - `pob_map_affix` — аффикс выбирается в списке PoB (33 из 41 описанных в `ModMap.lua`; PoB берёт максимум диапазона);
+    - `translated` — перевод статов RePoE в `enemy_mods`, `custom_mods` игрока или пробивание врага; так считаются все моды T17 и те, которых нет в списке PoB;
+    - `partial` — часть мода посчитана (например, Prismatic как ожидаемое разделение 1/3 на стихию);
+    - `not_modelled` — с осью опасности (reflect, ground, ailments, flask и т. д.);
+    - `no_combat_effect` — состав монстров, лиговый контент.
+  - Значения берутся по худшему краю диапазона. Проклятия карт заданы уровнем из RePoE (`You are cursed with Level N ...`).
+  - Здоровье считается только для обычных/редких монстров. Здоровье боссов зависит от вида монстра и в локальных данных отсутствует, его передают через `--enemy-life`.
+- **Анализ выживаемости и урона** (`encounter.mjs`, `analysis-encounter.mjs`):
+  - `analyze enemy <тип> --map-tier N --mods a,b` показывает сценарий и точные `changes` без расчёта.
+  - `analyze encounter <xml> --enemy rare|map_boss|uber|boss:Shaper:"Shaper Ball" --map-tier 17 --mods savage,exposure [--map-mod-effect P] [--delirium P] [--enemy-life N] [--md f.md]` выдаёт DPS и время убийства, удар врага, удары до смерти, max hit по типам, EHP, восстановление. Результат сравнивается с тем же врагом без модов, а для нерассчитанных механик даются проверки по билду.
+  - `analyze mapmod-sweep <xml> --map-tier 16` прогоняет каждый мод тира по отдельности против редкого монстра и выдаёт вердикт `avoid|caution|manual|ok`. Пороги лежат в `thresholds`, учитываются DPS, удары до смерти, max hit худшего типа и EHP.
+  - `analyze report <xml> [--md f.md]`: противники T16/T17, generic-боссы, все пресеты скиллов боссов (DoT-скиллы — как дегген против DoT EHP и регенерации) и проверка модов T16/T17. Для Toxic Rain около 120 расчётов занимают ~30 с.
+  - Обычный монстр PoB бьёт только физическим уроном, поэтому стихийные моды видны через max hit, а не через удары до смерти.
+- **Боссы, профили урона, пантеон, атлас** (этап 3):
+  - `fetch-game-data.mjs monsters` скачивает Wiki Cargo (`monsters` is_boss, `monster_types`, `monster_resistances`, `monster_map_multipliers`, `monster_life_scaling`) в `cache/wiki` с sha256; эти файлы входят в архив данных и в источники `enemies.json`.
+  - Для 11 боссов сопоставлен вид монстра из Wiki (`bossVarietyIds`). Сопротивления вида заменяют дефолт PoB 50/30 (у Atziri 40/25).
+  - Здоровье босса считается двумя формулами и выдаётся диапазоном, время убийства — тоже диапазоном с пометкой «оценка», без игровой проверки:
+    - A: life(L) × health_multiplier × unique rarity × Wiki boss_life;
+    - B: life(L) × health_multiplier × PoB `mapLevelBossLifeMult`.
+  - Для Uber здоровье неизвестно: убер-скейлинг в данных отсутствует, передавайте `--enemy-life`.
+  - Колонки ES/брони/уклонения в `monster_types` противоречат страницам Wiki, поэтому не используются.
+  - `--damage-profile physical|elemental|fire|cold|lightning|chaos|mixed` делит общий удар PoB для монстров по типам урона. В `report` добавлены редкие монстры со смешанным уроном на T16 и T17.
+  - `--pantheon-major/--pantheon-minor` задают настройки PoB.
+  - `analyze atlas [--search]` и `--atlas "Node,Node"` переводят узлы атласа:
+    - моделируются «Monsters in your Maps deal/have X% more/less …» и «increased effect of Explicit Modifiers» (в том числе «за каждый мод»);
+    - остальные узлы, влияющие на бой, попадают в `not_modelled`.
+- **CI**: `.github/workflows/test.yml` при push/PR на Windows выполняет `setup.mjs --deep` (релиз данных, npm ci, PoB) и `node --test`. Рабочий процесс завязан на опубликованный снимок `data-release.json`: после изменения данных сначала выпустить релиз, потом пушить.
 - `analysis-core.mjs`: метрики (dps, fulldps, ehp, maxhit, life, es, mana_sustain), один calculation contract на пакет, кэш `cache/analysis` по ключу (контракт + изменение). `analysis-rank.mjs`: ранжирование за очко, trade-offs, цены без сложения при `inconsistent_currency_conversion`. `analysis-upgrades.mjs`: формат `--candidates` и пакеты с проверкой конфликтов слотов/конфига. `analysis-nodes.mjs`: кандидаты узлов по графу (граф подставляется), пробы статов через `custom_mods`.
 - `eval list|show|prompts|template|score --answers f`: прогон `evaluations/cases.json`. Промпты слепые (без критериев), автоматические сигналы — только подсказка, итог pass/partial/fail ставит человек.
+
+## Подбор улучшений, предметы, цены, механики, прогрессия, наблюдения (24.11.2026)
+
+### Этап 1: автоматические кандидаты улучшений
+
+Модуль `scripts/analysis-candidates.mjs` строит кандидатов в формате файла `analyze upgrades --candidates`, так что писать его вручную больше не нужно.
+
+- `analyze candidates <xml> --kind supports [--group N] [--replace auto|add|weakest|<gem>] [--search t] [--exclude-awakened] [--plan] [--out f.json]`: перебирает все support gems, совместимые с active skill группы. Совместимость проверяется по выражениям allowed/excluded types из RePoE, как в PoB, с учётом added_types остающихся supports. `auto`: если в связке есть свободный сокет, gem добавляется; иначе заменяется самый слабый support, который находится removal probes (по одному прогону на каждый support). После прогона кандидаты, которых нет в `applied_supports`, убираются из рейтинга.
+- `--kind uniques --slot <Helmet|Body Armour|...|Weapon 1|Flask N>`: берёт uniques из каталога (флаг Wiki) с текстом предмета из данных PoB 2.68.1. Каждый текущий variant (не "Pre x.y") идёт отдельным кандидатом. Цена прикрепляется только при точном совпадении variant, иначе остаётся `null` с `price_match`.
+- `--kind anoints`: заменяет anoint на надетом amulet. `anoint-control` измеряет погрешность повторного импорта. Если amulet нет, используется строка custom mod `Allocates X`. Цены oils не подставляются.
+- `--plan`: только список кандидатов, без прогонов движка. `--out` сохраняет готовый файл кандидатов. Без `--plan` выполняются генерация и `analyzeUpgrades` с проверкой (`verification`: applied / parsed / unparsed_lines).
+
+Ограничения:
+- Диапазоны значений берутся из середины (PoB default 0.5). Alt variants остаются по умолчанию.
+- Generated uniques (Forbidden Shako, Megalomaniac, Precursor's Emblem) пропускаются.
+- Цены оружия и брони с вариантами по links: `quoteFor` принимает `price.filters` (например `{links: 6}`), но генератор пока не заполняет его, поэтому такие предметы остаются `variant_required`.
+- Corrupted gems 21/23 и cluster notables не генерируются. Weapon-type ограничения supports проверяет только движок.
+- Предметы с десятками variants (The Devouring Diadem, Vivinsect) дают десятки прогонов: используйте `--search`/`--limit`.
+- Результат — числовой эксперимент PoB, а не игровой тест.
+
+### Этап 2: конструктор предметов (`scripts/item-builder.mjs`)
+
+- Назначение: собрать normal/magic/rare предмет из модов RePoE и получить текст для PoB (`replace_items: [{slot, text}]`) без ручного набора.
+- Данные и логика пула берутся из Craft Lab v2 (`loadCatalog`, `tierInfo`, `pool`, `renderRoll`): закреплённый RePoE 3.30.0.4, сверка SHA-256. Свой пул не дублируется.
+- Мод задаётся как `REF[:Tn][=v1,v2]`: REF = id мода (`IncreasedLife9`), имя type (`Strength`) или текст (`maximum Life`). T1 = лучший тир, доступный на этой базе при этом ilvl. Без `=` значение берётся по `--roll max|min|mid` (числовой край диапазона в единицах RePoE: для "reduced" модов max не лучший ролл).
+- Проверки: spawn weight по тегам базы/influence/rarity, domain, prefix/suffix, `required_level <= ilvl`, лимит 3/3 (magic 1/1), одна группа на мод, bench recipe для item class, лимит crafted (1, или 3 с multimod), блок "cannot roll attack/caster". Каждое нарушение выводится кодом; `--allow-illegal` строит гипотетический предмет с предупреждением `hypothetical_item`.
+- Essence-only моды дают предупреждение, а не нарушение; unlock рецепта бенча и стоимость не проверяются; источник нестандартных implicit не проверяется.
+- `item check ... --check build.xml [--slot]` запускает `runPob` до и после замены и показывает `unparsed_item_modifiers` слота и дельты Life/ES/резистов/CombinedDPS. Это оценка движка, а не игровой тест.
+- Не поддержано: cluster/abyss jewel-специфика, fractured/synthesised/eldritch implicit как отдельные состояния, catalyst quality, veiled моды, имена magic-предметов (печатается только база).
+
+### Этап 4: свежесть и обновление цен
+
+- Модуль `scripts/price-refresh.mjs`: `price status [--stale-days 3]` (офлайн) и `price refresh [--categories a,b] [--dry-run]` (сеть только здесь).
+- `status`: самый новый снимок по league/platform/category, возраст, флаг `stale` (порог по умолчанию 3 дня), число хранимых снимков, проверка `inconsistent_currency_conversion` (курс chaos/divine из item-категорий против Divine Orb из Currency, правило 25%, как в `priceQuery`).
+- `refresh` использует `cachedSource` (sha256 и сырые тела в `cache/research`), `normalizeOverview` из `fetch-economy.mjs` и `importPrices`/`reindexPriceVariants`; старые снимки остаются историей (`price get --history`). Блокировка `cache/price-refresh.lock` против параллельного запуска.
+- Если league id `Covens` пропал из списка лиг poe.ninja, обновление останавливается с ошибкой и списком объявленных лиг; замена не угадывается.
+- `priceFreshness(db)` + `attachFreshness(priceResult, freshness)` добавляют к котировкам предупреждение о возрасте.
+- Список категорий и шаблон URL продублированы из `main()` `fetch-economy.mjs` (там не экспортированы); при правке стоит экспортировать их оттуда.
+- Расхождение курса (item feeds ~190 chaos/div против Currency ~116) сохраняется и после обновления: бюджеты в Chaos и Divine не объединять.
+- Редкие предметы не оцениваются. Для этого нужен официальный trade API (pathofexile.com/api/trade): POST search + GET fetch, жёсткие лимиты по заголовкам `X-Rate-Limit-*` (бан при превышении), обязательный User-Agent с контактом, ToS GGG; данные — объявления, а не сделки. Требуется решение пользователя (платформа, согласие на сетевые запросы, политика кэша); здесь не реализовано.
+
+### Этап 5: новые карточки механик
+
+Добавлено 11 карточек (40 -> 51) в `mechanics/coverage.mjs`, источники — закреплённые файлы PoB 2.68.1 (6 новых, 17 -> 23):
+- `projectile-behaviour` — Pierce/Fork/Chain, skillPierceCount/ChainCount/ForkCount, shotgun только через навыко-специфичные опции; Return в PoB не моделируется (открытый вопрос).
+- `impale` — 10% сохранённого урона, 5 stacks, 8 с, броня цели к суммарному повтору; multiplierImpalesOnEnemy.
+- `stun` — threshold, шанс 200×урон/threshold с порогом 20%, avoid, длительность; странное ветвление enemyDamageType отмечено; Heavy Stun не найден.
+- `charges` — Power/Frenzy/Endurance: эффекты за заряд, use*/override*, генерация не моделируется.
+- `rage` — 1% more attack damage за Rage, максимум 30, потеря 10/с после 2 с, нужен источник CanGainRage.
+- `aura-herald-effect` — группы aura/buff effect, Herald multiplier, резерв отдельно.
+- `warcry-exert` — Warcry Power (20 на boss preset), warcryMode AVERAGE/MAX, исключения exert.
+- `brand-channelling` — attached Brands как множитель DPS, Channelling условия и ограничения.
+- `low-life-ci-hybrid` — порог Low Life 50%, CI, chaos bypass ES у гибрида.
+- `enemy-debuffs` — Intimidate/Unnerve 10%, Wither 6%×15, Maim, Hinder, Blind.
+- `pantheon-map-context` — Pantheon применяет все души, map mods вручную; Atlas tree движком не моделируется; несколько общих строк переводит `analyze --atlas`.
+Тест: `test/mechanics-extra.test.mjs` (проверяет базу и существование всех упомянутых Config-переменных).
+
+### Этап 6: анализ прогрессии гайда (`analyze progression`)
+
+- Модуль `scripts/analysis-progression.mjs`: `progression <xml> [--stages f.json] [--plan] [--md f.md] [--out f.json] [--concurrency N] [--scenario S]`.
+- Этапы берутся из tree specs / item sets / skill sets. Ведущий список — самый длинный (при равенстве tree specs). Сопоставление: метка `{n}` -> одинаковое название -> последний набор, начатый не позже конца этапа -> самый ранний набор -> по порядку. Правило печатается в отчёте, у каждого набора указано, каким правилом он выбран.
+- Main socket group для каждого skill set: группа с основным скиллом сборки, иначе группа с наибольшим числом supports. Переопределение — `main_socket_group` в `--stages`.
+- Уровень персонажа: число из названия (`Level 40`, `Lvl 1-12` -> верхняя граница), иначе оценка по очкам основного дерева с квестовыми очками по актам (2/5/7/8/10/13/16/19/21/24), зажатая в диапазон этапа; оценки помечены `~`.
+- Кампания: rare и unique (заменитель босса акта, без его скиллов) на area level конца акта. `resistancePenalty`: 0 в актах 1-5, -30 в актах 6-10, -60 после Kitava в Act 10 и в картах. Если в названии есть "End of Act N", этап считается пройденным после убийства босса этого акта.
+- Карты: early maps — T5 (rare, map boss), maps — T10, early endgame — T16, endgame — T16/T17 и pinnacle, final — плюс uber. Моды карт не применяются.
+- По каждому этапу выводятся DPS, TTK, число ударов до смерти, самый слабый max hit, резисты относительно капа (`Missing*Resist`), life/ES, `mana_sustain`, `engine_warnings` (требования, мана) и `skill_disabled_reason`. Также проверяется бюджет очков дерева по актам и регрессии между соседними этапами (DPS -15%, life+ES -10%, max hit -20%, резисты, мана).
+- `--stages`: список `{label, tree_spec, item_set, skill_set, character_level, area_level, main_socket_group?, resistance_penalty?, enemies?}`. `tree_spec` — номер по порядку, `item_set` и `skill_set` — id из PoB.
+- Ограничения. Уровни актов и квестовые очки приблизительные. Гемы, флаконы и конфигурация гайда не корректируются. Если в гайде нет набора предметов для кампании, берётся ближайший более поздний (правило `earliest_later`), и это видно в отчёте.
+
+### Этап 7: игровые наблюдения (калибровка)
+
+- Модуль `scripts/observations.mjs`; хранение — append-only `builds/<id>/observations.jsonl` (локально, не в git). Сборка должна существовать (`loadBuild`).
+- `observe add <id> --file obs.json` или флаги: `--kind death|boss_kill|map_clear|sustain_issue|note`, `--map-tier`, `--mods a,b`, `--boss`, `--boss-tier`, `--enemy`, `--killed-by`, `--damage-type`, `--ttk`, `--deaths`, `--calculation-id`, `--pob-sha256`/`--pob-file`, `--date`, `--notes`. Неизвестное = null; неизвестные поля — ошибка.
+- `observe list <id> [--kind K]`; `observe compare <id> --report analysis.json` принимает вывод `analyze encounter|report|mapmod-sweep`.
+- Сопоставление: босс + скилл (`killed_by`) → строка boss skill (strong); тир карты + архетип + моды → строка матрицы (weak); моды карты → строки sweep (weak).
+- Проверки: смерть при `survives_hit`/`sustains_degen` → противоречие; смерть при `one_shot`/`dangerous` → согласие; тип урона против `dominant_type`; TTK observed/predicted в 0.67–1.5 → согласие. Пережитый one-shot — inconclusive (уклонение).
+- Если `calculation_id` наблюдения не совпадает с расчётом отчёта — `different_character_snapshot`. Строки матрицы `report` содержат `calculation_id` (с 24.11.2026).
+- Это инструмент калибровки, не доказательство: одно событие — одна выборка.
 
 ## Дерево, прокачка, изменения 3.30 и мета
 

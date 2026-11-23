@@ -40,6 +40,8 @@ export function mergeChanges(list) {
         }
       } else if (key === 'custom_mods' || key === 'add_support') {
         out[key] = [out[key], value].filter(Boolean).join('\n');
+      } else if (key === 'enemy_mods') {
+        out.enemy_mods = [...(out.enemy_mods ?? []), ...value];
       } else if (arrayKeys.includes(key)) {
         for (const entry of value) {
           const tag = key === 'replace_items' ? `slot:${entry.slot}` : `gem:${entry.group}/${entry.gem}`;

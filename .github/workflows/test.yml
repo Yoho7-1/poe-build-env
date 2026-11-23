@@ -1,0 +1,30 @@
+# Fresh-clone check on every push and pull request: install exactly as a user would (data snapshot from the
+# pinned GitHub Release, npm ci, pinned PoB), then run the whole test suite and doctor --deep.
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    # The PoB adapter runs the bundled LuaJIT through PowerShell, so the suite needs a Windows runner.
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Setup (data release, npm ci, PoB, doctor --deep)
+        run: node poe-db/scripts/setup.mjs --deep
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Tests
+        working-directory: poe-db
+        run: node --test

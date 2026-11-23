@@ -30,6 +30,8 @@ const addTree = folder => {
 addTree('data');
 addTree('cache/knowledge');
 addTree('cache/research');
+// Wiki Cargo/page cache: sources of scenarios/enemies.json (boss varieties) and of the leveling/changes builds.
+addTree('cache/wiki');
 files.add(rel('cache/manifest.json'));
 for (const source of readJson(path.join(dbRoot, 'cache/manifest.json')).sources) {
   if (!source.file.startsWith('cache/')) continue; // Files outside cache/ are tracked in git.

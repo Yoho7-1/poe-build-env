@@ -112,6 +112,54 @@
     "sha256": "06382b5f978f95510c0eee4e7f68b8c5842e0f2d516f1e7d27bfb0c04255fec5"
   },
   {
+    "id": "pob.mod-parser",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/ModParser.lua",
+    "file": "vendor/pob/src/Modules/ModParser.lua",
+    "sha256": "13b4665cbf4b802e0a44581fc95d581e70c500c5d2d7c9fa4e59f9d218d1350c"
+  },
+  {
+    "id": "pob.data-module",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/Data.lua",
+    "file": "vendor/pob/src/Modules/Data.lua",
+    "sha256": "0feed9ed473aab40f0721ebb95da645f8d9f153fec95439bd39245f8ac60fa34"
+  },
+  {
+    "id": "pob.data-misc",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Data/Misc.lua",
+    "file": "vendor/pob/src/Data/Misc.lua",
+    "sha256": "a8748c30ffc24296366396c8799bc406f79a41175909a6dcbe86dfecf1c96338"
+  },
+  {
+    "id": "pob.pantheons",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Data/Pantheons.lua",
+    "file": "vendor/pob/src/Data/Pantheons.lua",
+    "sha256": "eab277c94fb7e3764b4a6bc67553fdfdf3d790bd2a7be3cd1b8fa5d73fd66a1b"
+  },
+  {
+    "id": "pob.pantheon-tools",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/PantheonTools.lua",
+    "file": "vendor/pob/src/Modules/PantheonTools.lua",
+    "sha256": "cc7616ae03e7af41e9ace73bc4111dc63ffa1142b1929adf2f0ecc1381c75a41"
+  },
+  {
+    "id": "pob.calc-triggers",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/CalcTriggers.lua",
+    "file": "vendor/pob/src/Modules/CalcTriggers.lua",
+    "sha256": "d5153979e3f08ce22b478792d136d3ba27f0cb00b016fa14bd3da7f81048d4e8"
+  },
+  {
     "id": "ggg.tree",
     "kind": "official_data",
     "version": "3.30.0",

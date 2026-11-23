@@ -19,9 +19,10 @@
 Отложено (после трёх сессий): оценка рарок через trade API, интеграция craft-lab в общий CLI, прочие Timeless-базы по требованию.
 
 ## Статус
-- Сессия 1: готово (24.11.2026), кроме первого git-коммита — ждёт подтверждения пользователя. Хост PowerShell 5.1/7, doctor с проверкой запуска, `--changes` sets/tree/jewels/skills, `pob new`, `export-code`/`import-code`, тесты `test/pob-edit.test.mjs`. Git и `.gitignore` уже создала другая сессия; список первого коммита — 208 файлов.
+- Сессия 1: готово (24.11.2026); первый коммит и публикация на GitHub сделаны. Хост PowerShell 5.1/7, doctor с проверкой запуска, `--changes` sets/tree/jewels/skills, `pob new`, `export-code`/`import-code`, тесты `test/pob-edit.test.mjs`. Git и `.gitignore` уже создала другая сессия; список первого коммита — 208 файлов.
 - Сессия 2: готово (24.11.2026). `tree-graph.mjs` (path/cost/near/search/node/classes), `fetch-game-data.mjs` + `wiki-source.mjs` → `cache/wiki`, `build-leveling.mjs`/`leveling.mjs` → `data/leveling-3.30.json`, `patch-changes.mjs` + `lua-table.mjs` → `data/changes-3.30.json`, `meta.mjs` → `data/meta-research.sqlite`, регистрация `data-cli.mjs` (3 строки в agent.mjs), тесты `test/data.test.mjs` (7). Timeless проверен без загрузки: в `setup-pob.mjs` нет HeroicTragedy и пяти Abyss-баз PoB 2.68.1. Не сделано: числовой diff камней 3.29 (нет закреплённого снимка), сведение 23 Book of Skill + бандиты с 24 квестовыми очками.
 - Сессия 3: готово частично (24.11.2026). Есть `analyze survive|nodes|stats|upgrades` с движком (параллельный пул `pob run`, кэш, один контракт), `eval`, 17 кейсов. Замер: `analyze nodes` — 32 кандидата за 28 с при 8 процессах. Эталонный билд (п.5) остановлен по просьбе пользователя: черновик лежит в `examples/arc-teaching`, аудит не завершён. Навыки не обновлены.
+- Сессия 4 (24.11.2026): база противников и анализ выживаемости/урона (`analyze enemy|mapmods|encounter|mapmod-sweep|report`). Исправлен адаптер: uber-пресеты и тиры модов карт. Навык аудита дополнен.
 
 ---
 

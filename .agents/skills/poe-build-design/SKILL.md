@@ -7,7 +7,7 @@ Run `node poe-db/scripts/agent.mjs bootstrap` from the project root. Unknown use
 
 Read [the design procedure](../../../poe-db/docs/BUILDING.md) when constructing a candidate. Retrieve individual mechanics with `agent.mjs mechanic get <id> --related`, then query only relevant entities. Consult `availability` before making an item mandatory. For a required rare item, check crafting feasibility with `agent.mjs craftsim` (start with `coverage`); unpublished odds need an explicit `assume`, and a simulated success rate is not acquisition proof.
 
-Build a causal explanation: skill behaviour → applicable scaling → resource supply → defensive layers → equipment and passive-point costs. Record competing hypotheses and why a candidate is selected or rejected. Evaluate realistic intermediate stages before calling the endgame plan viable.
+Build a causal explanation: skill behaviour → applicable scaling → resource supply → defensive layers → equipment and passive-point costs. Record competing hypotheses and why a candidate is selected or rejected. Evaluate realistic intermediate stages before calling the endgame plan viable: `agent.mjs analyze progression <xml> --md f.md` checks every tree/item/skill set against enemies of its area level (resist penalty, requirements, sustain); `analyze report` covers maps and bosses. When the user reports in-game results, store them with `agent.mjs observe add <build-id>` and compare with predictions via `observe compare`.
 
 Use the pinned PoB adapter for numerical comparisons. Preserve engine warnings, unsupported modifiers, conditions and scenario differences. Synthetic controls and old references are teaching evidence, not ready player builds.
 

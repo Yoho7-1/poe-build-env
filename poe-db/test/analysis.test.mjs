@@ -48,7 +48,13 @@ test('survival picks the largest fraction of max hit and refuses mixed baselines
   const report = evaluateSurvival(profile, 'uber', results);
   assert.equal(report.kills_first.skill, 'Shaper Ball');
   assert.equal(report.kills_first.verdict, 'one_shot');
-  assert.equal(report.skills.find(s => s.skill === 'Shaper Beam').verdict, 'requires_engine_dot_check');
+  // DoT skills: without DoT EHP in the output no verdict is derived; with it, degen is compared with recovery.
+  assert.equal(report.skills.find(s => s.skill === 'Shaper Beam').verdict, 'unknown');
+  const dotOut = { ...out, Life: 5000, EnergyShield: 0, ColdDotEHP: 50000, FireDotEHP: 50000, LightningDotEHP: 50000, LifeRegenRecovery: 2000 };
+  const withDot = evaluateSurvival(profile, 'uber', runs.map((r, i) => result(dotOut, { id: `d${i}`, changes: r.changes })));
+  const beam = withDot.skills.find(s => s.skill === 'Shaper Beam');
+  assert.equal(beam.verdict, 'degen_survivable');
+  assert.ok(beam.taken_dps > beam.recovery_per_s && beam.time_to_die_s > 4);
   assert.deepEqual(report.missing, []);
   const partial = evaluateSurvival(profile, 'uber', results.slice(0, 1));
   assert.deepEqual(partial.missing.sort(), ['Shaper Beam', 'Shaper Slam']);

@@ -1,5 +1,4 @@
 // Offline build: cache/wiki (quest/vendor rewards, vendor recipe page) + RePoE 3.30 gems -> data/leveling-3.30.json
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dbRoot, atomicJson, readJson } from './workspace.mjs';

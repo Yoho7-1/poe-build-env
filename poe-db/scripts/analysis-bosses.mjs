@@ -202,11 +202,27 @@ export function engineHitAssessment(skill, output) {
     method: 'PoB NumberOfDamagingHits for the configured preset hit; fraction = 1 / hits' };
 }
 
+const num = v => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+const round = (v, d = 0) => (v == null ? null : Math.round(v * 10 ** d) / 10 ** d);
+
+// Degen (boss DoT skills): taken per second = raw * pool / <Type>DotEHP; compared with sustained recovery.
+export function dotOf(o, raw) {
+  const pool = (num(o.Life) ?? 0) + (num(o.EnergyShield) ?? 0);
+  const rows = Object.entries(raw ?? {}).filter(([, v]) => v > 0).map(([t, v]) => {
+    const ehp = num(o[`${t}DotEHP`]);
+    return { type: t, raw_dps: v, dot_ehp: round(ehp), taken_dps: ehp > 0 && pool > 0 ? round(v * pool / ehp) : null };
+  });
+  const recovery = (num(o.LifeRegenRecovery) ?? 0) + (num(o.LifeLeechGainRate) ?? 0) + (num(o.EnergyShieldRegenRecovery) ?? 0);
+  if (!rows.length || rows.some(r => r.taken_dps == null)) return { verdict: 'unknown', rows, note: 'DoT EHP missing; run with --full' };
+  const taken = rows.reduce((a, r) => a + r.taken_dps, 0), net = taken - recovery;
+  const time = net > 0 ? pool / net : null;
+  return { verdict: net <= 0 ? 'sustains_degen' : time < 4 ? 'degen_dangerous' : 'degen_survivable', rows, taken_dps: round(taken), recovery_per_s: round(recovery, 1),
+    net_loss_per_s: round(net), time_to_die_s: round(time, 2), method: 'pool (life + ES) / DoT EHP per type; regen, leech and ES regen as sustained recovery; MoM, recoup and flasks ignored' };
+}
+
 export function dotAssessment(skill, output) {
   const incoming = Object.values(skill.damage).reduce((s, v) => s + (v ?? 0), 0);
-  const recovery = ['NetLifeRegen', 'LifeRegenRecovery'].map(k => [k, output?.[k]]).find(([, v]) => typeof v === 'number');
-  return { incoming_raw_dps: incoming, by_type: skill.damage, recovery_stat: recovery?.[0] ?? null, recovery_per_second: recovery?.[1] ?? null,
-    verdict: 'requires_engine_dot_check', note: 'Raw degen before resistances/damage taken; compare only with an engine DoT breakdown. No verdict is derived here.' };
+  return { incoming_raw_dps: incoming, by_type: skill.damage, ...dotOf(output ?? {}, skill.damage) };
 }
 
 export function evaluateSurvival(profile, tier, results) {

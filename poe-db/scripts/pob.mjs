@@ -5,7 +5,7 @@ import { inflateSync, deflateSync } from 'node:zlib';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
-import { dbRoot, projectRoot, readJson, atomicJson, hashFile } from './workspace.mjs';
+import { dbRoot, readJson, atomicJson, hashFile } from './workspace.mjs';
 import { validateEditChanges } from './pob-changes.mjs';
 
 // Windows PowerShell 5.1 and PowerShell 7+ are both supported; pwsh is preferred when present.
@@ -121,7 +121,7 @@ const selectedStats = ['FullDPS','CombinedDPS','TotalDPS','AverageDamage','Speed
 export function runPob({ input = null, scenario = 'imported', changes = {}, saveXml = null, full = false, timeout = 120000, migrate = false, newBuild = null, noCache = false } = {}) {
   if (process.platform !== 'win32') throw new Error('This pinned runtime adapter currently supports Windows x64 only');
   if (!scenarios[scenario]) throw new Error(`Unknown scenario: ${scenario}`);
-  const allowed = ['config','custom_mods','add_support','replace_items','gem_levels','selection','sets','tree','jewels','skills'];
+  const allowed = ['config','custom_mods','enemy_mods','add_support','replace_items','gem_levels','selection','sets','tree','jewels','skills'];
   if(!changes||typeof changes!=='object'||Array.isArray(changes))throw new Error('Changes must be a JSON object');
   for (const key of Object.keys(changes)) if (!allowed.includes(key)) throw new Error(`Unsupported change: ${key}`);
   if(changes.selection!=null) {
@@ -131,6 +131,16 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
   for(const key of ['custom_mods','add_support'])if(changes[key]!=null&&typeof changes[key]!=='string')throw new Error(`${key} must be a string`);
   if(changes.config!=null&&(typeof changes.config!=='object'||Array.isArray(changes.config)))throw new Error('config must be an object');
   for(const [key,value]of Object.entries(changes.config??{}))if(!['number','boolean','string'].includes(typeof value)||(typeof value==='number'&&!Number.isFinite(value)))throw new Error(`Invalid configuration value: ${key}`);
+  if(changes.enemy_mods!=null){
+    if(!Array.isArray(changes.enemy_mods))throw new Error('enemy_mods must be an array');
+    for(const m of changes.enemy_mods){
+      if(!m||typeof m!=='object'||!/^[A-Za-z][A-Za-z0-9:]*$/.test(m.name??'')||!['BASE','INC','MORE','FLAG','OVERRIDE'].includes(m.type))throw new Error('enemy_mods entry needs name (PoB mod name) and type BASE|INC|MORE|FLAG|OVERRIDE');
+      if(m.type==='FLAG'?m.value!==true:!(typeof m.value==='number'&&Number.isFinite(m.value)))throw new Error(`Invalid enemy_mods value for ${m.name}`);
+      if(m.condition!=null&&!/^[A-Za-z]+$/.test(m.condition))throw new Error('enemy_mods condition must be a PoB condition name');
+      if(m.source!=null&&(typeof m.source!=='string'||m.source.length>120))throw new Error('enemy_mods source must be a short string');
+      for(const k of Object.keys(m))if(!['name','type','value','condition','source'].includes(k))throw new Error(`Unsupported enemy_mods field: ${k}`);
+    }
+  }
   for(const key of ['gem_levels','replace_items'])if(changes[key]!=null&&!Array.isArray(changes[key]))throw new Error(`${key} must be an array`);
   for(const g of changes.gem_levels??[])if(!Number.isInteger(g.group)||g.group<1||!Number.isInteger(g.gem)||g.gem<1||g.level!=null&&(!Number.isInteger(g.level)||g.level<1||g.level>40)||g.quality!=null&&(!Number.isInteger(g.quality)||g.quality<0||g.quality>1000))throw new Error('Invalid gem level/quality change');
   for(const item of changes.replace_items??[])if(typeof item.slot!=='string'||typeof item.text!=='string'||!item.text.trim())throw new Error('Item change requires slot and item text');
@@ -195,7 +205,7 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
       new_build: newBuild ?? undefined,
       adapter_sha256: hashFile(path.join(dbRoot,'scripts/pob-worker.lua')), scenario, scenario_definition: scenarios[scenario], changes,
       calculation_id: cacheId, computed_at: new Date().toISOString(), output, config: result.config, groups: result.groups, level: result.level,
-      unparsed_item_modifiers: result.unparsed_item_modifiers,
+      unparsed_item_modifiers: result.unparsed_item_modifiers, unparsed_custom_mods: result.unparsed_custom_mods,
       tree_version:result.tree_version,migration:result.migration,minion_output:result.minion_output,
       selection:result.selection,
       equipped_items:result.equipped_items,

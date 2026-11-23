@@ -69,10 +69,31 @@ if request.skills then edit.skills(request.skills, editReport) end
 if request.config then for key,value in pairs(request.config) do
   assert(build.configTab.varControls[key], 'Unknown configuration option: ' .. key)
   build.configTab.input[key] = value
+  -- Some apply functions read the drop-down selection (enemyIsBoss for boss presets, multiplierMapModTier for map
+  -- mods) instead of the input value; keep the control in sync so a scripted value matches what the GUI would do.
+  local control = build.configTab.varControls[key]
+  if control._className == 'DropDownControl' then
+    control:SelByValue(value, 'val')
+    assert(control.list[control.selIndex] and control.list[control.selIndex].val == value, 'Unknown value for configuration option ' .. key .. ': ' .. tostring(value))
+  end
 end end
 if request.custom_mods then
   local current = build.configTab.input.customMods or ''
   build.configTab.input.customMods = current .. '\n' .. request.custom_mods
+end
+if request.enemy_mods then
+  -- Enemy-side modifiers in PoB's own mod vocabulary (the same calls the map affix apply functions make).
+  -- Appended after every BuildModList so a rebuild during calculation cannot drop them.
+  local originalBuild = build.configTab.BuildModList
+  build.configTab.BuildModList = function(tab, ...)
+    local r = originalBuild(tab, ...)
+    for _,m in ipairs(request.enemy_mods) do
+      local tags = {}
+      if m.condition then table.insert(tags, { type = 'Condition', var = m.condition }) end
+      tab.enemyModList:NewMod(m.name, m.type, m.value, m.source or 'Agent enemy mod', unpack(tags))
+    end
+    return r
+  end
 end
 if request.add_support then
   local group = build.skillsTab.socketGroupList[build.mainSocketGroup or 1]
@@ -164,6 +185,17 @@ for slotName,slot in pairs(build.itemsTab.slots) do
           if line.extra then table.insert(result.unparsed_item_modifiers,{slot=slotName,line=line.line,unparsed=line.extra}) end
         end
       end
+    end
+  end
+end
+-- Custom modifier lines that PoB cannot parse are dropped silently by BuildModList; report them.
+result.unparsed_custom_mods = {}
+if request.custom_mods then
+  for line in request.custom_mods:gmatch('([^\n]*)\n?') do
+    local stripped = StripEscapes(line):match('^%s*(.-)%s*$')
+    if stripped ~= '' then
+      local mods, extra = modLib.parseMod(stripped)
+      if not mods or extra then table.insert(result.unparsed_custom_mods,{line=stripped,unparsed=extra or stripped}) end
     end
   end
 end

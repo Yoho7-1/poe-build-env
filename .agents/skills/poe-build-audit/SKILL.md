@@ -11,6 +11,8 @@ Follow [the audit procedure](../../../poe-db/docs/BUILDING.md). Run `pob run` fo
 
 Inspect engine warnings, unparsed item modifiers, applied supports, allocated points and resource cost/recovery. For each important condition record source, expected magnitude, uptime and evidence in the chosen encounter. Compare max hit by type, recovery, DoT exposure and series of hits; TotalEHP is scenario-dependent.
 
+For survival and damage against real content run `agent.mjs analyze report <xml> --md <file.md>` (map rares/bosses T16/T17, generic and every PoB boss skill preset, per-map-mod sweep), then `analyze encounter <xml> --enemy <type> --map-tier N --mods a,b` for the user's actual maps or bosses. Read `method` of every map mod: `translated`/`partial` are model translations, `not_modelled` mods and `build_checks` with `manual`/`risk` are not calculated and must be reported as open. The generic PoB monster hit is physical only; elemental mods show through max hit. Boss life is unknown unless the user gives `--enemy-life`.
+
 A numerical result can exist despite unmet gem requirements. Treat the control fixtures as synthetic and read their warnings. When a mechanism is unsupported, report the missing calculation and retain the hypothesis until separately tested.
 
 Separate findings into a concrete failure, an unverified assumption, and a supported result. Reference relevant cards and calculation IDs. Save only the compact findings and evidence in build state.

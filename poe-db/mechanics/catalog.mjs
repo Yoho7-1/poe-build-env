@@ -1,5 +1,6 @@
 // Curated explanations of the pinned engine, not an assertion that every game interaction is supported.
 import {advancedCards} from './advanced.mjs';
+import {coverageCards, coverageSourceFiles} from './coverage.mjs';
 const c = (id,title,aliases,summary,rules,conditions,pitfalls,sources,related=[]) => ({ id,title,aliases,game:'poe1',patch:'3.30',
   confidence:'pob_implementation',summary,rules,conditions,pitfalls,sources,
   verification:'Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.',
@@ -129,6 +130,7 @@ export const cards = [
     ['Полнота текущего каталога уникальных предметов и сочетаний Foulborn не подтверждена.'],
     ['Использовать исторический вариант из старого PoB как доступный в новой лиге.'],['project.catalog-rules']),confidence:'workflow' },
   ...advancedCards(c),
+  ...coverageCards(c),
 ];
 
 export const sourceFiles = {
@@ -139,4 +141,5 @@ export const sourceFiles = {
   'pob.items-tab':'src/Classes/ItemsTab.lua','pob.passive-spec':'src/Classes/PassiveSpec.lua',
   'pob.socket-tests':'spec/System/TestGemSocketQuality_spec.lua'
   ,'pob.item':'src/Classes/Item.lua','pob.tree-tab':'src/Classes/TreeTab.lua','pob.skills-tab':'src/Classes/SkillsTab.lua'
+  ,...coverageSourceFiles
 };

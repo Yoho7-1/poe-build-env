@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { dbRoot, projectRoot, readJson, atomicJson, flags } from './workspace.mjs';
+import { projectRoot, readJson, atomicJson, flags } from './workspace.mjs';
 import { compactQuery } from './compact-query.mjs';
 import { bootstrap, doctor, backup } from './environment.mjs';
 import { queryMechanics, buildMechanics } from './mechanics.mjs';
@@ -12,6 +12,9 @@ import { analyze, evaluate, analysisHelp } from './analysis-cli.mjs';
 import { referenceDb,importExample,exampleQuery,importPrices,priceQuery,importCraftPlan,craftQuery } from './reference-store.mjs';
 import { dataCommands, dataCommand, dataHelp } from './data-cli.mjs';
 import { cli as craftSim } from '../experiments/craft-lab/v2/cli.mjs';
+import { itemCommand, itemHelp } from './item-builder.mjs';
+import { priceCommand, priceHelp, priceOperations } from './price-refresh.mjs';
+import { observeCommand, observeHelp } from './observations.mjs';
 
 export function agent(args) {
   const [command,...rest] = args;
@@ -20,6 +23,10 @@ export function agent(args) {
   if(command==='analyze') return analyze(rest);
   if(command==='eval') return evaluate(rest);
   if(dataCommands.has(command)) return dataCommand(command,rest);
+  if(command==='item') return itemCommand(rest);
+  if(command==='observe') return observeCommand(rest);
+  // price status|refresh (freshness, network refresh) live in price-refresh.mjs; list|get|import stay below.
+  if(command==='price'&&priceOperations.has(rest[0])) return priceCommand(rest);
   if(command==='doctor') {
     const { options }=flags(rest,['report'],['deep']);
     const result=doctor({deep:!!options.deep});
@@ -122,7 +129,10 @@ export function agent(args) {
     'pob control':'Synthetic Fireball control, not a playable recommendation',
     ...pobHelp,
     ...analysisHelp,
-    ...dataHelp
+    ...dataHelp,
+    ...itemHelp,
+    ...priceHelp,
+    ...observeHelp
     ,'example list|get <id>|import --file descriptor.json':'Audited reference/synthetic/historical PoB library'
     ,'price list|get <exact name>|import --file snapshot.json':'Offline dated price observations; --variant, --corrupted true|false, --links, --gem-level, --gem-quality, --base-type, --history; platform pc by default'
     ,'craft list|get <id>|import --file plan.json':'Recorded craft plans; identifiers are checked, probabilities are not simulated (simulate with craftsim)'
@@ -133,7 +143,8 @@ export function agent(args) {
 
 if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
-    const result=agent(process.argv.slice(2));
+    // Most commands are synchronous; price refresh returns a Promise (network), so the result is awaited.
+    const result=await agent(process.argv.slice(2));
     process.stdout.write(JSON.stringify(result,null,2)+'\n');
     if(result.ready===false)process.exitCode=1;
   } catch(error) {process.stderr.write(JSON.stringify({error:error.message})+'\n');process.exitCode=1;}

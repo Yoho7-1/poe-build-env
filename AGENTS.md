@@ -18,6 +18,8 @@ PoE **1 / 3.30 / обычная Softcore**. Проект общий для се�
 - `agent.mjs query stat base_spell_suppression_chance_% --min 15`
 - `agent.mjs mechanic get resource-sustain --related`
 - `agent.mjs pob inspect <file.xml>` / `pob run <file.xml> --scenario sustained`
+- Выживаемость и урон против базы противников (`scenarios/enemies.json`: архетипы, тиры карт, 111 модов карт, скиллы боссов): `analyze report <file.xml> --md out.md`, `analyze encounter <file.xml> --enemy rare --map-tier 17 --mods savage,exposure`, `analyze mapmod-sweep`, `analyze mapmods --band t17`. Читать `method` модов и `build_checks`: `not_modelled` не рассчитан.
+- Улучшения и прогрессия: `analyze candidates <xml> --kind supports|uniques|anoints --plan`, `analyze upgrades <xml> --auto supports`, `item build|pool|check`, `analyze progression <xml>`. Цены: `price status` (свежесть), `price refresh` (сеть, только по запросу пользователя). Игровые факты: `observe add|list|compare <build-id>`.
 - `agent.mjs example list` / `example get <id>`; `price get Mageblood --variant "4 Flasks"`; `craft list`
 - Симулятор крафта 3.30 (проверка крафтов по шагам и Монте-Карло): `agent.mjs craftsim help`, затем `craftsim coverage`; описание в `poe-db/experiments/craft-lab/v2/README.md`. Результат симулятора — модель с явными допущениями, а не игровой тест.
 

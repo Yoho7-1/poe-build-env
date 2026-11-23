@@ -12,7 +12,7 @@ Documentation is in Russian; game terms stay in English. Entry point for agents:
 ## Requirements
 
 - Windows x64 (the PoB runner uses the bundled LuaJIT `lua51.dll` via PowerShell);
-- Node.js >= 24, PowerShell 7 (`pwsh.exe`), Git;
+- Node.js >= 24, Git; PowerShell 7 (`pwsh.exe`) if installed, otherwise the built-in Windows PowerShell 5.1 is used;
 - ~1.5 GB free disk after setup.
 
 ## Install

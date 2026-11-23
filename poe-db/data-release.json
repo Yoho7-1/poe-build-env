@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
   "repository": "Yoho7-1/poe-build-env",
-  "tag": "data-3.30-2026-11-24",
-  "asset": "poe-data-3.30-2026-11-24.tar.gz",
-  "sha256": "196da99fa1df5013c973110c1d1f5ae7da23f945b85473805d080f572a3dd72f",
-  "bytes": 64802758,
-  "files": 276,
+  "tag": "data-3.30-2026-11-24b",
+  "asset": "poe-data-3.30-2026-11-24b.tar.gz",
+  "sha256": "7227daed29735d4cd4b050bf64c14916f9edc06c51f15d114579452da118187d",
+  "bytes": 70586243,
+  "files": 299,
   "game": "poe1",
   "patch": "3.30",
   "snapshots": {
     "uniques": "bf5a79128fcb29d2",
     "knowledge": "dee8dc5b9a88dc07"
   },
-  "created_at": "2026-11-23T21:19:36.263Z"
+  "created_at": "2026-11-23T22:30:07.821Z"
 }

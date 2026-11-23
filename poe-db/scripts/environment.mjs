@@ -65,6 +65,13 @@ export function doctor({ deep = false } = {}) {
     }finally{db.close();}
     return { cards: cards.length, sources: sources.length };
   });
+  check('enemies', () => {
+    const db = readJson(path.join(dbRoot, 'scenarios/enemies.json'));
+    if (db.provenance.pob_commit !== lock.versions.pob_commit || db.provenance.repoe !== lock.versions.repoe) throw new Error('Enemy database built from other engine/data versions; run: agent.mjs analyze enemies build');
+    // Deep: every pinned source must still hash to the value recorded at build time.
+    if (deep) for (const s of db.provenance.sources) if (hashFile(path.join(dbRoot, s.file)) !== s.sha256) throw new Error(`Enemy database source changed: ${s.file}; rebuild with analyze enemies build`);
+    return { map_mods: Object.keys(db.map_mods).length, archetypes: Object.keys(db.archetypes).length, bosses: Object.keys(db.bosses).length, verified_sources: deep ? db.provenance.sources.length : undefined };
+  });
   check('workbench',()=>{
     const db=new DatabaseSync(path.join(dbRoot,'data/workbench-3.30.sqlite'),{readOnly:true});
     try {

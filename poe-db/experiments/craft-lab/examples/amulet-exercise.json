@@ -1,0 +1,28 @@
+{
+  "start": {
+    "base": "Amber Amulet",
+    "item_level": 86,
+    "rarity": "magic",
+    "mods": ["IncreasedLife5"],
+    "budget": {
+      "Orb of Augmentation": 1,
+      "Regal Orb": 1,
+      "Exalted Orb": 3
+    },
+    "target": {
+      "rarity": "rare",
+      "stats": [
+        { "id": "base_maximum_life", "min": 70 },
+        { "id": "base_fire_damage_resistance_%", "min": 30 }
+      ]
+    }
+  },
+  "actions": [
+    "Orb of Augmentation",
+    "Regal Orb",
+    "Exalted Orb",
+    "Exalted Orb",
+    "Exalted Orb"
+  ],
+  "stop_on_target": true
+}

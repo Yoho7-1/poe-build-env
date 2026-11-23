@@ -1,0 +1,22 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "repoe_version": "3.30.0.4",
+  "sources": {
+    "bases": {
+      "file": "cache/knowledge/base_items.json",
+      "sha256": "b16dc6c967b7e70ee369fba80506cdf08a1fa5bc5dd5c4f07aaddead97c98b2f",
+      "url": "https://raw.githubusercontent.com/repoe-fork/repoe-fork.github.io/536caa88b673e232aa410cb47e20dc2d9ecd064e/data/base_items.json"
+    },
+    "mods": {
+      "file": "cache/knowledge/mods.json",
+      "sha256": "8549a332c5de55ba5b3a7208adf2fca321ccce3ba50698200a78e867cba1f4e4",
+      "url": "https://raw.githubusercontent.com/repoe-fork/repoe-fork.github.io/536caa88b673e232aa410cb47e20dc2d9ecd064e/data/mods.json"
+    }
+  },
+  "weight_reference": {
+    "file": "vendor/pob/src/Classes/Item.lua",
+    "sha256": "a4100a9860236a90a5801ec17310b6d2979dfc85a0d874c76cdf5194228d48c7",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Classes/Item.lua#L1722"
+  }
+}

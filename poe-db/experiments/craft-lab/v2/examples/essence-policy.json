@@ -1,0 +1,9 @@
+{
+  "start": {
+    "item": { "base": "Vaal Regalia", "item_level": 86 },
+    "budget": { "Deafening Essence of Greed": 200 },
+    "target": { "min_tier": [{ "type": "LocalEnergyShieldPercent", "tier": 2 }] },
+    "start_cost": null
+  },
+  "policy": [ { "action": { "type": "essence", "essence": "Deafening Essence of Greed" } } ]
+}

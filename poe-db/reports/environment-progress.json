@@ -1,0 +1,70 @@
+{
+  "at": "2026-11-23T20:02:31.041Z",
+  "game": "poe1",
+  "patch": "3.30",
+  "scope": "Local research and calculation environment; does not certify the entire game or a player build.",
+  "implemented": [
+    "Pinned data/engine, offline diagnostics and backup/restore command",
+    "Compact retrieval, explicit field projection and context bootstrap",
+    "40 sourced mechanics cards and dependency links",
+    "PoB XML/code audit, calculation, supports/item/gem/selection changes, scenario comparison and cache",
+    "Revision-protected durable build state, decision history and stored calculation inputs",
+    "Design/audit/upgrade skills and staged progression method",
+    "Dated economy snapshots with variant filters, age and inconsistent currency conversion warnings",
+    "Real author archives and explicit native tree migrations; partial imports rejected and old invalid result quarantined",
+    "Conditional bench plans with pinned recipe action/base-class verification; no full craft probability simulation"
+  ],
+  "versions": {
+    "node_minimum": 24,
+    "node_verified": "26.13.0",
+    "xml_parser": "5.12.1",
+    "pob": "2.68.1",
+    "pob_commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "repoe": "3.30.0.4",
+    "pob_reference_export": "2.68.0",
+    "ggg_tree": "3.30.0"
+  },
+  "workbench": {
+    "examples": [
+      {
+        "kind": "historical",
+        "records": 4
+      },
+      {
+        "kind": "quarantined",
+        "records": 1
+      },
+      {
+        "kind": "reference",
+        "records": 3
+      },
+      {
+        "kind": "synthetic",
+        "records": 3
+      }
+    ],
+    "price_snapshots": 10,
+    "price_observations": 28761,
+    "craft_plans": 8
+  },
+  "mechanics": {
+    "cards": 40,
+    "sources": 17
+  },
+  "engine": {
+    "verified_source_files": 364,
+    "timeless_types": [
+      "GloriousVanity"
+    ]
+  },
+  "remaining": [
+    "Complete independent acquisition verification and Foulborn combination rules",
+    "More mechanic cards for selected archetypes and independently reviewed in-game cases",
+    "Resolve source currency conversion disagreement before combining a build budget; price snapshots require explicit refresh",
+    "Actual item crafting projects with eligibility/probability checks and matched market quotes",
+    "Independent gameplay validation and progression-stage audits for migrated references; current author uploads not verified",
+    "Full recipe catalogs and specialized seed databases when needed",
+    "Independent LLM evaluation of evaluations/cases.json; software tests are not a model reasoning score"
+  ],
+  "user_build": "main is intentionally in requirements phase; unprovided preferences remain null."
+}

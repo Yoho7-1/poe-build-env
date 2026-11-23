@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "game": "poe1",
+  "patch": "3.30",
+  "mode": "softcore",
+  "versions": {
+    "node_minimum": 24,
+    "node_verified": "26.13.0",
+    "xml_parser": "5.12.1",
+    "pob": "2.68.1",
+    "pob_commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "repoe": "3.30.0.4",
+    "pob_reference_export": "2.68.0",
+    "ggg_tree": "3.30.0"
+  },
+  "snapshots": {
+    "uniques": "bf5a79128fcb29d2",
+    "knowledge": "dee8dc5b9a88dc07"
+  }
+}

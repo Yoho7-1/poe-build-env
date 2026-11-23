@@ -1,0 +1,73 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "ready": true,
+  "deep": true,
+  "network_required": false,
+  "checks": [
+    {
+      "id": "node",
+      "status": "ok",
+      "version": "26.13.0"
+    },
+    {
+      "id": "uniques",
+      "status": "ok",
+      "snapshot_id": "bf5a79128fcb29d2",
+      "integrity": "ok"
+    },
+    {
+      "id": "knowledge",
+      "status": "ok",
+      "snapshot_id": "dee8dc5b9a88dc07",
+      "integrity": "ok"
+    },
+    {
+      "id": "build-state",
+      "status": "ok",
+      "build_id": "main",
+      "revision": 1
+    },
+    {
+      "id": "dependencies",
+      "status": "ok",
+      "xml_parser": "5.12.1"
+    },
+    {
+      "id": "pob-source",
+      "status": "ok",
+      "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+      "verified_files": 357
+    },
+    {
+      "id": "mechanics",
+      "status": "ok",
+      "cards": 24,
+      "sources": 13
+    },
+    {
+      "id": "workbench",
+      "status": "ok",
+      "examples": 3,
+      "price_snapshots": 0,
+      "craft_plans": 0
+    },
+    {
+      "id": "source-cache",
+      "status": "ok",
+      "verified_files": 126
+    },
+    {
+      "id": "pob-control",
+      "status": "ok",
+      "engine": "2.68.1",
+      "calculation_id": "96f8b0e4f59da7e7f2d6f93d3101ed143e86a847403797680b71bc759bbdb88c",
+      "checked_stats": [
+        "AverageDamage",
+        "TotalDPS",
+        "Speed",
+        "ManaCost"
+      ]
+    }
+  ]
+}

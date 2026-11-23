@@ -1,0 +1,26 @@
+{
+  "source": "https://raw.githubusercontent.com/grindinggear/skilltree-export/550fb34ae7fca9ec4d760a2ac845bb2ba1032ec3/data.json",
+  "sha": "550fb34ae7fca9ec4d760a2ac845bb2ba1032ec3",
+  "checked": "2026-11-23",
+  "keys": [
+    "tree",
+    "classes",
+    "alternate_ascendancies",
+    "groups",
+    "nodes",
+    "extraImages",
+    "jewelSlots",
+    "min_x",
+    "min_y",
+    "max_x",
+    "max_y",
+    "constants",
+    "sprites",
+    "imageZoomLevels",
+    "points"
+  ],
+  "tag": "3.30.0",
+  "commitDate": "2026-11-12T02:42:49Z",
+  "commitMessage": "3.30.0 preview",
+  "releaseVerificationUrl": "https://api.github.com/repos/grindinggear/skilltree-export/tags?per_page=5"
+}

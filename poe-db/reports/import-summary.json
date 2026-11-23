@@ -1,0 +1,181 @@
+{
+  "target_game": "poe1",
+  "target_patch": "3.30",
+  "league": "Covens of Umbra",
+  "fetched_at": "2026-11-23T18:21:11.607Z",
+  "snapshot_id": "bf5a79128fcb29d2",
+  "source_unique_rows": 1599,
+  "included_items": 1270,
+  "excluded_items": 327,
+  "filter_counts": {
+    "wiki_current_acquisition_flag": 1270,
+    "removed_by_target_patch": 207,
+    "outside_standard_covens_scope": 38,
+    "not_marked_in_game": 62,
+    "acquisition_not_confirmed_by_source": 20
+  },
+  "duplicate_item_rows": 2,
+  "source_conflict_pages": [
+    "Vessel of Vinktar (Added Lightning Damage to Spells)"
+  ],
+  "distinct_item_names": 1209,
+  "missing_optional_property_groups": [],
+  "modifier_rows": 8076,
+  "numeric_stat_rows": 9224,
+  "property_rows": 989,
+  "source_responses": 77,
+  "classes": [
+    {
+      "item_class": "Ring",
+      "count": 119
+    },
+    {
+      "item_class": "Helmet",
+      "count": 115
+    },
+    {
+      "item_class": "Body Armour",
+      "count": 110
+    },
+    {
+      "item_class": "Jewel",
+      "count": 108
+    },
+    {
+      "item_class": "Amulet",
+      "count": 97
+    },
+    {
+      "item_class": "Gloves",
+      "count": 88
+    },
+    {
+      "item_class": "Boots",
+      "count": 76
+    },
+    {
+      "item_class": "Shield",
+      "count": 73
+    },
+    {
+      "item_class": "Belt",
+      "count": 65
+    },
+    {
+      "item_class": "Utility Flask",
+      "count": 35
+    },
+    {
+      "item_class": "One-Handed Sword",
+      "count": 32
+    },
+    {
+      "item_class": "Bow",
+      "count": 31
+    },
+    {
+      "item_class": "Sceptre",
+      "count": 28
+    },
+    {
+      "item_class": "Map",
+      "count": 26
+    },
+    {
+      "item_class": "Wand",
+      "count": 26
+    },
+    {
+      "item_class": "Warstaff",
+      "count": 24
+    },
+    {
+      "item_class": "Quiver",
+      "count": 22
+    },
+    {
+      "item_class": "Claw",
+      "count": 21
+    },
+    {
+      "item_class": "Two-Handed Axe",
+      "count": 20
+    },
+    {
+      "item_class": "Two-Handed Sword",
+      "count": 20
+    },
+    {
+      "item_class": "Staff",
+      "count": 18
+    },
+    {
+      "item_class": "Two-Handed Mace",
+      "count": 16
+    },
+    {
+      "item_class": "Rune Dagger",
+      "count": 15
+    },
+    {
+      "item_class": "One-Handed Mace",
+      "count": 13
+    },
+    {
+      "item_class": "One-Handed Axe",
+      "count": 10
+    },
+    {
+      "item_class": "Relic",
+      "count": 10
+    },
+    {
+      "item_class": "Abyss Jewel",
+      "count": 9
+    },
+    {
+      "item_class": "Item Piece",
+      "count": 8
+    },
+    {
+      "item_class": "Thrusting One-Handed Sword",
+      "count": 8
+    },
+    {
+      "item_class": "Dagger",
+      "count": 7
+    },
+    {
+      "item_class": "Contract",
+      "count": 5
+    },
+    {
+      "item_class": "Mana Flask",
+      "count": 5
+    },
+    {
+      "item_class": "Tincture",
+      "count": 5
+    },
+    {
+      "item_class": "Fishing Rod",
+      "count": 2
+    },
+    {
+      "item_class": "Hybrid Flask",
+      "count": 2
+    },
+    {
+      "item_class": "Life Flask",
+      "count": 1
+    }
+  ],
+  "warnings": [
+    "Availability comes from community source flags; individual acquisition was not independently tested.",
+    "Records excluded for uncertain availability remain in the audit report, not in the database.",
+    "English original text; Russian localization is not included.",
+    "The Wiki Foulborn table contains only one source row. Supplementary PoB pools are stored in the separate knowledge database; exhaustive variants and combination rules are not verified.",
+    "This is retrieval data, not a combat calculator or model training run."
+  ],
+  "integrity": "ok"
+}

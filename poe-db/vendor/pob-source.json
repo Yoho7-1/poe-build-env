@@ -1,0 +1,2196 @@
+{
+  "repository": "https://github.com/PathOfBuildingCommunity/PathOfBuilding.git",
+  "version": "2.68.1",
+  "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+  "scope": "Headless subset: Lua source, standard 3.28–3.30 trees and runtime; optional pinned Timeless data. No updater or GUI assets.",
+  "timeless_types": [
+    "GloriousVanity"
+  ],
+  "verified_at": "2026-11-23T19:46:25.074Z",
+  "files": [
+    {
+      "file": "LICENSE.md",
+      "git_blob_sha1": "479186304feb960abd5b2f6a3e135a182b9fc3a5",
+      "sha256": "52506adfa82b9e36be1e5a9f1735e0b88dbc6239ac2a7006b167a9c41479110c",
+      "bytes": 62975
+    },
+    {
+      "file": "manifest.xml",
+      "git_blob_sha1": "46282838de0e49eb2ff84d2cb589c659003578d2",
+      "sha256": "9cb2cdf4313f3aa5cbca644f85f44908310b9a4d82e736d0aa3b0ac4e7bb5dec",
+      "bytes": 165763
+    },
+    {
+      "file": "runtime/lua-utf8.dll",
+      "git_blob_sha1": "a9153c791bfc3cacfafd35aa308febf069e20d99",
+      "sha256": "5f731810915f3ee060ea9de81d128da59130c5b48f2924dbb311ac66607319a3",
+      "bytes": 176128
+    },
+    {
+      "file": "runtime/lua/base64.lua",
+      "git_blob_sha1": "28411699aba33c0e5b2520577ad5bef328dee2dd",
+      "sha256": "deea708ee8aa785874e7e3ac7e3dae864d63f71e3108c6967daf7e865b45b01f",
+      "bytes": 1206
+    },
+    {
+      "file": "runtime/lua/dkjson.lua",
+      "git_blob_sha1": "57ed460ca91ed18a0ad73ada8280b4700c2ca5b9",
+      "sha256": "737d9839b8dc3eb7a2edbeab42fc99229b2547b69553178301d9e4c276cb5cd3",
+      "bytes": 22874
+    },
+    {
+      "file": "runtime/lua/lua-profiler.lua",
+      "git_blob_sha1": "10287b9dd232d90d4060c55bbce3220374edc522",
+      "sha256": "3df3da68fe930b90e2bd5e96845ea74991802c3a6d7bed305b6372440b9c0ea9",
+      "bytes": 11615
+    },
+    {
+      "file": "runtime/lua/sha1/bit_ops.lua",
+      "git_blob_sha1": "5fbaf056f3aaa4db2027cf781b4d91ec624a1116",
+      "sha256": "47546f147c3dd942d913bbbc9a9c736d07610e2f97c1822f54cc9e36b35de218",
+      "bytes": 553
+    },
+    {
+      "file": "runtime/lua/sha1/bit32_ops.lua",
+      "git_blob_sha1": "344b0f364c605eca6efa337168703a373926ce42",
+      "sha256": "e91f7515625f20bfe8337712e65eddc068d2f6c9d62634083179ce99c8fa064d",
+      "bytes": 569
+    },
+    {
+      "file": "runtime/lua/sha1/common.lua",
+      "git_blob_sha1": "c31ffef4646d4ed6f5e7f97afe462f04ac44363f",
+      "sha256": "5f86c1944b851b9e962a12aa664b34d8a62826fd062d461ef27039cc1ba60ac5",
+      "bytes": 427
+    },
+    {
+      "file": "runtime/lua/sha1/init.lua",
+      "git_blob_sha1": "692b48deb06d71129d3b04c40fd7ba82159d0393",
+      "sha256": "42c14310ce03c015f5608472c4e57903b7f2a4d5c9316b11b4fc14397b7453ec",
+      "bytes": 5928
+    },
+    {
+      "file": "runtime/lua/sha1/lua53_ops.lua",
+      "git_blob_sha1": "d5312e6b516bc2643151d92944225f9dc188ca3d",
+      "sha256": "fd0f08bf8abdc217e5db163c5e52bd0a06a7ab8bb50f88612847ad9d7f759d4c",
+      "bytes": 616
+    },
+    {
+      "file": "runtime/lua/sha1/pure_lua_ops.lua",
+      "git_blob_sha1": "7a645d030bc7340dbaf7e041a7c41e58eda8ff1e",
+      "sha256": "287704f43e6d2fc8349a1f56db90dbe9053a0806da85aa826f131a1fd934375d",
+      "bytes": 5768
+    },
+    {
+      "file": "runtime/lua/sha2.lua",
+      "git_blob_sha1": "201f52ea674b23248afb60e1328905f57afb3a89",
+      "sha256": "62d2e0885931a1f14db87e61cb3d74936bb5b1e19eb2b4994ab04c03d78f9ed6",
+      "bytes": 276232
+    },
+    {
+      "file": "runtime/lua/socket.lua",
+      "git_blob_sha1": "dec749aca53445e0fdd48cd61312dff2af15acd2",
+      "sha256": "3e12c998b2d82529bafa9eef6a81bf0a857355a981567ecc9cc55e4e5ab5ee29",
+      "bytes": 4406
+    },
+    {
+      "file": "runtime/lua/xml.lua",
+      "git_blob_sha1": "dfb47138dd4071f59e2c012f211857986f26abb2",
+      "sha256": "e5ad576e85c17b4883174df1fe1c839b17d8e30b804130c78dabdf4122bfee58",
+      "bytes": 4893
+    },
+    {
+      "file": "runtime/lua51.dll",
+      "git_blob_sha1": "a05157286c17897c7690105da001dbfd873b7b9c",
+      "sha256": "b11ad41b03d7aabe379fc38c1a490cfc53d7ab7d4d99c5bfadbbb27c09883e29",
+      "bytes": 642048
+    },
+    {
+      "file": "runtime/z.dll",
+      "git_blob_sha1": "abd4b4fce57e92a2882398a70e7d73a338cb0ed6",
+      "sha256": "d6bed76c1b079be89e6bd0a54653ddeeb2a4d87a155c815762087f26c6e94d20",
+      "bytes": 91648
+    },
+    {
+      "file": "runtime/zlib1.dll",
+      "git_blob_sha1": "ccdf3c85c0a2a62b6c4140e145a5582e98f93d30",
+      "sha256": "27f24e10860d28611b52c7f2e82e6f7e87c73fac44c8143ea511c73afd81a5c8",
+      "bytes": 90112
+    },
+    {
+      "file": "spec/System/TestAilments_spec.lua",
+      "git_blob_sha1": "b91f3937225ca5313e9d7867d643be92283e6657",
+      "sha256": "454c6f99341a5ce7fb6008b70b9f647f52dcf654f68b6066de199f0446506c54",
+      "bytes": 4630
+    },
+    {
+      "file": "spec/System/TestAttacks_spec.lua",
+      "git_blob_sha1": "d7671bb0090565749fad90fe00b78e852f3dece0",
+      "sha256": "5e3083b0e850f4046a83fd9501af8399ed15852c1abf1f3d9a1f237184d37893",
+      "bytes": 6712
+    },
+    {
+      "file": "spec/System/TestDefence_spec.lua",
+      "git_blob_sha1": "1a7f32895980a087eb67fc9eaf3e2393f583c5c3",
+      "sha256": "6307cb070d683a0070d9b49920df4e71d8d821cfa26d8d7eeae5fcb22bb6b131",
+      "bytes": 84545
+    },
+    {
+      "file": "spec/System/TestGemSocketQuality_spec.lua",
+      "git_blob_sha1": "09fb1903218f9e1cf6ffc80e2436a916a78f4c07",
+      "sha256": "01ea3976ec7a914cd70c9fb66f4129fad8572e6b78ebed3afb5d31782129fa6a",
+      "bytes": 9753
+    },
+    {
+      "file": "spec/System/TestSkills_spec.lua",
+      "git_blob_sha1": "f80738a666fc75ec2d2e1ba9e9fd9e5f7de53dd4",
+      "sha256": "4609f233d40eb0d7dafd9a580710bb898e6ad4633191ebcbd55069699c08316c",
+      "bytes": 44197
+    },
+    {
+      "file": "src/_SimpleGraphic.def.lua",
+      "git_blob_sha1": "9336ee36c3c73f66dedec2bc3477791a9ead6efa",
+      "sha256": "20cd24558e9519653372cef88d0c1cff20472d06e6c08c1d74b0a22be9d492ad",
+      "bytes": 12535
+    },
+    {
+      "file": "src/Classes/BuildListControl.lua",
+      "git_blob_sha1": "a09fa00a68341a1b0cb2dbc7c9bce11c1670c67d",
+      "sha256": "5c4e632dec40538319a8a82dc44f5f54522bbee032b4fca51e0b6065d5393353",
+      "bytes": 9152
+    },
+    {
+      "file": "src/Classes/ButtonControl.lua",
+      "git_blob_sha1": "e231280f5ec410a9c2889d10ae3d82c4ed57c7b1",
+      "sha256": "58524ebbc5f627b5bc8e0d77c86f02420033283a61065bfe2695be095e344d3c",
+      "bytes": 3417
+    },
+    {
+      "file": "src/Classes/CalcBreakdownControl.lua",
+      "git_blob_sha1": "cb06ec84e6e726e1535fc9f795d89de6662db856",
+      "sha256": "783c1279096fa7b50726ed9487ca90e313f8fb8fe63119a162265bea1ddc91be",
+      "bytes": 27733
+    },
+    {
+      "file": "src/Classes/CalcSectionControl.lua",
+      "git_blob_sha1": "668e742d4376907f0ad1d653dda95def2ce627c5",
+      "sha256": "d408c954846afe15d2880c101e3b8c5f9cba8360bc556844c08ff1e0883dbd06",
+      "bytes": 16470
+    },
+    {
+      "file": "src/Classes/CalcsTab.lua",
+      "git_blob_sha1": "95386e5f20fa0dd7b1b41d32de8c1d2a62fec05f",
+      "sha256": "d67f9e4d5923cabf95e79452882ac2e2c5da0b0941afa322dac739895066b38d",
+      "bytes": 28156
+    },
+    {
+      "file": "src/Classes/CheckBoxControl.lua",
+      "git_blob_sha1": "048d2582a2b82d6b65dc20895d690c5c5c578215",
+      "sha256": "0387e760dd2d20b8d66bded042611f5aa7f500df77023c893eb7926a20ea75dd",
+      "bytes": 2919
+    },
+    {
+      "file": "src/Classes/CompareBuySimilar.lua",
+      "git_blob_sha1": "099da211de4a647ce0d692ce1dcf5ec4d5707ceb",
+      "sha256": "817f6807f7e1c65835c295d98c0ee9acf3fbf6683b66fbd9c2613ed147f0cad4",
+      "bytes": 19930
+    },
+    {
+      "file": "src/Classes/CompareCalcsHelpers.lua",
+      "git_blob_sha1": "1a5254e8d01c78b98a837c7cbd6720a71b43ca58",
+      "sha256": "3a9eca26a80028788591bbc399a90254a1cf57f19d04df8a37ad98c46d589a82",
+      "bytes": 15600
+    },
+    {
+      "file": "src/Classes/CompareEntry.lua",
+      "git_blob_sha1": "58529fb285d874fc017596d7a4604538f4051ca9",
+      "sha256": "25ad850fbb229cdf8875242bb1b5f054acdd3461c27e81e32f2dceb9727b0bb5",
+      "bytes": 19822
+    },
+    {
+      "file": "src/Classes/ComparePowerReportListControl.lua",
+      "git_blob_sha1": "49cdb50799950a967335877e192e0f426ddf32b6",
+      "sha256": "52c51271e2f9d47383f9b27546501ff68b99422cf7ac25d2067b9c9a5905f621",
+      "bytes": 4646
+    },
+    {
+      "file": "src/Classes/CompareTab.lua",
+      "git_blob_sha1": "7682fe7b02d4b2e7feb5946eabe6ced0fc02d78e",
+      "sha256": "cbfa8e9e605e26ff3cf710a44a0ff68193a6246daca2bacdf1f264269a582ecf",
+      "bytes": 201220
+    },
+    {
+      "file": "src/Classes/ConfigSetListControl.lua",
+      "git_blob_sha1": "f944097082215d69d7e537aebf9e4a76ba9b8ce5",
+      "sha256": "9cb5216720a5bc6547b45bff5cad509dbc7bd2729586c9833df70ca386f3ec58",
+      "bytes": 4193
+    },
+    {
+      "file": "src/Classes/ConfigTab.lua",
+      "git_blob_sha1": "7a6bf0b95c3d3dd29ea276746511765b1b0febcb",
+      "sha256": "f8b8ca8abd681f4654240a0e64819850cb4b9d25aa86e980784f14da13f9e64a",
+      "bytes": 47971
+    },
+    {
+      "file": "src/Classes/Control.lua",
+      "git_blob_sha1": "22383af172c613c721f6bf9c58d4e18254e016ad",
+      "sha256": "ac3397157a646f4df1a2ba06697f3e15381907009ff2eeedc96376070d5e92b2",
+      "bytes": 4767
+    },
+    {
+      "file": "src/Classes/ControlHost.lua",
+      "git_blob_sha1": "83563f758b45121e91b3d3e4bac3efc99bb4f53b",
+      "sha256": "ed95a091a25d3a6065d50585b5f75cad988f92c9336abdb5cff26d8a681926bb",
+      "bytes": 3471
+    },
+    {
+      "file": "src/Classes/DraggerControl.lua",
+      "git_blob_sha1": "3aede080850c92666bbc1a47774b4d5f6d311f92",
+      "sha256": "017b614405243a63d38c1f361571a60d24379b79a716b648d1a90b9c8901cfa2",
+      "bytes": 4343
+    },
+    {
+      "file": "src/Classes/DropDownControl.lua",
+      "git_blob_sha1": "c2c2af60c5e3edc1de9e718f8ec00adcb8329cec",
+      "sha256": "429c974c338e6f49c36d1e986a50a7bb1fc902f40d2bd99a83e5f09c881ec8a2",
+      "bytes": 17772
+    },
+    {
+      "file": "src/Classes/EditControl.lua",
+      "git_blob_sha1": "899f5b0bcfe1ebf053db509bb60487e0b8228eb8",
+      "sha256": "1b6a59a763adff124b189a76ffce119ba774f00876b89ad5638f211f955ea4cb",
+      "bytes": 24585
+    },
+    {
+      "file": "src/Classes/ExtBuildListControl.lua",
+      "git_blob_sha1": "c00323a3a23659bae1015110fae2907697e1a48a",
+      "sha256": "6dfefa1a40eac685b844601e6b95007ff9893a14b73c9b0470651abaa902e0c7",
+      "bytes": 13546
+    },
+    {
+      "file": "src/Classes/ExtBuildListProvider.lua",
+      "git_blob_sha1": "546dc8b32c77630e270bc0ba325893df04a3cba7",
+      "sha256": "8188bd636bdc0fe4ecc9deeed666628a6542c572be52ac013360eccfd651e03f",
+      "bytes": 1934
+    },
+    {
+      "file": "src/Classes/FolderListControl.lua",
+      "git_blob_sha1": "8e0abcd406655af48abd0fee7b313501a32da1cc",
+      "sha256": "a833a1a339367673964e6fd8707eaaecf7ff30b06e30b54f0f98abacc1e00a3f",
+      "bytes": 2617
+    },
+    {
+      "file": "src/Classes/GemSelectControl.lua",
+      "git_blob_sha1": "e87c36ecbc23b94447bd7b5561dfcc4c11896a19",
+      "sha256": "4ef2bbec6126f579e26aa2a13a7ae25e4ce7d51b4e1fff23974e5f19f19d7262",
+      "bytes": 30754
+    },
+    {
+      "file": "src/Classes/GemTooltip.lua",
+      "git_blob_sha1": "567abf1bae8d363f328e00653221ca427b4dfdc8",
+      "sha256": "a285a56394c2a09a22ce42fd6263e68fed4316113ec1e3ac29bd7c24ad770942",
+      "bytes": 11336
+    },
+    {
+      "file": "src/Classes/ImportTab.lua",
+      "git_blob_sha1": "f4ad27a3e0a117d2d779684bf66bb6b00e47d62f",
+      "sha256": "eed0c47c9349bf1fff38ebe143f913f851bd0dcb7feda806774e8478c8001649",
+      "bytes": 78054
+    },
+    {
+      "file": "src/Classes/Item.lua",
+      "git_blob_sha1": "0bbcfb13f2e953a1d11354dfbbc36d543aa27452",
+      "sha256": "a4100a9860236a90a5801ec17310b6d2979dfc85a0d874c76cdf5194228d48c7",
+      "bytes": 107308
+    },
+    {
+      "file": "src/Classes/ItemDBControl.lua",
+      "git_blob_sha1": "d8f650450b32a666734cc85db7bc8ce078ee20df",
+      "sha256": "cf4cef38be46f4be24954a073f05adf4242b7521aa656318f465b98b827a3fe7",
+      "bytes": 14080
+    },
+    {
+      "file": "src/Classes/ItemListControl.lua",
+      "git_blob_sha1": "a38fe5fbc5e3a67248ecd6f0b454aaa9e711a4c1",
+      "sha256": "ba977010af0e809ab44ee13e5676b84a3ae27817fe278ac2ead8d1c1bbe6e070",
+      "bytes": 13952
+    },
+    {
+      "file": "src/Classes/ItemSetListControl.lua",
+      "git_blob_sha1": "4448d74ae2b811cd71d4a66e70f1997844794263",
+      "sha256": "9538af1dfc10791205e99866ca86bfb30db44eadcf5a5d14647518f83ad04a75",
+      "bytes": 5005
+    },
+    {
+      "file": "src/Classes/ItemSlotControl.lua",
+      "git_blob_sha1": "a3f658a78e3edfd835a13200f221477d0eaa3319",
+      "sha256": "8ad8b337aaf97d55e2a27abd0046426e4a3a90596b3e840d271c1fa6087ef9bd",
+      "bytes": 5980
+    },
+    {
+      "file": "src/Classes/ItemsTab.lua",
+      "git_blob_sha1": "b4db34b2473203212036ef7c2d9224c784662c86",
+      "sha256": "b30537d1fb5617603c01fc3ea1b8737623405e1180a9be8c366c72d600a1539f",
+      "bytes": 209879
+    },
+    {
+      "file": "src/Classes/LabelControl.lua",
+      "git_blob_sha1": "f684cfcd32b7275851a35753b0bce7ccaaaf8639",
+      "sha256": "e59bb9004ea0aa9a4fb1a4be6d71ec4dc439320ed216c58cc72faf90532deea6",
+      "bytes": 619
+    },
+    {
+      "file": "src/Classes/ListControl.lua",
+      "git_blob_sha1": "554075835035596abb5e2abaaf71570b320d8aa8",
+      "sha256": "d743cb0f0eacd32fe93ebac421bea8ac44bb0d20a4539ea49962982cee532459",
+      "bytes": 17912
+    },
+    {
+      "file": "src/Classes/MinionListControl.lua",
+      "git_blob_sha1": "2c153fdbaa1c5fbbcc973d169caeb3a71b40cdcc",
+      "sha256": "4c5b1fc94897e422b07fda264974bcdba90fdb0dd882cced9f5a888d2836b8de",
+      "bytes": 3323
+    },
+    {
+      "file": "src/Classes/MinionSearchListControl.lua",
+      "git_blob_sha1": "43773259d989e2035a872cf46caf32728c8129cc",
+      "sha256": "ced836cbced02d124f5c11519402ff9c96159762cfa2e42856437bf9a1af9590",
+      "bytes": 2357
+    },
+    {
+      "file": "src/Classes/ModDB.lua",
+      "git_blob_sha1": "ffaf1e5ea591bd8aabbacb7f29f96c684deb79cf",
+      "sha256": "9af92139c94a41f434b8c26ded7827e47d30dc129025ce80653be2c82b0f4abd",
+      "bytes": 10958
+    },
+    {
+      "file": "src/Classes/ModList.lua",
+      "git_blob_sha1": "ec686674d772a7ac27d1fef77b28d8c7d18678e1",
+      "sha256": "1c81651d76292e23ed35a0447fe4cc040fca6f9ba3e2faf068d9e73941f1bb37",
+      "bytes": 7654
+    },
+    {
+      "file": "src/Classes/ModStore.lua",
+      "git_blob_sha1": "0dd30e41d664333f5532f376f2c443d90bbc97f8",
+      "sha256": "59f8bd7e2760c94996cafae02b354229dcd8dd11e145fbd7f671b70e63bdb932",
+      "bytes": 30234
+    },
+    {
+      "file": "src/Classes/NotableDBControl.lua",
+      "git_blob_sha1": "8253f4a471fc10bcbf182502e703b4cd41c6ed13",
+      "sha256": "6f63e166c27f2ee5cacef365e3556e32b4912877f2426b540790658b8b8dfad1",
+      "bytes": 8536
+    },
+    {
+      "file": "src/Classes/NotesTab.lua",
+      "git_blob_sha1": "06c9cf53037efb92cde389acf1d39b363cca806d",
+      "sha256": "b26d62308b5b79395c0e05acbae47ee427bdb1543691cd6f9015eca166a316c3",
+      "bytes": 5849
+    },
+    {
+      "file": "src/Classes/PartyTab.lua",
+      "git_blob_sha1": "96cc74508ea756ac4f16bc2d1fb7eb2ab0ac2542",
+      "sha256": "70b3001f4cf5987f0780c9ef19aaeb6202d17e2c4d2b15784257d35b0a14b74f",
+      "bytes": 45582
+    },
+    {
+      "file": "src/Classes/PassiveMasteryControl.lua",
+      "git_blob_sha1": "99b5570765eb6a27d4dea4fe46885484f5a13c83",
+      "sha256": "40a7a01a1321aeab6561b37dba622c5eaf5e89a6b26bfc3cb415111d39ab3936",
+      "bytes": 1700
+    },
+    {
+      "file": "src/Classes/PassiveSpec.lua",
+      "git_blob_sha1": "89dd9e754a10197ab5be67f67f237006b88f743c",
+      "sha256": "9c7d836e7adb5b36256956907a8570a32bc27355b471e6a7f7fb9827299f4587",
+      "bytes": 90113
+    },
+    {
+      "file": "src/Classes/PassiveSpecListControl.lua",
+      "git_blob_sha1": "7f760ed3f03a0c894a2d54a485d06fee571ae8f4",
+      "sha256": "8a92a1623a48da4990e1c0469358b576f0c79f00a696d69ce6aeb4e911fc4c0a",
+      "bytes": 5120
+    },
+    {
+      "file": "src/Classes/PassiveTree.lua",
+      "git_blob_sha1": "5d74c11a3781422c02e98fa71e37ca9c902a4bfc",
+      "sha256": "e4fe3624d9c88ba31de81f4a84a8b5b5f214589d26eb9b6557516c2476e3daf0",
+      "bytes": 40881
+    },
+    {
+      "file": "src/Classes/PassiveTreeView.lua",
+      "git_blob_sha1": "651e51b005792fd308b5dc62975c787ad48be69c",
+      "sha256": "7ba0d9720829789e1bfe6196b594fefd097f7875248262d2abbf2fac9ef723c4",
+      "bytes": 72341
+    },
+    {
+      "file": "src/Classes/PathControl.lua",
+      "git_blob_sha1": "af32ccbbb5daac28411913f93867aee20d9ac2ee",
+      "sha256": "55ef7e8947eede62a9edfcc7b7408604d160fd85cc0c946f5bf7c20c362a23ea",
+      "bytes": 2846
+    },
+    {
+      "file": "src/Classes/PoBArchivesProvider.lua",
+      "git_blob_sha1": "d2d694b7746f09f08eabfb0c863c0a9a5adfe97b",
+      "sha256": "2ae83a624c4d5ce42706c71f8e20889df0b6ae219b65e66244a91b634585f7b9",
+      "bytes": 4023
+    },
+    {
+      "file": "src/Classes/PoEAPI.lua",
+      "git_blob_sha1": "7a9031df0599e532516daf6cf125d3bde3000bb4",
+      "sha256": "bb2e2a677beecaf7823c43dfb419f1b7f34368e8223bf2542c6e154feca31c50",
+      "bytes": 7684
+    },
+    {
+      "file": "src/Classes/PopupDialog.lua",
+      "git_blob_sha1": "1e54e8c695b686835b2bd1686a125709d3c95b07",
+      "sha256": "6992ef281f0c57ae28d926de8ae2037e7dcffa913c19102a56ff02c7e4d800ca",
+      "bytes": 2909
+    },
+    {
+      "file": "src/Classes/PowerReportListControl.lua",
+      "git_blob_sha1": "6472b01eeb2b5b14a337ae8bc99e80bee19816c9",
+      "sha256": "d124a90c817e7ee2d704ee1fed86b046972c0c0d15a568a8de535c3c0bb02ea7",
+      "bytes": 4338
+    },
+    {
+      "file": "src/Classes/RectangleOutlineControl.lua",
+      "git_blob_sha1": "d01a58d81471c59e12f19f2a352a8f14597e193c",
+      "sha256": "a1a3ea8c82351b897fe4891eca4ab983c1888fbc947608226772d6f26cbfa0a4",
+      "bytes": 823
+    },
+    {
+      "file": "src/Classes/ResizableEditControl.lua",
+      "git_blob_sha1": "4f5145fc3bb9721c09f745d2a1722aadf42e86dc",
+      "sha256": "ff9d64cf2f12e734ced02f8fca1cb1175aa91dc6faad72ba5c80ca181380df37",
+      "bytes": 1895
+    },
+    {
+      "file": "src/Classes/ScrollBarControl.lua",
+      "git_blob_sha1": "145fb94bfdf17260d38b688ef2accb0359a10011",
+      "sha256": "6c60df367d5a9ed1153ce5df1de35e0d3af025d1e498edafcff8ddcf07e3f622",
+      "bytes": 9024
+    },
+    {
+      "file": "src/Classes/SearchHost.lua",
+      "git_blob_sha1": "76163f73e33db8e217834272e1e4930180bb4c8a",
+      "sha256": "ea0933066d90e6990a7188eecfe5cb0eff28b88d1ba27ff65980bed11edf7b92",
+      "bytes": 4050
+    },
+    {
+      "file": "src/Classes/SectionControl.lua",
+      "git_blob_sha1": "e0acb6fd2130e9c903bac624d0ea6c71444c09e8",
+      "sha256": "47d7080ef22aa0648c0701434bc5fae969c8b16b5f6cf107a2b7c896187588f4",
+      "bytes": 917
+    },
+    {
+      "file": "src/Classes/SharedItemListControl.lua",
+      "git_blob_sha1": "cbbb32728f460908beb892b20548f697c26d75bf",
+      "sha256": "db3b416d7671f036014bdefeed5921de1ac1415f479e0ee2c15cead389b689ef",
+      "bytes": 2490
+    },
+    {
+      "file": "src/Classes/SharedItemSetListControl.lua",
+      "git_blob_sha1": "ba604874c7720af8eab28569aeeee1efe6217359",
+      "sha256": "7db73f13f2589e415475eee460a5797cdb84ef96269fe6df568c322daeb756ab",
+      "bytes": 3959
+    },
+    {
+      "file": "src/Classes/SkillListControl.lua",
+      "git_blob_sha1": "f5b86e4084addd0fec355e276eb159054ee4fdd8",
+      "sha256": "03beb1e70247ec390623943619f800cdbc091016e3c7cee768f04d532f209333",
+      "bytes": 10328
+    },
+    {
+      "file": "src/Classes/SkillSetListControl.lua",
+      "git_blob_sha1": "fb815b71b900bdb6206d49e7a8ad211ce649c94a",
+      "sha256": "58218279f973567303a70cfaa594aa6743d1b9bc878e70555d89de3fa42ff983",
+      "bytes": 4599
+    },
+    {
+      "file": "src/Classes/SkillsTab.lua",
+      "git_blob_sha1": "1a09ef95ad410bddd215ecfa7f73b76d596b2b6c",
+      "sha256": "06382b5f978f95510c0eee4e7f68b8c5842e0f2d516f1e7d27bfb0c04255fec5",
+      "bytes": 64629
+    },
+    {
+      "file": "src/Classes/SliderControl.lua",
+      "git_blob_sha1": "89dba3e1fc0a6b884927fe38b0ad32655aaef4fa",
+      "sha256": "91ecbe51031edbde2a4937f0051e4cb5a3beff2c7b43d908b4ec8b3b85e8e4b5",
+      "bytes": 5443
+    },
+    {
+      "file": "src/Classes/TextListControl.lua",
+      "git_blob_sha1": "50e58a2d16855d69ad23846503823775212eb656",
+      "sha256": "bb5646e6a995bae0ca89b4dfc9dbf705a49c6d3ae4ac329ceab89b7b67a3bd78",
+      "bytes": 3984
+    },
+    {
+      "file": "src/Classes/TimelessJewelListControl.lua",
+      "git_blob_sha1": "726d7cd47a264b7b55f5df9f9ff470028a790159",
+      "sha256": "1fbbe63ec2195ba393d89658ff95cefda9ff0fe6f2b19a9c6913b0054c5397ca",
+      "bytes": 12555
+    },
+    {
+      "file": "src/Classes/TimelessJewelSocketControl.lua",
+      "git_blob_sha1": "5562d604e07b6c0d37e8b0771acccf6538102e3e",
+      "sha256": "5569b18e9cc0658dc676c5e6d653e98af51def74bbdcacbb2c8924671b2fc94a",
+      "bytes": 1905
+    },
+    {
+      "file": "src/Classes/Tooltip.lua",
+      "git_blob_sha1": "832793aedde015c18a125dec940685812294fd27",
+      "sha256": "78fe72e292bf3893dc67267fdb298262b58268620aa663e9e6a9a4fe60e39c44",
+      "bytes": 25727
+    },
+    {
+      "file": "src/Classes/TooltipHost.lua",
+      "git_blob_sha1": "42a9c3e0e90ccf7f0ba60c4ea7517116c88b9d37",
+      "sha256": "7fbc3b14b2630c86c178ce01328d5f2b505fd082fc0b23ba14e71d017b16bde3",
+      "bytes": 689
+    },
+    {
+      "file": "src/Classes/TradeHelpers.lua",
+      "git_blob_sha1": "36f6302fff1b1bac8499898f247097845730528b",
+      "sha256": "54c05c5595dd35dcd61180379f140c8b61da08917892a0c95e40a594bd1c5336",
+      "bytes": 25509
+    },
+    {
+      "file": "src/Classes/TradeQuery.lua",
+      "git_blob_sha1": "eeefec021f7a11c2385698c36e6ec923cfa4308f",
+      "sha256": "d27d61bc699e5bfc71d7700f2942698d44347d3d969a8c6300761e61161dfa65",
+      "bytes": 64574
+    },
+    {
+      "file": "src/Classes/TradeQueryGenerator.lua",
+      "git_blob_sha1": "097a2e7f948d5f8745d46f7944a21504654a8055",
+      "sha256": "0fc1a5c653b2df62fe7bea4afa18d498f8e11f030b90681f5c4e1a0e949a8ee7",
+      "bytes": 62541
+    },
+    {
+      "file": "src/Classes/TradeQueryRateLimiter.lua",
+      "git_blob_sha1": "f98c59f669fcdec3c1e17ff4e5a267f44d4f6e71",
+      "sha256": "3592c44afed980e667e58245e63416ad1c8adbf59b7cbd7fe107e8364d956969",
+      "bytes": 9501
+    },
+    {
+      "file": "src/Classes/TradeQueryRequests.lua",
+      "git_blob_sha1": "0c93599196ed189c554ca67095d556c29d0542b7",
+      "sha256": "c7608e2e186b86eea5178ef6153a7d4cb81a87918d65fd127f1898ff2ffb7d54",
+      "bytes": 18486
+    },
+    {
+      "file": "src/Classes/TradeStatWeightMultiplierListControl.lua",
+      "git_blob_sha1": "3be20855b1745c0704c9cf1b35cf775e90606d88",
+      "sha256": "c244d8c990c08516fd2fed4c1431ff5f68eba7eda1eff5f72dacf20119a335e0",
+      "bytes": 1495
+    },
+    {
+      "file": "src/Classes/TreeTab.lua",
+      "git_blob_sha1": "5cce675e443702a856549d9ab556eda6e2ab8104",
+      "sha256": "92bcaf60674c947294c768798f808768ad1656e5aec87d44bb599b6dc4b15a10",
+      "bytes": 126212
+    },
+    {
+      "file": "src/Classes/UndoHandler.lua",
+      "git_blob_sha1": "4e6674808fc8df41a0dcc634014c360271ba5a2f",
+      "sha256": "f81fd7a95b707cd7491f035cc035711bb39d09d6ee1ea38916964be337ce8e0c",
+      "bytes": 1859
+    },
+    {
+      "file": "src/Data/Bases/amulet.lua",
+      "git_blob_sha1": "7b7ad8241d91a2a3142d643290ee0e8d034aaa2d",
+      "sha256": "8a1b934fbb7f3e8812d9edae2b0f8c85f440f68a597785c082d314b668e1022e",
+      "bytes": 84969
+    },
+    {
+      "file": "src/Data/Bases/axe.lua",
+      "git_blob_sha1": "353a2e04a11f1cf1f30c81889320c5f9890ac50d",
+      "sha256": "1d6573566cba35388aa9f2f97282253cfc2cb7a6c901f1a4c6ea295385cf2cce",
+      "bytes": 37907
+    },
+    {
+      "file": "src/Data/Bases/belt.lua",
+      "git_blob_sha1": "a0e8966d809a43418655028328fdbac3a713ed13",
+      "sha256": "e0d313cd1262123fa4bef0da9a5f1b7a0dc6c7b1a382431200f4aee8784c41a0",
+      "bytes": 7868
+    },
+    {
+      "file": "src/Data/Bases/body.lua",
+      "git_blob_sha1": "8d5c913509dea9ed5db8473dd4307cba9ff3be17",
+      "sha256": "5c51c0cb85cc36f02ace0ee0783ba4053598683ba3daf2925f21e06d488f3fbd",
+      "bytes": 89713
+    },
+    {
+      "file": "src/Data/Bases/boots.lua",
+      "git_blob_sha1": "0b593dc1f7cbd3dd42f5c8db15892cb576719b3c",
+      "sha256": "a79944cf6624971ebc276637a0ab8eda8d0208e83d049a837bec0724842395ed",
+      "bytes": 53967
+    },
+    {
+      "file": "src/Data/Bases/bow.lua",
+      "git_blob_sha1": "d7b52e19c857d57d7e187fd12b4a683b681f5c6b",
+      "sha256": "1d67834eee5d8ecb8408b40d6e47e0aaad1b9dc3e9019277289d9e2ea527e362",
+      "bytes": 21005
+    },
+    {
+      "file": "src/Data/Bases/claw.lua",
+      "git_blob_sha1": "8be295090ba2744825ff0524f9ced056d5957b72",
+      "sha256": "b1b85b06e87ed11f079fefd90bcaacd8d48b8dabcb789ab005d7137924ea2077",
+      "bytes": 22512
+    },
+    {
+      "file": "src/Data/Bases/dagger.lua",
+      "git_blob_sha1": "6dee416d063695b789fac90bcb90aa57603ae626",
+      "sha256": "cadf3b46d2b35f95307b9506b881a272a34a954d69573062fad76adf735eef6c",
+      "bytes": 27693
+    },
+    {
+      "file": "src/Data/Bases/fishing.lua",
+      "git_blob_sha1": "6dc395762e548b1b37d9221876083846bbebcb8f",
+      "sha256": "6f759195f963a603e6a60bf01e5c96dd16c75a8be721449e28521b6fd97b8842",
+      "bytes": 513
+    },
+    {
+      "file": "src/Data/Bases/flask.lua",
+      "git_blob_sha1": "e8b7df231014c0638f234441f50d896521878ba7",
+      "sha256": "886ed2ba70aefcf43050d308ac35d8cef27204a9bf1c03b3965c868cb73273fe",
+      "bytes": 16319
+    },
+    {
+      "file": "src/Data/Bases/gloves.lua",
+      "git_blob_sha1": "d7720342f1106ee3b6c91c670bdb0810f1ff057a",
+      "sha256": "e88bf2ed0ae60118d2e97d635624a58c6828621320f1cb82716f7ed2633a2f3c",
+      "bytes": 54077
+    },
+    {
+      "file": "src/Data/Bases/graft.lua",
+      "git_blob_sha1": "99e0f4e623cb48b2ff71b43bf44cdd3370a899cc",
+      "sha256": "4f1d79854092d9618c943ffbbb90909370b727d67ec81cbd889a991c61e4891a",
+      "bytes": 6196
+    },
+    {
+      "file": "src/Data/Bases/helmet.lua",
+      "git_blob_sha1": "669965bdfd7ce044e3556697bd26015db5d59f0f",
+      "sha256": "b8780ca97b39b6b61bf36b3d10cbe2b0d20d83bfed9e8ebb4f2354ae9162e70a",
+      "bytes": 63890
+    },
+    {
+      "file": "src/Data/Bases/jewel.lua",
+      "git_blob_sha1": "0099fd32895f4226401ce1dd8aa84a760df3db46",
+      "sha256": "9e602ce9b8662dea4d2e0daa615075bb16692068e3dcc67cc43cdc440e3736eb",
+      "bytes": 4420
+    },
+    {
+      "file": "src/Data/Bases/mace.lua",
+      "git_blob_sha1": "2cd427720ac2f6d4cdf215105635be45cfc31aec",
+      "sha256": "51107c40c5c712031b19755e1467224953c5e9ea5c0c4409cb9536fbd358d965",
+      "bytes": 65824
+    },
+    {
+      "file": "src/Data/Bases/quiver.lua",
+      "git_blob_sha1": "e938150062bff200b89bf9e2e763b6c415b4d00a",
+      "sha256": "42c07d705694732bac2c5aec3870642db109e024c6fe4e561737b6df455b9dc6",
+      "bytes": 17400
+    },
+    {
+      "file": "src/Data/Bases/ring.lua",
+      "git_blob_sha1": "48706ce7024d2f5029426ed19a45dd87d0051b85",
+      "sha256": "03d36af66b8e085c7572f44332891cdc235357217df7c1eed5424347b4b4150f",
+      "bytes": 29607
+    },
+    {
+      "file": "src/Data/Bases/shield.lua",
+      "git_blob_sha1": "164e6dc7b03d574619066dded85bd2dd36c9d3c8",
+      "sha256": "833921204b47db6d2699d449b7a69fa0abec7a67593370319cc55bd735ca56ab",
+      "bytes": 79245
+    },
+    {
+      "file": "src/Data/Bases/staff.lua",
+      "git_blob_sha1": "1ae93c5a527e7330fe8990e75e6842a29d6e137d",
+      "sha256": "ff6b714f24082bb437eedde4e5c524ecda963f0a641608a2695a5bf4af8f7f15",
+      "bytes": 23644
+    },
+    {
+      "file": "src/Data/Bases/sword.lua",
+      "git_blob_sha1": "949ad5513f81e63b92645b6ac6eff32b170a827b",
+      "sha256": "d0c78f83769d91dc1e5f9bfa28b57e6310cfe26226f4ec2966076802df7655fb",
+      "bytes": 69996
+    },
+    {
+      "file": "src/Data/Bases/tincture.lua",
+      "git_blob_sha1": "27b36a67e9c67b2cccdb89e39ee7370bda70c3e2",
+      "sha256": "e4000c70f75ce17e132c64ade1469ae20b2068c83ad47d62d0dec4c20b64742c",
+      "bytes": 5060
+    },
+    {
+      "file": "src/Data/Bases/wand.lua",
+      "git_blob_sha1": "9c61b8650f281f703e46c5b05329cec54c9bce4c",
+      "sha256": "4f5d59f006252d8fdfd72b7685b7fdb93960a6a9e949938bbfb39296a4ee42af",
+      "bytes": 23938
+    },
+    {
+      "file": "src/Data/Bases/wickerman.lua",
+      "git_blob_sha1": "42ef525812e0826352a6f08060f288a2c26ce9d3",
+      "sha256": "3bbe2721282e649aa181410d5d5b3f5eff84e4fd4f25e41896deb1a472346665",
+      "bytes": 30261
+    },
+    {
+      "file": "src/Data/BeastCraft.lua",
+      "git_blob_sha1": "a8d80b64c432fa3ca3d62fd04f9261d8b98987c1",
+      "sha256": "a604c8e7916abc7c5317fdc09f3b54101945236a5236a354ff80a5f4dd2b2456",
+      "bytes": 3747
+    },
+    {
+      "file": "src/Data/Bosses.lua",
+      "git_blob_sha1": "66239e31f875b490ba93c578956622bdc73d2ce5",
+      "sha256": "907c5eb522b6710ef0db8e9430d37d31a755821b6fb04cd20820a328dc4e1c7d",
+      "bytes": 1887
+    },
+    {
+      "file": "src/Data/BossSkills.lua",
+      "git_blob_sha1": "0958b9721dd321042db1eba60d5cb6491edab360",
+      "sha256": "81c01827779e1aaf3e2e7f92a26eeb7382e08ba1ed6f0b5cb1467d7cb7d83e95",
+      "bytes": 5344
+    },
+    {
+      "file": "src/Data/ClusterJewels.lua",
+      "git_blob_sha1": "e76bf45d7b79dbf9d2df50720cbf0e98dcf02260",
+      "sha256": "9a86c4d1b7266c2348188931c5f54e327b881459310eb415b9e426c83fc1262b",
+      "bytes": 35720
+    },
+    {
+      "file": "src/Data/Costs.lua",
+      "git_blob_sha1": "34158612869da3fcdf9c6b63d35f786d99e29fe4",
+      "sha256": "bcf66c609ea8e56056d6c4d8f33e8dec44d2f0d4791e179877b6882545e045e0",
+      "bytes": 1914
+    },
+    {
+      "file": "src/Data/Crucible.lua",
+      "git_blob_sha1": "a22f71840f376e05132aa175e48d2d7ddd5485b1",
+      "sha256": "4fff5973ea45e654ba9f65fef1128b4b6cd3d12be7016e064255df977c6bc096",
+      "bytes": 1024891
+    },
+    {
+      "file": "src/Data/CurrencyNames.lua",
+      "git_blob_sha1": "96e11688eb04859c88a052225781091e06565ee1",
+      "sha256": "c547b8d0dcf89b092f49d6f93ab63716cecd93b377bd13fd196bb1aaea79873d",
+      "bytes": 40181
+    },
+    {
+      "file": "src/Data/DelveDropOnly.lua",
+      "git_blob_sha1": "929fbf5681dde56f5fb31a5151c0ea66ba8bf04f",
+      "sha256": "6cc1779edf444e79f5986d453c9bbf0b78c995c086d09d8f17ccd4f47e419b00",
+      "bytes": 10852
+    },
+    {
+      "file": "src/Data/EnchantmentBelt.lua",
+      "git_blob_sha1": "841b5a622fdc21781503d871295fbfd9b61e9cb0",
+      "sha256": "76b2bf6a53a64e70b20fa7307fef4270674c48a2d697acfe3a98813f14cd5be0",
+      "bytes": 1107
+    },
+    {
+      "file": "src/Data/EnchantmentBody.lua",
+      "git_blob_sha1": "0c69081e2ea8fad0641fe611a7eb961f5187c91a",
+      "sha256": "c1229872f54983c1919d31bb2bc827b371b9e696a2fd42f3f823e06141dcf81a",
+      "bytes": 6716
+    },
+    {
+      "file": "src/Data/EnchantmentBoots.lua",
+      "git_blob_sha1": "319a4739d06c93721706bc23e39e4228db00c94a",
+      "sha256": "4a8afb265a8dfb8c2503cce4cb2076766b5469f9ed1e5f344dbf4ae479760696",
+      "bytes": 3572
+    },
+    {
+      "file": "src/Data/EnchantmentFlask.lua",
+      "git_blob_sha1": "cf8cb2ee146aee68884f39463755166fbad743c7",
+      "sha256": "c54e0095eab56887aefe546be99278527dd5bddfea751cbe56abcb3d797d635c",
+      "bytes": 1094
+    },
+    {
+      "file": "src/Data/EnchantmentGloves.lua",
+      "git_blob_sha1": "64ae15b1cbf1682fe72d5a66e9d74e520268bf79",
+      "sha256": "fe15c0b85aa2757701d880065dc49aa7c7dacd8fd465bad023b4450478aff82e",
+      "bytes": 2695
+    },
+    {
+      "file": "src/Data/EnchantmentHelmet.lua",
+      "git_blob_sha1": "ef6fff730ae41a939aa655c0d544722ede70a363",
+      "sha256": "68ea0ac18024bfe8fab647fb2cf205017f74e7d6ebf884e2ec96fe21dad43e1e",
+      "bytes": 90133
+    },
+    {
+      "file": "src/Data/EnchantmentWeapon.lua",
+      "git_blob_sha1": "37d8d9fa04ba9ee8dfb055eb7550380e34202f89",
+      "sha256": "f171342b7583289e10d2bf59fcd99423b1d43a6d990eab7b233d2e16d8f806ca",
+      "bytes": 15669
+    },
+    {
+      "file": "src/Data/Essence.lua",
+      "git_blob_sha1": "38c8c66d535b178702bea87f08976db57968b5c0",
+      "sha256": "75d5e8d5cee6c6d7136562519a51b1fa9c27187bebb07829b6525594bd114bf7",
+      "bytes": 119532
+    },
+    {
+      "file": "src/Data/FlavourText.lua",
+      "git_blob_sha1": "399614ed907dbec4740f5c5072a7a854af979aa0",
+      "sha256": "3aa6bfa5acf06014050419175f5c7ed841d340dddb32c9b6ec12648127ea3d44",
+      "bytes": 270524
+    },
+    {
+      "file": "src/Data/Gems.lua",
+      "git_blob_sha1": "0bc954838fa1e7dd9d8fa53c40b5d5ba7ebd16a1",
+      "sha256": "ac41109d85714d570765dc63c9e5926fad29e7a1682494d44397953e887ab46a",
+      "bytes": 413034
+    },
+    {
+      "file": "src/Data/Global.lua",
+      "git_blob_sha1": "c675233afcdfd9e8e2afb758d4871d54c553abfa",
+      "sha256": "b8ec7fa6ed21c760b3ba1124d3e0fbd4aba7229dc7df11a43d07979bfc8b29c5",
+      "bytes": 10446
+    },
+    {
+      "file": "src/Data/IncursionDropOnly.lua",
+      "git_blob_sha1": "b0c51dd051d75f89cf706c49a1d3d7eba71c0984",
+      "sha256": "a3ec9a0d8ec0a06227a5dcfc40cf6d7ea006bd222b81cb17d7a1ff1a17aa322b",
+      "bytes": 16151
+    },
+    {
+      "file": "src/Data/Minions.lua",
+      "git_blob_sha1": "198ae51387a45de5be5a3727579250e11044419d",
+      "sha256": "b31a88843141ddf68c5850d556f38464c1238efa882656c6228380208ab293eb",
+      "bytes": 67800
+    },
+    {
+      "file": "src/Data/Misc.lua",
+      "git_blob_sha1": "5add0bc9e128d9a449d7c5f2a479a974cc87e2ed",
+      "sha256": "a8748c30ffc24296366396c8799bc406f79a41175909a6dcbe86dfecf1c96338",
+      "bytes": 28367
+    },
+    {
+      "file": "src/Data/ModCache.lua",
+      "git_blob_sha1": "fec5aa0ebd9a0b156a9b0cd325d66577b68175af",
+      "sha256": "3eb11e5c3859cd6572c8958d4ca1e9f8e78221de8165828a1b790028f09990e8",
+      "bytes": 4108077
+    },
+    {
+      "file": "src/Data/ModCorrupted.lua",
+      "git_blob_sha1": "060e82c6706faf598790112e78572a98e25f2927",
+      "sha256": "821e8c70ab48cfa56f14a8efae98f2b1aafcb3995bc6d5546a6a4be47e10aa57",
+      "bytes": 140754
+    },
+    {
+      "file": "src/Data/ModDelve.lua",
+      "git_blob_sha1": "755dc619fa965661b0a6b4150635f6f48e9e2afc",
+      "sha256": "f28048d65c6e449142008282ead3005db01b679250ba5008ed7138142fd9c15f",
+      "bytes": 119422
+    },
+    {
+      "file": "src/Data/ModEldritch.lua",
+      "git_blob_sha1": "594a8df122e4fc438759f618c2e6722773d55aa7",
+      "sha256": "227d3c10ad4c32cdeaef8d0ad3077b8a139cf78d2a18dde6ede9599ca6b6a2de",
+      "bytes": 1948218
+    },
+    {
+      "file": "src/Data/ModExplicit.lua",
+      "git_blob_sha1": "92a61287b757c4935df5fed7f6b8bea53e520f69",
+      "sha256": "a9f96aff1aac3412f6b88d9d04c29616814d4428330c04cc57ae86c5fcde9b42",
+      "bytes": 1956292
+    },
+    {
+      "file": "src/Data/ModFlask.lua",
+      "git_blob_sha1": "b27d125482d632b6a5acfe02ad46933195a00149",
+      "sha256": "7b0b5e63638aa0cffb5620b9a47896c51c884811b48fd22f0b46419086572403",
+      "bytes": 108969
+    },
+    {
+      "file": "src/Data/ModFoulborn.lua",
+      "git_blob_sha1": "68d6bf8ed87aadd9de377af8fa3a35d083a78d6f",
+      "sha256": "a3439df8f1beaed2fc2460444c0f405d6114c7aca06ef5638d6eaf8798271890",
+      "bytes": 136672
+    },
+    {
+      "file": "src/Data/ModFoulbornMap.jsonc",
+      "git_blob_sha1": "5205a0c6c32b4351b9d4d8e4e207773ebc186c0f",
+      "sha256": "e20a6a0c21b68f508384feb89b0317942b639ce1e6b115c949b8a3fd3395b2a7",
+      "bytes": 44458
+    },
+    {
+      "file": "src/Data/ModFoulbornMap.lua",
+      "git_blob_sha1": "01b26fdabac0dbcf21ef566b0ba08fbc83ef419c",
+      "sha256": "aa982c61df71627a4e09d9728640d9606f80c0f2f12e0863341bea7208943a8a",
+      "bytes": 28694
+    },
+    {
+      "file": "src/Data/ModGraft.lua",
+      "git_blob_sha1": "78fbb8a4cee94f220290c00a131c5225fa1fb94a",
+      "sha256": "3009cf7a5e1822f1ac39f1d1f95711584f9eee5145a309d4a58f427398d198f9",
+      "bytes": 201346
+    },
+    {
+      "file": "src/Data/ModItemExclusive.lua",
+      "git_blob_sha1": "9f14dbb057e6fb34e686b211de10031cf4428ee1",
+      "sha256": "d11d2a314b863914d91682d261906acbb245c6f4b6d4d8311613255f8566d11e",
+      "bytes": 3281558
+    },
+    {
+      "file": "src/Data/ModJewel.lua",
+      "git_blob_sha1": "0d5d2350d0b54cf9c36accff762973a0587bbe56",
+      "sha256": "a55e00936df40ec1c11d8b729dad5b3d70e11aa23570d92a88c6089bed2b2eda",
+      "bytes": 177240
+    },
+    {
+      "file": "src/Data/ModJewelAbyss.lua",
+      "git_blob_sha1": "2f4735b6cdbed0907ee41b7a0cadccbdd9adfb7e",
+      "sha256": "49a3ed10a8614f14314ce77478631b18e07ad6b89f20c29139b1f7428b94264b",
+      "bytes": 361073
+    },
+    {
+      "file": "src/Data/ModJewelCharm.lua",
+      "git_blob_sha1": "3fa3d35400495b2e43b9c91531c4685be79179d0",
+      "sha256": "58198643eb9e324d6b24d76d363d293bd923280d5b5579df6a8929484d51a24e",
+      "bytes": 106984
+    },
+    {
+      "file": "src/Data/ModJewelCluster.lua",
+      "git_blob_sha1": "cd67e66ab485c62db9ef1cb133f51d8dbdc5858a",
+      "sha256": "8e9cd3ef02bea7ac03dd19727e58dab42c6233f8c4261a1240754e078738247e",
+      "bytes": 330131
+    },
+    {
+      "file": "src/Data/ModMap.lua",
+      "git_blob_sha1": "949311d367d7a43520bf57fdbdc535945bee1d06",
+      "sha256": "91b3fa5529f783936a0f868f80e268a9aa7f283544edc433ba7f8e10fe1ccc7f",
+      "bytes": 24130
+    },
+    {
+      "file": "src/Data/ModMaster.lua",
+      "git_blob_sha1": "8d04dccf6b6ddc7998969c290f9f9f6264ce5337",
+      "sha256": "d0686b0ba74ff22aa9a7aa8b222f47ba400dec26d6e9da107a09ebdab618ce3a",
+      "bytes": 268661
+    },
+    {
+      "file": "src/Data/ModMercenary.lua",
+      "git_blob_sha1": "38b20925b8281d5d1d242ef83849bb2f4d64da7b",
+      "sha256": "15107278d9266462eda4dfca418c13b10c4072453fe5d36484c27473d1f46d74",
+      "bytes": 11784
+    },
+    {
+      "file": "src/Data/ModNecropolis.lua",
+      "git_blob_sha1": "ff15e1bd1b20e4ce046dd9e747583d88e1fb145a",
+      "sha256": "0e5f3bb90701dadd20e11ecc892acf6dda6af7b17d9c8fdfd8225dc963564dbb",
+      "bytes": 21566
+    },
+    {
+      "file": "src/Data/ModScalability.lua",
+      "git_blob_sha1": "2830ce13b078b057476e6910961e2674b3603941",
+      "sha256": "3163bd041b638f72e9f9195e71ca3f0d76a3c0c6977292239e6477eef6a5fc48",
+      "bytes": 1331776
+    },
+    {
+      "file": "src/Data/ModScourge.lua",
+      "git_blob_sha1": "d7531619063bbb787941b4be5767bd3cc58b991a",
+      "sha256": "c69720f6f35efaccaa166c5897557c9dd1f08f4747c443cdba4b03268c6a64d9",
+      "bytes": 508465
+    },
+    {
+      "file": "src/Data/ModSynthesis.lua",
+      "git_blob_sha1": "6add5014046a92b95d44e6fc3ec0890d56488f87",
+      "sha256": "5064f7543aee7aeacf18342f8231bb02524e94116ba9eb8aabe955e593776136",
+      "bytes": 472110
+    },
+    {
+      "file": "src/Data/ModTincture.lua",
+      "git_blob_sha1": "cf98d62ba994764c7cbdc81d08a34a7f2747d490",
+      "sha256": "faa4f853240770fe9c82552be560fa41199a28cb86eb8866439c631057361df7",
+      "bytes": 27093
+    },
+    {
+      "file": "src/Data/ModVeiled.lua",
+      "git_blob_sha1": "de7ab189462b4fc22726293bd7f8220633e21917",
+      "sha256": "8ca193bf3f6673de99e75779f4d4139533f9376dfa7aedcaf4e971a1edaccb20",
+      "bytes": 161801
+    },
+    {
+      "file": "src/Data/Pantheons.lua",
+      "git_blob_sha1": "056a91cecc19da0de57facf2464b65f7777d0f1a",
+      "sha256": "eab277c94fb7e3764b4a6bc67553fdfdf3d790bd2a7be3cd1b8fa5d73fd66a1b",
+      "bytes": 9102
+    },
+    {
+      "file": "src/Data/PearlSupports.lua",
+      "git_blob_sha1": "929f5c79cba4e8e121515b40b74f7d5023a3036e",
+      "sha256": "47d8d0bdc8e11d9573394300d789b08f8c3c455d0782260b05226edbdf042f76",
+      "bytes": 17007
+    },
+    {
+      "file": "src/Data/QueryMods.lua",
+      "git_blob_sha1": "76bfc6942f2abedd5dc79f2c491d544ee55c1309",
+      "sha256": "7574c3ce5ce22d0ef564ef3fd8d31eda2b27d42acccc5cfab49c908cc56b9dd6",
+      "bytes": 1366443
+    },
+    {
+      "file": "src/Data/Rares.lua",
+      "git_blob_sha1": "79061c852d8b4d3d627b1d8f51b22f7bedd3892b",
+      "sha256": "d93163f2c2033df3f3e2ccdfd10b5bf72b76d63c1cb95611f49ed742b5b2c5e8",
+      "bytes": 38608
+    },
+    {
+      "file": "src/Data/Skills/act_dex.lua",
+      "git_blob_sha1": "f3ff59e0cbb1036ad6f72b1cf68b4b4b54d0e52d",
+      "sha256": "500bf74b4a26a35f8a9b18cc2d2a2d1a586254c01289dae3a12fba6707823957",
+      "bytes": 1664148
+    },
+    {
+      "file": "src/Data/Skills/act_int.lua",
+      "git_blob_sha1": "68cbccff925a740cfe385426b2a044f5926cb583",
+      "sha256": "9fb893361bc3c26fc539416992b394c3be642448d33d49c4d2b224b5b90f3116",
+      "bytes": 1983667
+    },
+    {
+      "file": "src/Data/Skills/act_str.lua",
+      "git_blob_sha1": "e982cb75042342b32c085fe74d93ec326917b56d",
+      "sha256": "6e4c1a5b724b6a6bf7f65f160c432e3a8098849d4d9004c141bece7b0d5db49d",
+      "bytes": 1143614
+    },
+    {
+      "file": "src/Data/Skills/glove.lua",
+      "git_blob_sha1": "bbc144a89c4804b297a2cf2a79f19ca035a1457f",
+      "sha256": "b9b3134f02d871773471602eea1e57dede42f435d46456ea67a148a104ebbe3c",
+      "bytes": 81739
+    },
+    {
+      "file": "src/Data/Skills/minion.lua",
+      "git_blob_sha1": "225dcef465d2e31f27f458ccd6253fa1ae386cb2",
+      "sha256": "3e2b3b9091151ece7bc28330f5403bee4b40262c48dfd07ef1694d31c75e04fc",
+      "bytes": 90928
+    },
+    {
+      "file": "src/Data/Skills/other.lua",
+      "git_blob_sha1": "906f27fd2df9b7dc3f7b741eaaddf1b7028099e4",
+      "sha256": "5b6c75f5a7e8a477f4cb3efde587a2f9e25ef38321730acdd66caa7ee608f370",
+      "bytes": 321301
+    },
+    {
+      "file": "src/Data/Skills/spectre.lua",
+      "git_blob_sha1": "ce1eab39ec92a4f54b2117217c8b6f11cea044b3",
+      "sha256": "a0ede057b22b3ce94e3ad870107f1bbe8f55a12264cbf748bf4094eaf46ca3cb",
+      "bytes": 429147
+    },
+    {
+      "file": "src/Data/Skills/sup_dex.lua",
+      "git_blob_sha1": "53987cedf5ce066c1d598443ad7c3eb4b5b79ab5",
+      "sha256": "dc13eb56026d8a59e4f34edc00313a021fd86f75986b77a030902e00c10ab24c",
+      "bytes": 351943
+    },
+    {
+      "file": "src/Data/Skills/sup_int.lua",
+      "git_blob_sha1": "2797a1425e9deea47095fcd1f01fd5cd39c77e17",
+      "sha256": "87488d2c760a83ae186c4017e162d6ad26bbeca8208eabf433dce23b44ec4d5b",
+      "bytes": 477743
+    },
+    {
+      "file": "src/Data/Skills/sup_str.lua",
+      "git_blob_sha1": "d1d8b2600e542f0bcd7f5b4d16048afbe11f9348",
+      "sha256": "65e585fd60b9bcf9e5f2445e88fbb151afe42cfe9a54d709be72601564c46369",
+      "bytes": 360721
+    },
+    {
+      "file": "src/Data/SkillStatMap.lua",
+      "git_blob_sha1": "880e8c8e42195e27bedb341b9bffc9b5f30f938e",
+      "sha256": "353f9821d846f143d6c9f38dbf4bf274678be16e31a67605d5646508920299cc",
+      "bytes": 81095
+    },
+    {
+      "file": "src/Data/Spectres.lua",
+      "git_blob_sha1": "4d70f177ecf3eb79fbb43de72146fe8c03365033",
+      "sha256": "f148639ff24d57f51e3de3075e323a392273c193517fc99cee3f126f6ae062d3",
+      "bytes": 229263
+    },
+    {
+      "file": "src/Data/StatDescriptionFormatters.lua",
+      "git_blob_sha1": "7af1b9935857917ea87b8d7ea785482f1237e204",
+      "sha256": "1a5be560b9ca0b5132870a229842b23e10fccb0a54ba9ac55d4a06d93aaee0bf",
+      "bytes": 1463
+    },
+    {
+      "file": "src/Data/StatDescriptions/active_skill_gem_stat_descriptions.lua",
+      "git_blob_sha1": "3a1879db090ae2f456d1efccc89d8e854a94248f",
+      "sha256": "a34a025c1a66fc406373afed1e12484028412d3718b4e14abb11684103a546cb",
+      "bytes": 150651
+    },
+    {
+      "file": "src/Data/StatDescriptions/aura_skill_stat_descriptions.lua",
+      "git_blob_sha1": "0d1876b826e7a06e4b11a489b91854f302f823d8",
+      "sha256": "59c661c99ee7a78f8110f3eaefee142b71a198ef95f1e2a7bbba5066f58ebb55",
+      "bytes": 36389
+    },
+    {
+      "file": "src/Data/StatDescriptions/banner_aura_skill_stat_descriptions.lua",
+      "git_blob_sha1": "1e5c58db84bfc2b97c51322c1a207887c3d1bf84",
+      "sha256": "3bc42db2872ad8c2015090726dac382e18b0742b4e70ff2e21d6640edb4bb50a",
+      "bytes": 7935
+    },
+    {
+      "file": "src/Data/StatDescriptions/beam_skill_stat_descriptions.lua",
+      "git_blob_sha1": "8f43fbec9a5bffcbf8993acbfca75c3571447787",
+      "sha256": "514c34c218c37660a4319e91808d047a64ac9a024897d4d50b37a2d699ba3db7",
+      "bytes": 1648
+    },
+    {
+      "file": "src/Data/StatDescriptions/brand_skill_stat_descriptions.lua",
+      "git_blob_sha1": "5fc9de3bf56b4dfecdf1c3b31e236e2d32a60191",
+      "sha256": "d4349a1a6cc064b11e82e5524dc56d70b44eb6b00157c0e68c9dca5c0e7d4d42",
+      "bytes": 5873
+    },
+    {
+      "file": "src/Data/StatDescriptions/buff_skill_stat_descriptions.lua",
+      "git_blob_sha1": "4c43a470eb090e6fda092ab96a86551d8bee7f65",
+      "sha256": "38784e2fb5082ef105c9eda7c0c439c3708a87e9c7abb92490461aa806fb280a",
+      "bytes": 27098
+    },
+    {
+      "file": "src/Data/StatDescriptions/curse_skill_stat_descriptions.lua",
+      "git_blob_sha1": "60ce57b47ebe287a62686d115160c9abfa94c0f3",
+      "sha256": "83659db6d1a71cbebd3db440ef4913e9c3141baac0e09f93af333db9e7217e16",
+      "bytes": 32492
+    },
+    {
+      "file": "src/Data/StatDescriptions/debuff_skill_stat_descriptions.lua",
+      "git_blob_sha1": "9b253a6b350b32404b437bf54378da0b2d15b519",
+      "sha256": "99b459be22d14be447eac6256993056616707c755b0529245cb47b70c2b6ad0e",
+      "bytes": 10955
+    },
+    {
+      "file": "src/Data/StatDescriptions/gem_stat_descriptions.lua",
+      "git_blob_sha1": "2ace1be1153a3ba31a36ff95988b1f21f9d110bf",
+      "sha256": "5943bb03cc1ebc60046e4b051d7b27d57f29b9030ec8af4d05366c7ff3188bde",
+      "bytes": 376530
+    },
+    {
+      "file": "src/Data/StatDescriptions/graft_stat_descriptions.lua",
+      "git_blob_sha1": "f779702cd9e21ea50b0a77fe262cf66d95370f0e",
+      "sha256": "37e8927cb5b37a947efeee0aa2e1aca6c120e1cbd9b47ef6a95a798fe9962bec",
+      "bytes": 44870
+    },
+    {
+      "file": "src/Data/StatDescriptions/minion_attack_skill_stat_descriptions.lua",
+      "git_blob_sha1": "dee57829c49d43ca1921b589438fb2be4d23f4d5",
+      "sha256": "1961b47556d32eb6b414c7c835bd5da2db36228ebcc548cdf17a62b608339ab2",
+      "bytes": 85933
+    },
+    {
+      "file": "src/Data/StatDescriptions/minion_skill_stat_descriptions.lua",
+      "git_blob_sha1": "6e4b1c9a597908f06fb87e61d6e9f8cd2e40abdc",
+      "sha256": "fb0e9804b65f4c7c39faf3f10221d6a6c1e941174f9116bb94a9914520002d23",
+      "bytes": 168378
+    },
+    {
+      "file": "src/Data/StatDescriptions/minion_spell_damage_skill_stat_descriptions.lua",
+      "git_blob_sha1": "17361a54a48df2bec3f69b6f027b9ba97e206cb6",
+      "sha256": "1c0d63e04f999e2964dfcdfb52af516b19ae7553f04a02b39797ac1a3f07d435",
+      "bytes": 47625
+    },
+    {
+      "file": "src/Data/StatDescriptions/minion_spell_skill_stat_descriptions.lua",
+      "git_blob_sha1": "d20095a6a14a4859ff3321fe393bef023fee6b35",
+      "sha256": "6b82b50cfa3da08331875a6a90b00502c60122cddef5de5af01d775fc52c79ee",
+      "bytes": 4022
+    },
+    {
+      "file": "src/Data/StatDescriptions/monster_stat_descriptions.lua",
+      "git_blob_sha1": "92317b5b1fdd21e988f9428d91e1a168d57fd584",
+      "sha256": "4240bde923ec79b2f1343cd68413015180764aa05ab8d483ad0276394c1ff31f",
+      "bytes": 8771
+    },
+    {
+      "file": "src/Data/StatDescriptions/offering_skill_stat_descriptions.lua",
+      "git_blob_sha1": "86aba52a27cd253165378712babbfe05e732bf84",
+      "sha256": "eeb1ba0523f47dc8aa1bffc22dbbd0fac27a945a55dd743394b711fe6acc93ce",
+      "bytes": 6497
+    },
+    {
+      "file": "src/Data/StatDescriptions/secondary_debuff_skill_stat_descriptions.lua",
+      "git_blob_sha1": "d60107e14f4539caedbb9c8afbc375622046a4bf",
+      "sha256": "f22be98e751e5a5d10e3b0f478e5bef3c86c701911e68aa095ef5c3c67bda013",
+      "bytes": 833
+    },
+    {
+      "file": "src/Data/StatDescriptions/single_minion_spell_skill_stat_descriptions.lua",
+      "git_blob_sha1": "bb5ac92bff58f09ae141197134a3124eba7f1a0a",
+      "sha256": "6880151e5833f4b80692b002d3aec915febfd96ee732e4404b788fc70b136ac7",
+      "bytes": 23227
+    },
+    {
+      "file": "src/Data/StatDescriptions/skill_stat_descriptions.lua",
+      "git_blob_sha1": "1a232e6c4fa10d4400473c90a5d448abf3cbb5a8",
+      "sha256": "08b6b1d21877fc59ddc163395f01d4931de6468f17e36979acc815917d92baf3",
+      "bytes": 922110
+    },
+    {
+      "file": "src/Data/StatDescriptions/stat_descriptions.lua",
+      "git_blob_sha1": "59c544eb14b658ab521fae18f6c4e682822da3ab",
+      "sha256": "d5728274d56499dc84081f4f8941de0b4c1489b845575e2cdf51ed86a1cda5ea",
+      "bytes": 4322708
+    },
+    {
+      "file": "src/Data/StatDescriptions/tincture_stat_descriptions.lua",
+      "git_blob_sha1": "ab059585017b3c2845560d441cefc0b87981ff8a",
+      "sha256": "3be33611704f83e3d8949c68fe27cc2544edf38fda4e1a9295bb3fabe2a7d8a5",
+      "bytes": 39909
+    },
+    {
+      "file": "src/Data/StatDescriptions/variable_duration_skill_stat_descriptions.lua",
+      "git_blob_sha1": "afe8669bc8e87cb5df47537b2a494fed52cf1d96",
+      "sha256": "c0da3c44cbbcf94f35914e0a30d5237aa05d79cdad1bcca228c49c7ec2fde308",
+      "bytes": 2580
+    },
+    {
+      "file": "src/Data/TattooPassives.lua",
+      "git_blob_sha1": "a899ccbaf8bc62972d93feada6a73467e4a4752d",
+      "sha256": "a02aa69dc6ac2a951de8e5a3ba29d105d170d284544ee16ab3255107400c8aa4",
+      "bytes": 151614
+    },
+    {
+      "file": "src/Data/TimelessJewelData/AbyssNotableNames.lua",
+      "git_blob_sha1": "2ef60fd7eb273bf8417f9715629818adb64826d9",
+      "sha256": "d73ea953a85d31344aa7f2710b8422d34232c3be29dac504ff1594cd99093df1",
+      "bytes": 5830
+    },
+    {
+      "file": "src/Data/TimelessJewelData/GloriousVanity.zip.part0",
+      "git_blob_sha1": "0e3436cf31ea39bddf84a34e12ee1ff8de579599",
+      "sha256": "f18541b1be2ca2b91d5c5ab45bb95d4b3769ce6c33f481ec1ded5618dc3499fa",
+      "bytes": 5242880
+    },
+    {
+      "file": "src/Data/TimelessJewelData/GloriousVanity.zip.part1",
+      "git_blob_sha1": "3bbc1d9051dc88adf56f5d7bc3070a1bef697c1c",
+      "sha256": "d88dd57defeba8d17704630f8769406db784f9efb4fc166b9cd0a9b4113eafd8",
+      "bytes": 5242880
+    },
+    {
+      "file": "src/Data/TimelessJewelData/GloriousVanity.zip.part2",
+      "git_blob_sha1": "9d49d7640a13aa6ed24355c357ea95d97726f0c7",
+      "sha256": "92eec138a4f00eea0c62e1effc6496c855ff27457e4ba3a412483b6c26ef61f3",
+      "bytes": 5242880
+    },
+    {
+      "file": "src/Data/TimelessJewelData/GloriousVanity.zip.part3",
+      "git_blob_sha1": "1bc274bd1be642057604dbdf6982ed4129d10a59",
+      "sha256": "26757acca01ffc045daee958efc6a192d6e1f46051967e98f16c0dccc1951f80",
+      "bytes": 5242880
+    },
+    {
+      "file": "src/Data/TimelessJewelData/GloriousVanity.zip.part4",
+      "git_blob_sha1": "3133fb2cd0a12a35bdf9b09cc11c7842e1b0db6e",
+      "sha256": "92ae6bfbd65d3d59061f633cad745fb353c5bd62b1e4f18a10be550776f11fe0",
+      "bytes": 1858225
+    },
+    {
+      "file": "src/Data/TimelessJewelData/LegionPassives.lua",
+      "git_blob_sha1": "4b6e953d8d405840f776f4701689f649ddf1f22a",
+      "sha256": "22a564b8687b5a0442d648ecdf809e52316ff893eeaa362f72edc55dc57e3274",
+      "bytes": 518117
+    },
+    {
+      "file": "src/Data/TimelessJewelData/LegionTradeIds.lua",
+      "git_blob_sha1": "609becb7b760b77eb196c31712f6006768526937",
+      "sha256": "a87af421e6607758b37ea841eb1b8409d9ec7bfb184ca6305654686959d69c44",
+      "bytes": 2274
+    },
+    {
+      "file": "src/Data/TimelessJewelData/NodeIndexMapping.lua",
+      "git_blob_sha1": "1905d69f7228d507aff477c47fc57737e9802176",
+      "sha256": "eba252a0d95fe2f28f92afb0efcc01572fd13b26e5029e3dcde25a90175c5125",
+      "bytes": 130940
+    },
+    {
+      "file": "src/Data/TradeSiteStats.lua",
+      "git_blob_sha1": "712e9c42ea1d1c43abc443984313645658b80883",
+      "sha256": "6223152d7f292572c70391e614728a48e9a3c29964192cde587227e11b4bbcea",
+      "bytes": 2801428
+    },
+    {
+      "file": "src/Data/Uniques/amulet.lua",
+      "git_blob_sha1": "e9faf00dd0b5668f19f9a62f45d9a2bcff194534",
+      "sha256": "5588152c6f62cecf2c8cade86fc907ebace324a52939f9556406465c600eb8ee",
+      "bytes": 59464
+    },
+    {
+      "file": "src/Data/Uniques/axe.lua",
+      "git_blob_sha1": "ed83e2cdcba65b85b5a1f4a5d07e4962cdcaed79",
+      "sha256": "834464e2133b775ddde8c29cc37df9995f0005a710a6178303bf2cff318b94d2",
+      "bytes": 16093
+    },
+    {
+      "file": "src/Data/Uniques/belt.lua",
+      "git_blob_sha1": "27d2f7ac3ad1e508be41c09cfb93da89249b19fd",
+      "sha256": "5989f29079c62fc0cbc851980be783d1f4965687c4d178e90edbcad5eaeade87",
+      "bytes": 42062
+    },
+    {
+      "file": "src/Data/Uniques/body.lua",
+      "git_blob_sha1": "ed2c8df71fe03dcf9986e6da418de5af0004cee4",
+      "sha256": "b2e71c64254abbdb5a514d5c2a773220c51a6167ec41599c3c1a5a4bc46cb20c",
+      "bytes": 51671
+    },
+    {
+      "file": "src/Data/Uniques/boots.lua",
+      "git_blob_sha1": "364275da93d06b17d47762f1fff7ba184d8f57db",
+      "sha256": "cfa11dfe9b03238a9d37816f393c16ad5610a3e92482e1820c87da482ff79198",
+      "bytes": 39382
+    },
+    {
+      "file": "src/Data/Uniques/bow.lua",
+      "git_blob_sha1": "6d86426d4aac936637af1a00653dcb9d4c3316fa",
+      "sha256": "a29483393d5f8de5c90237cd786f80edb0c414705c9e5150dd025b5407f7560b",
+      "bytes": 20183
+    },
+    {
+      "file": "src/Data/Uniques/claw.lua",
+      "git_blob_sha1": "73605f7c6c19c0e6ec7db1b11d31b0dd427a6ab3",
+      "sha256": "b5ee907ee826b9df4bacc384e8d4cee6fc5c29ed80e26a3fb4bede9b4fbafcfa",
+      "bytes": 14427
+    },
+    {
+      "file": "src/Data/Uniques/dagger.lua",
+      "git_blob_sha1": "b2ad2d34527483c348d3edeb1addce3484c308a7",
+      "sha256": "bed5968b01efdc23048d466148b63fa98a3ee5db534545c0feae3cb651f1860e",
+      "bytes": 13031
+    },
+    {
+      "file": "src/Data/Uniques/fishing.lua",
+      "git_blob_sha1": "d149f0ee72f59200e60439a4d5dd5080300fc5fb",
+      "sha256": "e8c7909bef398354309608bd7c47fbdb0b884a2857035bab936ebfec535ebe2f",
+      "bytes": 531
+    },
+    {
+      "file": "src/Data/Uniques/flask.lua",
+      "git_blob_sha1": "ae8470432fd9c04a1110d59583de5958261a999c",
+      "sha256": "edc8cac29441a6e712a8eaf2ca6a2637c8d6e24448ae9d3131b40353216107b1",
+      "bytes": 22181
+    },
+    {
+      "file": "src/Data/Uniques/gloves.lua",
+      "git_blob_sha1": "8273e40958dae6081d7a1c9b4f40d10fade6fdc6",
+      "sha256": "4a3c0a10b742c96f14cdf84d8b0bd3f9f77f88d9c462b3177bc7eefa6c9d76d0",
+      "bytes": 38232
+    },
+    {
+      "file": "src/Data/Uniques/graft.lua",
+      "git_blob_sha1": "eeb99c8156cc24b003c5167f4483987209c9f209",
+      "sha256": "fce873d9e292821c75cf9bdeefc0a438468777dcf23406f2e8e843b068eb4342",
+      "bytes": 48
+    },
+    {
+      "file": "src/Data/Uniques/helmet.lua",
+      "git_blob_sha1": "05faf1c200094a62fed342e52a286b86e20920f0",
+      "sha256": "b09eb823489def4f62baba4e2a13a5271f9b29ee03eb2ccc5bf5449a23e4bbd0",
+      "bytes": 57940
+    },
+    {
+      "file": "src/Data/Uniques/jewel.lua",
+      "git_blob_sha1": "d7a8d679fac1be76df8543c4d154df679333a612",
+      "sha256": "923c3a02985ee877665e864188d8a52ff306dbb6f11febcfa800b984227f21a3",
+      "bytes": 65956
+    },
+    {
+      "file": "src/Data/Uniques/mace.lua",
+      "git_blob_sha1": "83a67bd07ede75dcfb6f80213bef8d68c6aa5e8b",
+      "sha256": "cc179767a48bdf710cbb8d7591669b4aae75b7f0652662260559fb27e71584c4",
+      "bytes": 31041
+    },
+    {
+      "file": "src/Data/Uniques/quiver.lua",
+      "git_blob_sha1": "b82955285783ad62eb3d886e04671c1e2b992672",
+      "sha256": "0d2a90fbcf928276d3cb491020b772135e85728f152915e7374839fa978fb770",
+      "bytes": 13433
+    },
+    {
+      "file": "src/Data/Uniques/ring.lua",
+      "git_blob_sha1": "42fd0f41f868de214cf746fe9269163275c53d46",
+      "sha256": "fef26489228eecb3273f42e59eaf4610c0930c368f8569d666087827de8cf100",
+      "bytes": 72521
+    },
+    {
+      "file": "src/Data/Uniques/shield.lua",
+      "git_blob_sha1": "e6cd04778d6a73ea6a48cb42452a23473eacdc2c",
+      "sha256": "226f65efec24434c916393d787982239d1d81b8d95b6f68ef4839a44135bf25d",
+      "bytes": 44228
+    },
+    {
+      "file": "src/Data/Uniques/Special/BoundByDestiny.lua",
+      "git_blob_sha1": "6df4f5ff577d1ced720d8495722fd2108578c68f",
+      "sha256": "712ff29835a5f59f47d9661bee2fd8fca1af4d7c1b196863061c418015461e1b",
+      "bytes": 22938
+    },
+    {
+      "file": "src/Data/Uniques/Special/Generated.lua",
+      "git_blob_sha1": "9d8c7acd36b56f6b0b84c07569dfd7c2c5c16453",
+      "sha256": "c5cc25fa7c4bdef0eda18a1e8ddad9f747800fe0d92e5fb73c99815308e3f3b6",
+      "bytes": 31158
+    },
+    {
+      "file": "src/Data/Uniques/Special/New.lua",
+      "git_blob_sha1": "5226f1ca19ed7ec6ccf89a78376951e03851f747",
+      "sha256": "80e65250797ad1a6d196f5210a3937450c86d4b4001a8264ebfdeb6a46ec066f",
+      "bytes": 109
+    },
+    {
+      "file": "src/Data/Uniques/Special/race.lua",
+      "git_blob_sha1": "8acc3750f3499c814ab09198ff3b78f75955a48d",
+      "sha256": "cb9c1adfd24b4a55ac5edc1512f9dca05111fd07e2a9573c5c5e546dcb6b9d8e",
+      "bytes": 3180
+    },
+    {
+      "file": "src/Data/Uniques/Special/WatchersEye.lua",
+      "git_blob_sha1": "8ae5b7941af4ee27e0da72ec9be4f1cda9098b8a",
+      "sha256": "0a8af472dd451a7a486124e485cc9056b447a26d3c93de3c3dda48ae018ee1d2",
+      "bytes": 62200
+    },
+    {
+      "file": "src/Data/Uniques/staff.lua",
+      "git_blob_sha1": "a3498329fd9cc051a1ce0b0183353768b62e10c4",
+      "sha256": "fbfa1e8004e2f9ac7fc5b26636692da58d914d16e28d3b17c926f547d3114818",
+      "bytes": 28765
+    },
+    {
+      "file": "src/Data/Uniques/sword.lua",
+      "git_blob_sha1": "07022b39c1d46b276bbde0c6fa6c787793831483",
+      "sha256": "6da14e7bbf73c47304259a79e7a7cedf227f0a95bd726acc9a03172beb5e7274",
+      "bytes": 36094
+    },
+    {
+      "file": "src/Data/Uniques/tincture.lua",
+      "git_blob_sha1": "5b9619d0f4326f41b4fc46da0dcf0963c667b37c",
+      "sha256": "56acaf8f1d8f6fe2347f20db12a21feab8e12a8d5b8ab103009aad0dbf2ee84b",
+      "bytes": 1640
+    },
+    {
+      "file": "src/Data/Uniques/wand.lua",
+      "git_blob_sha1": "b056c0dfeb7aa1ad1f615176a93aaf92b6944bf6",
+      "sha256": "61fce0c7edaf3c13f2c31a0213fef144a96eac2d6f39e83dbd4173fe99e26ba0",
+      "bytes": 17670
+    },
+    {
+      "file": "src/Data/Vestigial.lua",
+      "git_blob_sha1": "ea2434d4ebe816f68ba0cf776527edd5263ae232",
+      "sha256": "1b125311e3f499dae41d4dd813f4903fa1b64ba9d10808f8c7a06097dabbe178",
+      "bytes": 39647
+    },
+    {
+      "file": "src/Data/Viscera.lua",
+      "git_blob_sha1": "5235f969bde08977b4c48ab43a23b0f2ce69b2ad",
+      "sha256": "767a379a2405f28d733de8bcbe26bfe04bd942aabbb368ff24c1bac7039ebdc9",
+      "bytes": 48555
+    },
+    {
+      "file": "src/Export/browse.lua",
+      "git_blob_sha1": "eb35f484acd82b6046a3481c23370d3af21538e2",
+      "sha256": "e20b0b52138c4db2b5efee52e824e081b7c027ba7f6abb240d7545278b3bffb2",
+      "bytes": 3128
+    },
+    {
+      "file": "src/Export/Classes/Dat64File.lua",
+      "git_blob_sha1": "4d052f3423a9e8a860c7f598e641bcb2e8be3d94",
+      "sha256": "48ca42720ef5d1818623bed14ad66f56ef247e306c4bd33d0d3cb35bd390798a",
+      "bytes": 7547
+    },
+    {
+      "file": "src/Export/Classes/DatFile.lua",
+      "git_blob_sha1": "6bc843fe95fd5acc582f71451eabb9b552445255",
+      "sha256": "9626eca4b4e9221123478cb83d9bcf4f804706a5e63a84e2f2b6a5df0a244447",
+      "bytes": 7145
+    },
+    {
+      "file": "src/Export/Classes/DatListControl.lua",
+      "git_blob_sha1": "a47aac70d7a5a20fa76353efc892d35df102579d",
+      "sha256": "e5938cb38994b25e204cb33d2e6c3fa0b94669b33655a6c6fc592e5e207bcce6",
+      "bytes": 1278
+    },
+    {
+      "file": "src/Export/Classes/GGPKData.lua",
+      "git_blob_sha1": "10ab23bc6065e1c560a0e44201e7dccdcac1d7f0",
+      "sha256": "2afcf80ca18d5073ae2a481147656681323524aaab3cdc942f35480c133b5358",
+      "bytes": 13461
+    },
+    {
+      "file": "src/Export/Classes/GGPKSourceListControl.lua",
+      "git_blob_sha1": "ab478c1f8ed1c639f85047def56c05fe7505937b",
+      "sha256": "6d55bd392460348c0d9c6c79fecc57a3e3a6f1cb2109a09bdc7e1e6e53b292c0",
+      "bytes": 4213
+    },
+    {
+      "file": "src/Export/Classes/RowListControl.lua",
+      "git_blob_sha1": "46a70a93e255cd56367752bf06344ddd3835d8a9",
+      "sha256": "acca58bc7e7cb353694d0f6089f0304500371397afa2a4af27b7a44256a23968",
+      "bytes": 11960
+    },
+    {
+      "file": "src/Export/Classes/ScriptListControl.lua",
+      "git_blob_sha1": "c4bc13276996a10599a22bf5f94e716d08284f89",
+      "sha256": "feb5cc86a418cf7c3deaa072b23a376bb3b45df0246d3594d3ab4b5ed93024de",
+      "bytes": 715
+    },
+    {
+      "file": "src/Export/Classes/SpecColListControl.lua",
+      "git_blob_sha1": "ca491dcf113b4784900fb042e33d61d54638c40b",
+      "sha256": "0151bc60db56e174d3ea63788592b891bb217b5ed1c8e1f8467db00ade062510",
+      "bytes": 881
+    },
+    {
+      "file": "src/Export/essenceMatch.lua",
+      "git_blob_sha1": "1380db77f145ab30821687af84bc48bee620e2c4",
+      "sha256": "f902ec6dbc1b71307a8bdaa0a2eae06baea235e38579193ea60f2119bfeb7d41",
+      "bytes": 1815
+    },
+    {
+      "file": "src/Export/Launch.lua",
+      "git_blob_sha1": "47878cc401ed490a6198127ece31756a712cf763",
+      "sha256": "0796e26b05b72b4d2ef4a6eca556b5f92ed5f23379d2321cfa2d6e898cb1e338",
+      "bytes": 4889
+    },
+    {
+      "file": "src/Export/Main.lua",
+      "git_blob_sha1": "822a9ff964f10307ec1591055c0ca9c6aacf9493",
+      "sha256": "ea73dd3023ce10c5c712cfdd86bf6806def3f324eca000fcf41f4f0a92a72e2b",
+      "bytes": 27084
+    },
+    {
+      "file": "src/Export/passives.lua",
+      "git_blob_sha1": "e7e34241bed77363e33c4fc0ccbc113006ef8bbf",
+      "sha256": "b943dfae65fccc908d218d4ec081778f9d645445f5312e3db4cecf2c02f28ba4",
+      "bytes": 920
+    },
+    {
+      "file": "src/Export/psg.lua",
+      "git_blob_sha1": "141a1115cdbce1fd76cba0693b401cb47b47a1f0",
+      "sha256": "39769830338f9d79145b0f0451a0040003863cfa8b42e7173dbae96d5bf3063e",
+      "bytes": 7008
+    },
+    {
+      "file": "src/Export/Scripts/bases.lua",
+      "git_blob_sha1": "bf68477677725bb265a4652fa215b57033f9bf0b",
+      "sha256": "dc3c741d42095e3d444f52262f7c026b701a401367ac0aa69bff50aa68b95228",
+      "bytes": 14319
+    },
+    {
+      "file": "src/Export/Scripts/bossData.lua",
+      "git_blob_sha1": "7f61c9b0982c6dd8a0e50dff8a9e797c8aea163d",
+      "sha256": "3d4a32e3901f2ca3b5ada54c44c1293c0a952a118299f1d9ac7bebe21e976a10",
+      "bytes": 28720
+    },
+    {
+      "file": "src/Export/Scripts/cluster.lua",
+      "git_blob_sha1": "98b6476033a238dae620e3ba524bebf1bdf5eb37",
+      "sha256": "3d3d406a7ea86d64646cd829ad89a84fe1f2a01a33ba3cbbffead2b781d18c54",
+      "bytes": 3880
+    },
+    {
+      "file": "src/Export/Scripts/costs.lua",
+      "git_blob_sha1": "a0f926ac50ca6f1e920687b4573ca2131c0270dc",
+      "sha256": "5ee59a13d31c7469e23c432434fa892e0445f9a63c8d24f24c39468b8bb68b44",
+      "bytes": 1030
+    },
+    {
+      "file": "src/Export/Scripts/crucible.lua",
+      "git_blob_sha1": "18cf210bec09c1414c6052843c6aa419a68a01fa",
+      "sha256": "98530059d32a27582fe0fd46b10d6fb19a700318d3eae2179f9f6a552a77904e",
+      "bytes": 2203
+    },
+    {
+      "file": "src/Export/Scripts/enchant.lua",
+      "git_blob_sha1": "cdcab34ef7b042f419f4b90ea97c2024c17ac7c4",
+      "sha256": "021622560df3c31fea9a4352c10f85fbe2265e770262c55ad552a6f1a8760653",
+      "bytes": 12357
+    },
+    {
+      "file": "src/Export/Scripts/enums.lua",
+      "git_blob_sha1": "9326450c1c31451df49d0605f2840ac082136437",
+      "sha256": "ea877c358f3887ab2fb0256b2681e90c6bcd352ecc30d8c93c70571297bb86a2",
+      "bytes": 1321
+    },
+    {
+      "file": "src/Export/Scripts/essence.lua",
+      "git_blob_sha1": "32dfc61e016735d9c75d74f216f9e0af2f4e3220",
+      "sha256": "b1e667c901d61771fae7b9e62ac2245470ee94089948125b76466995ab397dab",
+      "bytes": 1402
+    },
+    {
+      "file": "src/Export/Scripts/flavourText.lua",
+      "git_blob_sha1": "45ebb546011ec6aedc270c4a9e9456a26266acb4",
+      "sha256": "aac317eb81568300b8bd69d67139ae808d36dd4ff004d973a71e80af8e76bdf7",
+      "bytes": 9666
+    },
+    {
+      "file": "src/Export/Scripts/legionPassives.lua",
+      "git_blob_sha1": "26eddae151fc8a85826619a9a35796dcdd9435ea",
+      "sha256": "28e1d0e801fb50875cd58d11b50e56e1a13ba654c82e92fe58ebe6b649e4a9b9",
+      "bytes": 7665
+    },
+    {
+      "file": "src/Export/Scripts/legionSprites.lua",
+      "git_blob_sha1": "b4601fb119c5a21278f3f9b780018d080723d08b",
+      "sha256": "1b1947dbd06a0e3b47252b7769b0a64f424db95cdef64d2520dd7c1e3454ccb2",
+      "bytes": 10664
+    },
+    {
+      "file": "src/Export/Scripts/mapUniqueToFoulborn.lua",
+      "git_blob_sha1": "c61f7fa2ad35d8f11fa845a57a56b73b7e3ba296",
+      "sha256": "026286474c3d586bb2a4301076d97e302c2a9fcc0786eb87d0cf5b710ea86600",
+      "bytes": 1619
+    },
+    {
+      "file": "src/Export/Scripts/masters.lua",
+      "git_blob_sha1": "8888e56293e46d6630cecf73e196d27928ad1867",
+      "sha256": "aebd2cc6531028151f06bc3629f71800a4d8c51d05b8ee9540fab44fe11ba1cc",
+      "bytes": 2363
+    },
+    {
+      "file": "src/Export/Scripts/minions.lua",
+      "git_blob_sha1": "1bc860975a4bca049b99b5d32ed1e699eb8da4b3",
+      "sha256": "5f26d7f960d21d2b9b7a31354fdc019f1bc774590fd2fe977bda55b2c0e86202",
+      "bytes": 8708
+    },
+    {
+      "file": "src/Export/Scripts/miscdata.lua",
+      "git_blob_sha1": "448fb4b425f64555f630c8238507514eb92b6270",
+      "sha256": "f29e4d7bccf2dc16e4a38f994f1e3fc37b3d0636501f55d55169d009ed0b6cec",
+      "bytes": 6246
+    },
+    {
+      "file": "src/Export/Scripts/mods.lua",
+      "git_blob_sha1": "56404a03fca37a1ce259b22cca603933c47c3c09",
+      "sha256": "8655773cfb63a6aca089b9f6e6669afcb765524571ae352d4872a4078f89df5a",
+      "bytes": 13424
+    },
+    {
+      "file": "src/Export/Scripts/modScalability.lua",
+      "git_blob_sha1": "d5ce710b69d8c8a03d9a3727186433bce012a71c",
+      "sha256": "03622e1d9f16a3def17974942f036ffe891ac4a45979815699b98bb7e71d4891",
+      "bytes": 1068
+    },
+    {
+      "file": "src/Export/Scripts/pantheons.lua",
+      "git_blob_sha1": "a4044d72fb955ef7281b28985531dfad2f1d2fbd",
+      "sha256": "95b1413414230cfc5213c4bbb75e2a222eaadc02b8b278106b388d41f7f2b736",
+      "bytes": 1910
+    },
+    {
+      "file": "src/Export/Scripts/skillGemList.lua",
+      "git_blob_sha1": "74d8c68ba4f9413a4c86bee68c10cabb95642111",
+      "sha256": "f23930dd3dc1ea00e7b56f79e0832369885084b54893b3a06c59dee38762f2f8",
+      "bytes": 4551
+    },
+    {
+      "file": "src/Export/Scripts/skills.lua",
+      "git_blob_sha1": "6f4e1f429bbeebc1fa97a64514f998491c46e1f2",
+      "sha256": "ee461cf0eb09e6b968e19782b1cfbaab0b789ea608594c467d8cf6c21b0350da",
+      "bytes": 20998
+    },
+    {
+      "file": "src/Export/Scripts/statdesc.lua",
+      "git_blob_sha1": "3790bf6ac8f12c6e6db32d62a37060317f7a7a82",
+      "sha256": "bf8d4e97b9a02b6f95bceaf6d113a555922ce74dc2fb93fa961864206d0bde09",
+      "bytes": 4995
+    },
+    {
+      "file": "src/Export/Scripts/tattooPassives.lua",
+      "git_blob_sha1": "2f429e6229be358e61b1e8ba31a7835a31c8764d",
+      "sha256": "eb78240b9fa4b9f494152e1b64d777bebd6f28ead7fa42f96f948d6c308ea5a2",
+      "bytes": 6929
+    },
+    {
+      "file": "src/Export/Scripts/uModsToText.lua",
+      "git_blob_sha1": "f7568938cb90f7591c56fb9c81ce36f8b455a398",
+      "sha256": "d9fb5a77dbc9dea5408529922cc8eda4ed8cb078d30a7595ed34c8e22b70da8e",
+      "bytes": 6445
+    },
+    {
+      "file": "src/Export/Scripts/uTextToMods.lua",
+      "git_blob_sha1": "f8c7d093a385853efcf8a15d207e871742ef1f37",
+      "sha256": "d3b48480ea139ec1bf053f7769aa39ae6c6d779514624a1155f95ffe3e1886ac",
+      "bytes": 7964
+    },
+    {
+      "file": "src/Export/Scripts/vestigial.lua",
+      "git_blob_sha1": "547a56c69a0cf271c1c53e37dc3d76144596d608",
+      "sha256": "c36236053387d760e75fa5f2d75163cb45b9c136afea68ed51a48cc3c2e91b31",
+      "bytes": 6715
+    },
+    {
+      "file": "src/Export/Scripts/viscera.lua",
+      "git_blob_sha1": "23caa87daf5a01572edacbc43d3028fd1310d2a3",
+      "sha256": "749777db501de337ee6e5a9c384c4a46ece6bd0f68ed799d0975d1ed53c4c613",
+      "bytes": 1322
+    },
+    {
+      "file": "src/Export/spec.lua",
+      "git_blob_sha1": "3c84ba935ce86ec3f823a2dc79898c27573ffe68",
+      "sha256": "a92ff637cd281740c4437ae2dd71712f7bae5dba5e1df01ffa227426a008d266",
+      "bytes": 191497
+    },
+    {
+      "file": "src/Export/statdesc.lua",
+      "git_blob_sha1": "1c3b05b117579bd2fab02721e0ac755c747032d3",
+      "sha256": "b8bcb1964aaaacadcf4e7098faba1254f3e23f19230389cd8b87e5f450926df0",
+      "bytes": 23122
+    },
+    {
+      "file": "src/Export/Tree/GimpBatch/gimp_batch.lua",
+      "git_blob_sha1": "004d52315fc189b6784938f321eb64cb7d83c753",
+      "sha256": "570b6ba9bd25d25dc6ee4afbd435a7e9ae23f2e8529a58de212a37dbaef0bbaa",
+      "bytes": 2629
+    },
+    {
+      "file": "src/Export/Tree/tree_in.lua",
+      "git_blob_sha1": "b5a32feb11f6877637a5f5a6df2173c3f9179771",
+      "sha256": "db25567b9bc12a5e43942087a59a98d3041376ae893d4f7141c6f65da6911209",
+      "bytes": 1349065
+    },
+    {
+      "file": "src/Export/Tree/tree.lua",
+      "git_blob_sha1": "419cd1399a52a13f5e151699883e93db8df98aa8",
+      "sha256": "ce3f0f55b9a042ce052bbc9e3a6fd78aa58db0eb1f8105a00be0decdc7a8e21c",
+      "bytes": 1027154
+    },
+    {
+      "file": "src/Export/Uniques/amulet.lua",
+      "git_blob_sha1": "4b333fc7357f88437df49ef9e9f950638a6fb33d",
+      "sha256": "df992c344fed0a6922f11a38f1ee9fbc146d90c5cc320748838b678660ecb6ad",
+      "bytes": 44367
+    },
+    {
+      "file": "src/Export/Uniques/axe.lua",
+      "git_blob_sha1": "321a71af27fd0c95242c97ae11442fbac982c4b8",
+      "sha256": "cf6c658c5c45a1d6e80510b8087b56101dc3e0979fc812b5148c07dd3d548062",
+      "bytes": 16182
+    },
+    {
+      "file": "src/Export/Uniques/belt.lua",
+      "git_blob_sha1": "4ae9201cad89a53ff17a9ff6933c53f201a87237",
+      "sha256": "8cd289dfc7fd8f168b6df1482e3b369c60e48e981334a661b7fc5e38f878d27d",
+      "bytes": 30582
+    },
+    {
+      "file": "src/Export/Uniques/body.lua",
+      "git_blob_sha1": "34f83ee04327ec077172eb102143b9b8077a2959",
+      "sha256": "046434c632200a1b016cbd6cd784b63a02b6d2b23495e1f613b7f9b118c672d2",
+      "bytes": 48241
+    },
+    {
+      "file": "src/Export/Uniques/boots.lua",
+      "git_blob_sha1": "8d45623a39c24b43784990b297b16a2f47f1f8d6",
+      "sha256": "b68d0e624314f58b9708f47f8cfa5c1811d96043d2c86136b77828d2a3ca8a1a",
+      "bytes": 37165
+    },
+    {
+      "file": "src/Export/Uniques/bow.lua",
+      "git_blob_sha1": "9e5e7ee999bf5c957c40aa289ade6eb84e8d01e5",
+      "sha256": "ae46831299e18c1ee0e8e5c2c288927570073a07ce6d1e1020410558f2c3f966",
+      "bytes": 18832
+    },
+    {
+      "file": "src/Export/Uniques/claw.lua",
+      "git_blob_sha1": "feb3930d28e49f6c19f20f2350d7b6a623bef12d",
+      "sha256": "87dd48be990f9c668c739ab6b2d1193d26401df75c48692f7a8c10918a593eca",
+      "bytes": 13065
+    },
+    {
+      "file": "src/Export/Uniques/dagger.lua",
+      "git_blob_sha1": "6933ed8dc740d7f107da94a1c010937f36f0b18c",
+      "sha256": "4ce780ebb64bed0070ce35ba0ef6c8bb2ea2365f0abbda575c1082021a512803",
+      "bytes": 11720
+    },
+    {
+      "file": "src/Export/Uniques/fishing.lua",
+      "git_blob_sha1": "2d52fcefc1605c1040bf1205cbcc4d6a0a8f8b88",
+      "sha256": "3186d0688480cce3d0c5a1fcb638737cb559c2e723915ce0ffdf6f7540d06ba8",
+      "bytes": 499
+    },
+    {
+      "file": "src/Export/Uniques/flask.lua",
+      "git_blob_sha1": "e9047043d7921d3542313f87c6c25668d6b48b84",
+      "sha256": "bcf350fd8598549de22577172c2786486955bd890ec4472e06c31775bb4030bd",
+      "bytes": 19372
+    },
+    {
+      "file": "src/Export/Uniques/gloves.lua",
+      "git_blob_sha1": "c598b46a913616271f5867295e6a3fb888cfde70",
+      "sha256": "52ad1ca6ddf07d758283c024224fe2fc4c67bddf5680cc52c7e4fc7a5b226c26",
+      "bytes": 33771
+    },
+    {
+      "file": "src/Export/Uniques/helmet.lua",
+      "git_blob_sha1": "9f9b286fc28124c28c3e4a264cf57e6a346f6580",
+      "sha256": "1982bcc18eb3213192f3f6cd7a34201420ce91a03ba1a6b98724e6d0a9e93168",
+      "bytes": 52376
+    },
+    {
+      "file": "src/Export/Uniques/jewel.lua",
+      "git_blob_sha1": "d3f4bee7f78739d2201d0079707f96c1f83a9008",
+      "sha256": "7ff8e2af1d1ee8f09ada066a1dacf760b4d1ef37a8152729ea7d4373f5e0d465",
+      "bytes": 51286
+    },
+    {
+      "file": "src/Export/Uniques/mace.lua",
+      "git_blob_sha1": "2c09f643970d2c522a9e1192718e34412bdd1fc1",
+      "sha256": "d113b7e11325b3712a1cfcc3edfe30b287cc49e258f05dbc32c630e9d0328202",
+      "bytes": 28951
+    },
+    {
+      "file": "src/Export/Uniques/ModTextMap.lua",
+      "git_blob_sha1": "7b8b995113da73bef3830e8b115447c589c60686",
+      "sha256": "49d8d42fc5af1dbb58867719ef1c0e9895610f0cae710d83928119eedc2c591d",
+      "bytes": 1300174
+    },
+    {
+      "file": "src/Export/Uniques/quiver.lua",
+      "git_blob_sha1": "4a511e539715187fabbc9e7a7f76e9fe3038d1cb",
+      "sha256": "4c8a8b5da5024ee9eb4e6c26a8c03edd59ab3e042c749d6219c8f7c9bd0bc420",
+      "bytes": 11599
+    },
+    {
+      "file": "src/Export/Uniques/ring.lua",
+      "git_blob_sha1": "5d08686558edb000b9caea9d6f7f0b40ce128b25",
+      "sha256": "15a9206dbf272fabaf5cd0a54da31a80085f28b3983b76d4df4c8af2ab19d20a",
+      "bytes": 51253
+    },
+    {
+      "file": "src/Export/Uniques/shield.lua",
+      "git_blob_sha1": "c7560c33f41570caba832008e00080ca04d325db",
+      "sha256": "6c823e39313d97c7e67850a90bf6263abc5e1a38abbd08c82f0ec0ee239ccfa0",
+      "bytes": 42062
+    },
+    {
+      "file": "src/Export/Uniques/staff.lua",
+      "git_blob_sha1": "af604781a569fb6cd9d9928b73ca3b177d3976c4",
+      "sha256": "2ab580a56742c00ec3e0bd209506aea9275b81c9b502198118ba89708e84fa7c",
+      "bytes": 25653
+    },
+    {
+      "file": "src/Export/Uniques/sword.lua",
+      "git_blob_sha1": "5a0d0173d009e65049c5324d03e954fbfee889f6",
+      "sha256": "3455fcf4cbdf2b31c1a179e045d1e237e266da37d767549937eb20cf1babacfb",
+      "bytes": 34920
+    },
+    {
+      "file": "src/Export/Uniques/tincture.lua",
+      "git_blob_sha1": "ad7aa1b1698a396aae442349ae36a41996206d7b",
+      "sha256": "ade596f6d43802da14322641b58053366784f66cef4b728d8624c56ced7d7741",
+      "bytes": 1097
+    },
+    {
+      "file": "src/Export/Uniques/wand.lua",
+      "git_blob_sha1": "68d501adc8361837805d436f740031ba3bcddbcb",
+      "sha256": "14829bbddd9e69c548f7316e7240c9c231926579c283dcff5588720e5b54a6fc",
+      "bytes": 15742
+    },
+    {
+      "file": "src/GameVersions.lua",
+      "git_blob_sha1": "e424d8fff0000eb2e2aeee6bc6bc624f887e5cee",
+      "sha256": "caf5a74a7c290dd06234761ceebffa7766ac5219b4e1ec705692d50ed67e0d40",
+      "bytes": 7820
+    },
+    {
+      "file": "src/HeadlessWrapper.lua",
+      "git_blob_sha1": "6ab11221cfac464519e1c6b6de08ec1181b33d33",
+      "sha256": "a9baa73128e54a6781d795d50add3f17d956a011fc1daaf97134b071eef40238",
+      "bytes": 2421
+    },
+    {
+      "file": "src/Launch.lua",
+      "git_blob_sha1": "e0f67db802dd0480893d24c03f1d338a65b43633",
+      "sha256": "1c8705d7a62892b2b5c81af9803189f46ebff44da24f076cd5620791c264503a",
+      "bytes": 12239
+    },
+    {
+      "file": "src/LaunchInstall.lua",
+      "git_blob_sha1": "0ca3acacf9e7e7b70231baa011c93b91c4ef1aa2",
+      "sha256": "e57b6027cd708d891db0276bf1df0ea8cc4a9055e66f393bd513fa17088b716f",
+      "bytes": 1360
+    },
+    {
+      "file": "src/LaunchServer.lua",
+      "git_blob_sha1": "0a20fc4920b6c7043f91f974e9226b897f9afda9",
+      "sha256": "15943f58deec245e91cf948ce0d88e944f2367b3fe2371be9e1542e65dd85124",
+      "bytes": 6223
+    },
+    {
+      "file": "src/Modules/AddImplicitPopup.lua",
+      "git_blob_sha1": "b324c47cddba1414dc2a47e1f5eb8404dc719aa5",
+      "sha256": "4735905a77dc492271fd2dbdf37252eb4d016dcc1d67d9106d99654ad8bbd0b5",
+      "bytes": 14943
+    },
+    {
+      "file": "src/Modules/Build.lua",
+      "git_blob_sha1": "c472060134d3b756f37b713dc16af8837a81faee",
+      "sha256": "c8e1f6c139585f74463f2eb8dc2de696e896a02696aa42c2a0044912dacb6356",
+      "bytes": 93308
+    },
+    {
+      "file": "src/Modules/BuildDisplayStats.lua",
+      "git_blob_sha1": "950c579f09a2fa84ef01217eb51a6bf7feee0548",
+      "sha256": "e2bf970547b0e69d64d0f6cb8f653b2c3bbeb31e255901805d941a82f233084b",
+      "bytes": 39150
+    },
+    {
+      "file": "src/Modules/BuildList.lua",
+      "git_blob_sha1": "053b2f02594ef82cb0f0327356e811a1093ed266",
+      "sha256": "e01ecba2a8c120132de276016f220f0700332401aae9a6d6ad4cf569bd0f9c5e",
+      "bytes": 8255
+    },
+    {
+      "file": "src/Modules/BuildListHelpers.lua",
+      "git_blob_sha1": "dc1ff177a0d5c00afbe0d803fea7a62757a3c305",
+      "sha256": "a590ba6d30755be1e05b516d87376aff33f2fcddac7f5a884c5b2b31ae5cbae9",
+      "bytes": 7288
+    },
+    {
+      "file": "src/Modules/BuildSiteTools.lua",
+      "git_blob_sha1": "b0877216b01d4cd1fcc3902e678e85c1ba1e452b",
+      "sha256": "cbdc7bf365bf4c5576da19e82c690dbde04eed7d2a6434d557c4fe89c14a98f2",
+      "bytes": 6098
+    },
+    {
+      "file": "src/Modules/CalcActiveSkill.lua",
+      "git_blob_sha1": "aa843854871de5749def24cedd5eb38afe1f3823",
+      "sha256": "b052dd30c4e604eee9b64457b11aa9567e27432c3efd7580ab5fc6a15cdfc637",
+      "bytes": 39628
+    },
+    {
+      "file": "src/Modules/CalcBase.lua",
+      "git_blob_sha1": "391aeda567a915c2d03fe1082e98cf0bf730ca19",
+      "sha256": "6ee2319a0edc237347307f58828031dee2a14494a800fa4df60ff8d26dc77a45",
+      "bytes": 3064
+    },
+    {
+      "file": "src/Modules/CalcBreakdown.lua",
+      "git_blob_sha1": "000f494fd176da1c53386f80807aac9fd0c8741d",
+      "sha256": "0dc2d0cd47854d5dbe1e830a7f0cc919a5729f6cd6040030c5b706057b7a0dac",
+      "bytes": 10039
+    },
+    {
+      "file": "src/Modules/CalcDefence.lua",
+      "git_blob_sha1": "c8ab58c6ed6b18faa31a13f84e51d13110b5c9de",
+      "sha256": "45fcb24297c46417c9286a832bd4ffe5073742e8a6d1c68e2a39292a58e5d0ba",
+      "bytes": 209890
+    },
+    {
+      "file": "src/Modules/CalcFormat.lua",
+      "git_blob_sha1": "e6349be0ed9411fbd13d0928375697b250abc5c2",
+      "sha256": "c81a0148071e9691929d8360077d33fefa5232a5e78bf2eaa030ff3c37ddb71e",
+      "bytes": 2497
+    },
+    {
+      "file": "src/Modules/CalcMirages.lua",
+      "git_blob_sha1": "82b4f3f0a1b5d4cad696c80de9897fe10faa4070",
+      "sha256": "1f7421c2425267938f6401d030825af1ab0daf13ffafbd0c4cdfa1e0ce34daa7",
+      "bytes": 20091
+    },
+    {
+      "file": "src/Modules/CalcOffence.lua",
+      "git_blob_sha1": "a051a1ffaf2c67f4a51c6ad8d2dbbc2f55250827",
+      "sha256": "436bae3fb46603fb6218ff15df1bd8986ce619b4a8f4739ca627f6aa3afcd393",
+      "bytes": 359655
+    },
+    {
+      "file": "src/Modules/CalcPerform.lua",
+      "git_blob_sha1": "c5ee6e94ea04b06bf24d4f716a3a1ab916aad3e0",
+      "sha256": "8950f3b9c5ebbf8755f3f95a90ff47397269dfea6cfb0f4161025c8f634c9c4b",
+      "bytes": 203991
+    },
+    {
+      "file": "src/Modules/Calcs.lua",
+      "git_blob_sha1": "9134e1080f39f5b146c5ff792f45c7ac2308b1b6",
+      "sha256": "2d2ca4c835226866103bcb18c519c9fc8b7ec3e063bc3116d86cf6d9d10f17ff",
+      "bytes": 37582
+    },
+    {
+      "file": "src/Modules/CalcSections.lua",
+      "git_blob_sha1": "dbf9dfbc6139b391aa961c99ee8e40e1a3675eb7",
+      "sha256": "74f06a526073797d0e8331d17c3ecac40ed81d98597a5b1ea65357950416dd69",
+      "bytes": 193146
+    },
+    {
+      "file": "src/Modules/CalcSetup.lua",
+      "git_blob_sha1": "3cef9f2f3511d1ae10f9c63bea8876908ebb7c20",
+      "sha256": "a28e80fb92d35b36f4791d9b06af7726ad00bf12c2a924bcc6aa6ff3bdc9535a",
+      "bytes": 95271
+    },
+    {
+      "file": "src/Modules/CalcTools.lua",
+      "git_blob_sha1": "aafc74e523e70c6989b4e364ca905022c9a253a5",
+      "sha256": "8f590b40b4ab9ec04bfde3e41cd2e4af55b2b6ed592b1ec1285430893ca5f9a6",
+      "bytes": 12644
+    },
+    {
+      "file": "src/Modules/CalcTriggers.lua",
+      "git_blob_sha1": "1b0880da175009dfc496aba3bac5c101219dc4fa",
+      "sha256": "d5153979e3f08ce22b478792d136d3ba27f0cb00b016fa14bd3da7f81048d4e8",
+      "bytes": 90495
+    },
+    {
+      "file": "src/Modules/Common.lua",
+      "git_blob_sha1": "43d214e33a340127e7be5908c53d272fdff16207",
+      "sha256": "1f7ef4dfdeb69d263bc4680ed229c70bc72ca5fca05cdc2592d0aa605ecacdaf",
+      "bytes": 32090
+    },
+    {
+      "file": "src/Modules/ConfigModBrowser.lua",
+      "git_blob_sha1": "2143336c6f8d9838ce02df04cb83df7f1036c43b",
+      "sha256": "f380c0ab443a0e028bb7d4722053a979c3c18115905425f772816c38b648d49b",
+      "bytes": 10400
+    },
+    {
+      "file": "src/Modules/ConfigOptions.lua",
+      "git_blob_sha1": "0a58bf4e9aecbaf34efbe5acc5d7e821e0424c80",
+      "sha256": "65775f10e817d2cbefdcd0b41e18e215b77fca38a98f0eb7d6e43fe290bb5f00",
+      "bytes": 252676
+    },
+    {
+      "file": "src/Modules/ConfigVisibility.lua",
+      "git_blob_sha1": "94692f953aa4db2de1919948ca3a6d23ae308bc7",
+      "sha256": "9761240d72a3700efc5487ab62008569c06d48f8742bdea8d1cf938c5b91f138",
+      "bytes": 6350
+    },
+    {
+      "file": "src/Modules/Data.lua",
+      "git_blob_sha1": "f83e02f96cd6caa08ec20fca034996eb7547dba3",
+      "sha256": "0feed9ed473aab40f0721ebb95da645f8d9f153fec95439bd39245f8ac60fa34",
+      "bytes": 49410
+    },
+    {
+      "file": "src/Modules/DataAbyssJewelLookUpTableHelper.lua",
+      "git_blob_sha1": "78c32af2a4d14497f59ce920d4593d41e5ecf5cf",
+      "sha256": "4598053af12cbf1e7480cce72d5c275fd5b5b2034688782206aecb304fdb7ffc",
+      "bytes": 9271
+    },
+    {
+      "file": "src/Modules/DataJewelFileLoader.lua",
+      "git_blob_sha1": "07ce80e52eba4cdeca6a14488acc6fd815241997",
+      "sha256": "ae42be81a71c37d33d95d5ae6c670dc85472a30601aa6b0e8ce4881de38ae4a0",
+      "bytes": 2994
+    },
+    {
+      "file": "src/Modules/DataLegionLookUpTableHelper.lua",
+      "git_blob_sha1": "a936f6e0f01b6963978b40c8a55eb6a5362f664f",
+      "sha256": "473591acc63cb5fca4f93da53b5b339152d53fba1d87b67b884bea1e162bb8e0",
+      "bytes": 10222
+    },
+    {
+      "file": "src/Modules/ItemSlotHelper.lua",
+      "git_blob_sha1": "49055361eb1d92ffe3a8ba8d17c5322044883670",
+      "sha256": "e03ae1a44f48d467dc8665c31930b72f3eb04db8cad77fb5feb219e1390a4fbb",
+      "bytes": 1153
+    },
+    {
+      "file": "src/Modules/ItemTools.lua",
+      "git_blob_sha1": "d6acf456583a21e1f4b97391e8527944dbec6e74",
+      "sha256": "43173b3ab55e501c35245815f359b325550738e3fd80a4a73909e73de5d6ce06",
+      "bytes": 18208
+    },
+    {
+      "file": "src/Modules/Main.lua",
+      "git_blob_sha1": "7410e8ab2a051e1cd96e87ffa91c9dbb4a995535",
+      "sha256": "a0b03c580413f625557192aa668e152c90ef6de671fab046f7fa2c0e4f222ace",
+      "bytes": 73894
+    },
+    {
+      "file": "src/Modules/ModParser.lua",
+      "git_blob_sha1": "5b751d0aa7f4eefe1b5f5a73fa5ffa76ad8d5252",
+      "sha256": "13b4665cbf4b802e0a44581fc95d581e70c500c5d2d7c9fa4e59f9d218d1350c",
+      "bytes": 686961
+    },
+    {
+      "file": "src/Modules/ModTools.lua",
+      "git_blob_sha1": "c70fe526eceb347b2949bcc551260cb69fe9ef90",
+      "sha256": "6f2770239f61b94673142be08b23a0bf6bf0554346712d078e4e42caacac9c04",
+      "bytes": 7140
+    },
+    {
+      "file": "src/Modules/PantheonTools.lua",
+      "git_blob_sha1": "99bcd469885a5bf6bcecc0447434749786185cc1",
+      "sha256": "cc7616ae03e7af41e9ace73bc4111dc63ffa1142b1929adf2f0ecc1381c75a41",
+      "bytes": 431
+    },
+    {
+      "file": "src/Modules/StatDescriber.lua",
+      "git_blob_sha1": "8af5aeb5808c60d95696c25ec813efad086dcac5",
+      "sha256": "681111c2b844dc8494337f7a97887c4bcad9d5f12194923d0c227244be4f4b1a",
+      "bytes": 11060
+    },
+    {
+      "file": "src/Modules/ToastNotification.lua",
+      "git_blob_sha1": "2c95af2cdaf4f75f1c4d9be79bd1c178f2a4c6ee",
+      "sha256": "d68c78eaa5cccf1d334d36e4541c6f8fd7802498ce7abc701023034c4c3894cd",
+      "bytes": 5964
+    },
+    {
+      "file": "src/Modules/Utils.lua",
+      "git_blob_sha1": "67be5b523f43e9db260b8f2f95d9860387bd2014",
+      "sha256": "58f59fdadb68f70b7ed70322f3dbd890517d1606475f5371ae3688938c4eb3ab",
+      "bytes": 4165
+    },
+    {
+      "file": "src/TreeData/3_19/Assets.lua",
+      "git_blob_sha1": "3e40ff4c3869ae683a8ebb070483176a6bc7f840",
+      "sha256": "efafcb808697a03eaf783fe83234ca1c42d8bca5785d68f53d214a4cb89f56b8",
+      "bytes": 90728
+    },
+    {
+      "file": "src/TreeData/3_28/sprites.lua",
+      "git_blob_sha1": "d629e41ba291ee30e7a4a9134a7ea4270d6da528",
+      "sha256": "62c8fb711ba3e5537e286d74f79546a7d81d55cd54abde1557d191d47ca492ea",
+      "bytes": 697494
+    },
+    {
+      "file": "src/TreeData/3_28/tree.lua",
+      "git_blob_sha1": "6cca51d95c716db2ef479b62ef66fc6cdf7132bf",
+      "sha256": "a1894510f90f42975af6ab2fc9a6735304aae5a6069690eec6875787c54d7aea",
+      "bytes": 2874542
+    },
+    {
+      "file": "src/TreeData/3_29/sprites.lua",
+      "git_blob_sha1": "2d772206c4711cc37faebfa76f9b1016fef1f22f",
+      "sha256": "4e4352062c3e63a1e9bcb720faade885ab323938daef4b7a696734edbbbdffad",
+      "bytes": 725556
+    },
+    {
+      "file": "src/TreeData/3_29/tree.lua",
+      "git_blob_sha1": "3086d40c72d926484c7d52b563ad686a5627a12a",
+      "sha256": "5138c2c84f0bff4ec3061383d08263079c346f8345d40fb70d25ea8689f8cd74",
+      "bytes": 2922264
+    },
+    {
+      "file": "src/TreeData/3_30/sprites.lua",
+      "git_blob_sha1": "1c044ade689ebf7386426babf862011ac5a7fd88",
+      "sha256": "9aab934e894fa8bcf73ea414a41fe663c172ec569f12df12b2bdb06304a3f0a1",
+      "bytes": 725829
+    },
+    {
+      "file": "src/TreeData/3_30/tree.lua",
+      "git_blob_sha1": "a87a349236f1c690f74e07d337ccb60d145209cc",
+      "sha256": "29ab30175ed662fbfd71585fc4d353513a76efc793303a77f5a23ed0de232073",
+      "bytes": 2095628
+    },
+    {
+      "file": "src/TreeData/legion/tree-legion.lua",
+      "git_blob_sha1": "55256f9d83b0d211e748b8250d3d128db3f4f2ff",
+      "sha256": "0d7ab5142adb142e7cc95cd672f52deef16008b1611ac880aabc3864e6a69995",
+      "bytes": 15534
+    },
+    {
+      "file": "src/UpdateApply.lua",
+      "git_blob_sha1": "1032a9b149ed150273104a950d407499283b2cba",
+      "sha256": "afacfdc500873fa4a7719fc939e27daf3f32c796a1d57772bb19db128fc8d6cc",
+      "bytes": 1409
+    },
+    {
+      "file": "src/UpdateCheck.lua",
+      "git_blob_sha1": "969357151d060dfe98fddaa008218c56331eb112",
+      "sha256": "e7e250d33d3b98085009d6d5811c3884e3222d03915f8b4c0a079a2c193088fe",
+      "bytes": 11359
+    }
+  ]
+}

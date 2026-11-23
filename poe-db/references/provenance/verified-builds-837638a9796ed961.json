@@ -1,0 +1,446 @@
+{
+  "checkedAt": "2026-11-12",
+  "patchSource": "https://www.pathofexile.com/forum/view-thread/4013680",
+  "note": "Тиры — оценка соответствия универсальному фарму по историческим гайдам. Никто не объявлен 100% проверенным3.30. Наличие полного гайда и открытогоPoB не заменяет локальный пересчёт или просмотр всех видео.",
+  "builds": [
+    {
+      "id": "shrapnel",
+      "name": "Shrapnel Ballista",
+      "ascendancy": "Hierophant",
+      "author": "POEGuy",
+      "tier": "SS",
+      "guide": "https://www.poe-vault.com/guides/shrapnel-ballista-hierophant-build-guide",
+      "pob": "https://pobb.in/fw66mh2PgIPK",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Без Mageblood",
+          "pob": "https://pobb.in/fw66mh2PgIPK"
+        },
+        {
+          "name": "Mageblood",
+          "pob": "https://pobb.in/nwxzb0uRh2Bz"
+        },
+        {
+          "name": "Min-max",
+          "pob": "https://pobb.in/IVpwp0NTTrme"
+        }
+      ],
+      "why": "Сила одновременно повышает урон и число баллист через Replica Iron Commander; восстановление растёт с тотемами.",
+      "farm": [
+        "Боссы",
+        "Приглашения",
+        "Карты",
+        "Simulacrum"
+      ],
+      "limits": "Дорогой переход: автор требует уровень 94+, минимум 2000 Strength; редкие кольца и колчан важны.",
+      "authorBudget": "Автор: минимум 150 div в 3.29; не текущая проверенная цена.",
+      "patchStatus": "conditional",
+      "patchNote": "Artillery Quiver изменён в пользу тотемов; наёмник и крафт требуют пересмотра.",
+      "sources": [
+        "https://www.poe-vault.com/guides/shrapnel-ballista-hierophant-build-guide",
+        "https://pobb.in/fw66mh2PgIPK"
+      ],
+      "compatible": true,
+      "compatibilityRationale": "Статическая сверка: ключевые предметы и активные навыки не совпали с именованными нерфами 3.30. Artillery Quiver потенциально усилен. Это вывод о сохранении ядра, не проверка в игре.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "bfbb",
+      "name": "Bladefall / Blade Blast CoC",
+      "ascendancy": "Assassin",
+      "author": "Ky",
+      "tier": "SS",
+      "guide": "https://mobalytics.gg/poe/builds/ky-s-blade-fall-blade-blast-slinger-coc-assassin-leaguestart-to-endgame",
+      "pob": "https://pobb.in/bTjYGNg2Kqj8",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Final CoC",
+          "pob": "https://pobb.in/bTjYGNg2Kqj8"
+        }
+      ],
+      "why": "Spellslinger-старт переходит в автоматические Bladefall/Blade Blast и высокий одиночный урон.",
+      "farm": [
+        "Карты",
+        "Essence",
+        "Боссы",
+        "Приглашения"
+      ],
+      "limits": "Физический удар остаётся слабым местом; PoB содержит ручную компенсацию частоты Lancing Steel. Не принимать 210M за независимо проверенный DPS.",
+      "patchStatus": "needs_recalculation",
+      "patchNote": "Проверить Ralakesh, Acuity и вспомогательные взаимодействия по комплекту; итоговый PoB не пересчитан.",
+      "sources": [
+        "https://mobalytics.gg/poe/builds/ky-s-blade-fall-blade-blast-slinger-coc-assassin-leaguestart-to-endgame",
+        "https://www.reddit.com/r/PathOfExileBuilds/comments/1vevqsv/200m_dps_cast_on_crit_blade_fall_blade_blast/"
+      ],
+      "compatible": true,
+      "compatibilityRationale": "В XML итогового CoC нет Atziri's Acuity, Ralakesh, Malachai's Loop, Transfusion, Vaal Sacrifice, Pact of Beidat и ослабленных големов. Прямого нерфа ядра не найдено; ручная поправка trigger rate остаётся непроверенной.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "toxic-rain",
+      "name": "Toxic Rain",
+      "ascendancy": "Pathfinder",
+      "author": "PathofEvening",
+      "tier": "S",
+      "guide": "https://www.poe-vault.com/guides/toxic-rain-pathfinder-build-guide",
+      "pob": "https://pobb.in/NlUa8ZnB3YGK",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Все этапы автора",
+          "pob": "https://pobb.in/NlUa8ZnB3YGK"
+        }
+      ],
+      "why": "Быстрое движение, продолжительный хаос-урон и автоматическая Caustic Arrow дают стабильную зачистку.",
+      "farm": [
+        "Heist",
+        "Неглубокий Delve",
+        "Delirium",
+        "Приглашения"
+      ],
+      "limits": "Требуется правильная площадь перекрытия pods. Снижение восстановления и зарядов флаконов опасно; Uber требует инвестиций.",
+      "patchStatus": "changed",
+      "patchNote": "Master Surgeon изменён; навыки не названы среди прямых нерфов, требуется пересчёт восстановления.",
+      "sources": [
+        "https://www.poe-vault.com/guides/toxic-rain-pathfinder-build-guide",
+        "https://www.poe-vault.com/guides/toxic-rain-pathfinder-passive-skill-tree-gem-links"
+      ],
+      "compatible": true,
+      "compatibilityRationale": "В XML Ralakesh означает пантеон, не ботинки. Главные навыки и основная экипировка не имеют найденного прямого нерфа. Изменение Master Surgeon улучшает длительность при прежней исходной скорости восстановления; итоговый sustain требует пересчёта.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "tornado",
+      "name": "Tornado of Elemental Turbulence",
+      "ascendancy": "Inquisitor",
+      "author": "BalorMage / Shads404",
+      "tier": "S",
+      "guide": "https://www.poe-vault.com/guides/tornado-inquisitor-build-guide",
+      "pob": "https://pobb.in/8kdqvrLk_OEi",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Старт и эндгейм",
+          "pob": "https://pobb.in/8kdqvrLk_OEi"
+        }
+      ],
+      "why": "Автонаведение, масштабирование жизни через Rathpith и сильное восстановление упрощают боссов.",
+      "farm": [
+        "Боссы",
+        "Приглашения",
+        "Harvest",
+        "Essence"
+      ],
+      "limits": "Скорость карт средняя; Legion автор считает неудобным. В PoB есть вручную модифицированный Rathpith.",
+      "patchStatus": "conditional",
+      "patchNote": "Допущены только Early Maps/Early Endgame с3% Rathpith. Конечная4% версия исключена.",
+      "sources": [
+        "https://www.poe-vault.com/guides/tornado-inquisitor-build-guide",
+        "https://pobb.in/8kdqvrLk_OEi"
+      ],
+      "compatible": true,
+      "compatibilityRationale": "Разрешены только Early Maps (ItemSet1) и Early Endgame (ItemSet6): оба используют Rathpith item81 с корректными3%. Endgame (ItemSet4) использует item79 с4% и исключён. Нерфов именованных ключевых зависимостей допущенных этапов не найдено.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги.",
+      "compatibleItemSetIds": [
+        "1",
+        "6"
+      ],
+      "compatibleItemSetTitles": [
+        "Early Maps",
+        "Early Endgame"
+      ],
+      "excludedItemSetIds": [
+        "4"
+      ]
+    },
+    {
+      "id": "srs",
+      "name": "Poison Summon Raging Spirits",
+      "ascendancy": "Necromancer",
+      "author": "BalorMage",
+      "tier": "A",
+      "guide": "https://www.poe-vault.com/guides/balormage-summon-raging-spirits-necromancer-build-guide",
+      "pob": "https://pobb.in/7_6IS6EVRZfT",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Старт / средний / min-max",
+          "pob": "https://pobb.in/7_6IS6EVRZfT"
+        }
+      ],
+      "why": "Миньоны дают урон во время уклонения; экипировка и poison масштабируют развитие.",
+      "farm": [
+        "Боссы",
+        "Blight",
+        "Карты",
+        "Приглашения"
+      ],
+      "limits": "Нужен повторный призыв; враги атакуют игрока и utility-миньонов. Защита дорогой версии не равна стартовой.",
+      "patchStatus": "conditional",
+      "patchNote": "Прямого нерфа основного навыка и основной уникальной экипировки в проверенной секции не найдено.",
+      "sources": [
+        "https://www.poe-vault.com/guides/balormage-summon-raging-spirits-necromancer-build-guide",
+        "https://pobb.in/7_6IS6EVRZfT"
+      ],
+      "compatible": false,
+      "compatibilityRationale": "Transfusion в XML отсутствует, но Summon Stone Golem включён в пяти наборах навыков. Его защитный бонус изменён, поэтому строгий статус «не задет» не выдан.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "ea-hit",
+      "name": "Explosive Arrow hit Ballista",
+      "ascendancy": "Hierophant",
+      "author": "POEGuy",
+      "tier": "B",
+      "guide": "https://www.poe-vault.com/guides/explosive-arrow-ballista-hierophant-build-guide",
+      "pob": "https://pobb.in/zY5__MKcIUfb",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Кампания / карты",
+          "pob": "https://pobb.in/zY5__MKcIUfb"
+        }
+      ],
+      "why": "Дешёвый Quill Rain и уровни камня обеспечивают удобный фарм карт с автонаведением баллист.",
+      "farm": [
+        "Карты T16",
+        "Blight",
+        "Harvest",
+        "Ritual"
+      ],
+      "limits": "Это hit-версия. Автор исключает Uber-фарм; T17 требует максимизации. Возможен дорогой переход в Shrapnel.",
+      "patchStatus": "conditional",
+      "patchNote": "Artillery Quiver изменён; ядро EA не указано среди прямых нерфов.",
+      "sources": [
+        "https://www.poe-vault.com/guides/explosive-arrow-ballista-hierophant-build-guide",
+        "https://pobb.in/zY5__MKcIUfb"
+      ],
+      "compatible": true,
+      "compatibilityRationale": "Активные gems и основная экипировка не используют именованные нерфы. Слова Beidat/големы присутствуют только в каталоге вариантов Replica Dragonfang. Artillery Quiver изменён в пользу тотемов.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "phase-run",
+      "name": "Phase Run Heist runner",
+      "ascendancy": "Pathfinder",
+      "author": "Greek",
+      "tier": "C",
+      "guide": "https://www.poe-vault.com/guides/phase-run-pathfinder-build-guide",
+      "pob": "https://pobb.in/7x3YrMtKbp7p",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Прокачка / Heist",
+          "pob": "https://pobb.in/7x3YrMtKbp7p"
+        }
+      ],
+      "why": "Специализация на скорости и отвлечении врагов позволяет быстро выносить Heist-добычу.",
+      "farm": [
+        "Heist"
+      ],
+      "limits": "В финальной версии нет урона. C означает плохое соответствие универсальности, а не слабость в Heist. Торговля обязательна.",
+      "patchStatus": "changed",
+      "patchNote": "Pathfinder и источники контрактов изменены; применимость специализации сохранена только как предположение.",
+      "sources": [
+        "https://www.poe-vault.com/guides/phase-run-pathfinder-build-guide",
+        "https://pobb.in/7x3YrMtKbp7p"
+      ],
+      "compatible": true,
+      "compatibilityRationale": "XML предметов и активных навыков проверен: именованных нерфов ядра не найдено. Допускается только специализированный Heist-runner, универсальный фарм невозможен по конструкции.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "winter-orb",
+      "name": "Winter Orb",
+      "ascendancy": "Occultist",
+      "author": "Lexyu",
+      "tier": "A",
+      "guide": "https://www.poe-vault.com/guides/winter-orb-occultist-build-guide",
+      "pob": "https://pobb.in/gngEnRjrh1ou",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Early / mid / endgame",
+          "pob": "https://pobb.in/gngEnRjrh1ou"
+        }
+      ],
+      "why": "Автонаведение и Herald of Ice дают быстрые взрывные карты; есть несколько уровней вложений.",
+      "farm": [
+        "Карты",
+        "Delirium",
+        "Legion"
+      ],
+      "limits": "Нужно стоять для channeling; перекрытия зависят от AoE. Не включать в неизменённые3.30.",
+      "patchStatus": "exclude_direct_nerf",
+      "patchNote": "Главный навык непосредственно ослаблен в 3.30.",
+      "sources": [
+        "https://www.poe-vault.com/guides/winter-orb-occultist-build-guide",
+        "https://pobb.in/gngEnRjrh1ou"
+      ],
+      "compatible": false,
+      "compatibilityRationale": "Главный навык непосредственно ослаблен.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "dark-bargain",
+      "name": "Dark Bargain / Dark Pact",
+      "ascendancy": "Elementalist",
+      "author": "GhazzyTV",
+      "tier": "A",
+      "guide": "https://www.poe-vault.com/guides/dark-bargain-elementalist-build-guide",
+      "pob": "https://pobb.in/_52RDaVNNXNE",
+      "pobPatch": "3.29",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Высокий бюджет Elementalist",
+          "pob": "https://pobb.in/_52RDaVNNXNE"
+        }
+      ],
+      "why": "Жизнь скелетов масштабирует базовый урон; ES/evasion и големы развивают защиту и урон.",
+      "farm": [
+        "Боссы",
+        "Приглашения",
+        "Карты"
+      ],
+      "limits": "Двухкнопочный цикл с перепризывом; дорогая версия после Necromancer. Не полностью отдельный starter.",
+      "patchStatus": "exclude_direct_nerf",
+      "patchNote": "Бонусы используемых големов ослаблены; прежние цифры требуют пересчёта.",
+      "sources": [
+        "https://www.poe-vault.com/guides/dark-bargain-elementalist-build-guide",
+        "https://pobb.in/_52RDaVNNXNE"
+      ],
+      "compatible": false,
+      "compatibilityRationale": "Используемые големы непосредственно затронуты.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "warden",
+      "name": "Frost Blades / Lightning Strike",
+      "ascendancy": "Warden",
+      "author": "Branarn",
+      "tier": "SS",
+      "guide": "https://www.reddit.com/r/PathOfExileBuilds/comments/1v0yyll/329_fbls_warden_allrounder_zerotohero/",
+      "pob": "https://pobb.in/2qeDOsnmS1fx",
+      "pobPatch": "3.28",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Все этапы (version mismatch)",
+          "pob": "https://pobb.in/2qeDOsnmS1fx"
+        }
+      ],
+      "why": "Настойки, ауры и claw recovery дают быстрый универсальный strike-персонаж.",
+      "farm": [
+        "Карты",
+        "Legion",
+        "Delirium",
+        "Приглашения"
+      ],
+      "limits": "Настойки обязательны. Автор поста говорит3.29, но публичный PoB показывает3.28; цифры нельзя считать пересчитанными.",
+      "patchStatus": "version_mismatch",
+      "patchNote": "Warden усилен, но нужна сверка всех предметов старого PoB.",
+      "sources": [
+        "https://www.reddit.com/r/PathOfExileBuilds/comments/1v0yyll/329_fbls_warden_allrounder_zerotohero/",
+        "https://pobb.in/2qeDOsnmS1fx"
+      ],
+      "compatible": false,
+      "compatibilityRationale": "Прямых nerfed charge-items в комплекте не обнаружено: Ralakesh — пантеон. Warden усилен, но guide3.29/PoB3.28 пока не согласованы.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "spark",
+      "name": "Archmage Spark of the Nova",
+      "ascendancy": "Hierophant",
+      "author": "Big Ducks",
+      "tier": "S",
+      "guide": "https://mobalytics.gg/poe/builds/bigducks-spark-archmage-heirophant",
+      "pob": "https://pobb.in/W0IqCph20qR0",
+      "pobPatch": "3.28",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Кампания (3.28)",
+          "pob": "https://pobb.in/oLWVUO1gqaMo"
+        },
+        {
+          "name": "Endgame (3.28)",
+          "pob": "https://pobb.in/W0IqCph20qR0"
+        }
+      ],
+      "why": "Мана усиливает урон; Spark покрывает пространство, а block поддерживает защиту.",
+      "farm": [
+        "Карты",
+        "Закрытые арены",
+        "Simulacrum"
+      ],
+      "limits": "Нужен переход через Ball Lightning и уникальные лук/колчан; обе прямые ссылки показывают3.28.",
+      "patchStatus": "version_mismatch",
+      "patchNote": "Pact of Beidat меняется; проверить его наличие. Главный навык не указан среди прямых нерфов.",
+      "sources": [
+        "https://mobalytics.gg/poe/builds/bigducks-spark-archmage-heirophant",
+        "https://pobb.in/W0IqCph20qR0"
+      ],
+      "compatible": false,
+      "compatibilityRationale": "Проверенные rawXML не используют Pact of Beidat/ослабленных големов. Однако обе ссылки имеют дерево3.28; подтверждение соответствия гайду3.29 не завершено.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    },
+    {
+      "id": "cyclone",
+      "name": "Void Shockwave Cyclone / General's Cry",
+      "ascendancy": "Slayer",
+      "author": "Ronarray",
+      "tier": "A",
+      "guide": "https://mobalytics.gg/poe/builds/ronarray-shockwave-cyclone-generals-cry-slayer",
+      "pob": "https://pobb.in/d9iWbOHaTTAg",
+      "pobPatch": "3.28",
+      "guidePatch": "3.29",
+      "guideComplete": true,
+      "versions": [
+        {
+          "name": "Все этапы (3.28)",
+          "pob": "https://pobb.in/d9iWbOHaTTAg"
+        }
+      ],
+      "why": "Cyclone, Shockwave и воины General's Cry одновременно наносят урон; overleech поддерживает жизнь.",
+      "farm": [
+        "Карты",
+        "Harvest",
+        "Приглашения",
+        "Боссы с вложениями"
+      ],
+      "limits": "Abyssus снижает физическую защиту; Desecrate нужен на боссах. Прямая ссылка показывает3.28.",
+      "patchStatus": "version_mismatch",
+      "patchNote": "Прямого нерфа основных камней не найдено; проверить стоимость и свойства редкого оружия.",
+      "sources": [
+        "https://mobalytics.gg/poe/builds/ronarray-shockwave-cyclone-generals-cry-slayer",
+        "https://pobb.in/d9iWbOHaTTAg"
+      ],
+      "compatible": false,
+      "compatibilityRationale": "Прямая ссылка имеет дерево3.28; rawXML не получен из-за429. Полный аудит зависимостей не завершён.",
+      "compatibilityMeaning": "Нет найденной потери основной функциональности в статической сверке3.30; не гарантия и не тест новой лиги."
+    }
+  ],
+  "compatibilityMethod": "Сопоставлены raw XML активных навыков/предметов и именованные изменения3.30. Не учитывает непредвиденные баги, будущие исправления, новые цены и весь контент."
+}

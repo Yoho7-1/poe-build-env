@@ -1,0 +1,133 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "boss": "Shaper",
+  "name": "The Shaper",
+  "tier": "pinnacle",
+  "skill_coverage": "pob_boss_skill_presets",
+  "baseline": {
+    "input_sha256": "fdf026aa37a91aeafc0c45a9a2e8cc07739c056fe647f52851c3b4c7fca506f4",
+    "scenario": "sustained",
+    "calculation_contract_sha256": "a8fc982b15068cab83b0ceafae63ad91ec4bf6b33c8b37cd755cb148e4853de8",
+    "engine_commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac"
+  },
+  "kills_first": {
+    "skill": "Shaper Slam",
+    "damage_type": "Physical",
+    "damage_fraction_of_max_hit": 4.312676942434792,
+    "verdict": "one_shot"
+  },
+  "skills": [
+    {
+      "skill": "Shaper Ball",
+      "kind": "hit",
+      "damage_type": "SpellProjectile",
+      "penetration": {
+        "ColdPen": 25
+      },
+      "flags": [],
+      "conversion": {},
+      "calculation_id": "92b9d3b2d8ef54a6061d336f7a52880ec1bcd879eb8a6fe4cf3979bbf7408e02",
+      "source": "engine_configured_hit",
+      "engine_hits_to_die": 0.48379377325288,
+      "damage_fraction_of_max_hit": 2.0669964255147577,
+      "hits_to_die": 0,
+      "margin_multiplier": 0.48379377325288,
+      "dominant_type": "Cold",
+      "taken_after_mitigation": {
+        "Cold": 6569.08
+      },
+      "total_taken": 6569.08,
+      "verdict": "one_shot",
+      "preset_check": {
+        "expected_raw_damage": 12944,
+        "engine_raw_damage": 12944,
+        "status": "matches"
+      },
+      "cross_check": {
+        "method": "sum of damage/max-hit fractions per source type (linear approximation for mixed hits; conversion handled by the engine max hit of the source type)",
+        "damage_fraction_of_max_hit": 2.035860333438188,
+        "rows": [
+          {
+            "type": "Cold",
+            "damage": 12944,
+            "max_hit": 6358,
+            "ratio": 2.035860333438188
+          }
+        ]
+      },
+      "method": "PoB NumberOfDamagingHits for the configured preset hit; fraction = 1 / hits",
+      "caveats": [
+        "Cosmic Wounds raises cold penetration to 40% (uber) and adds projectiles.",
+        "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+      ]
+    },
+    {
+      "skill": "Shaper Slam",
+      "kind": "hit",
+      "damage_type": "Melee",
+      "penetration": {},
+      "flags": [],
+      "conversion": {},
+      "calculation_id": "3ea8d695366893e97dc7827fcbc4773b2abacc32605b15455c65120ad295cfe2",
+      "source": "engine_configured_hit",
+      "engine_hits_to_die": 0.23187454412837,
+      "damage_fraction_of_max_hit": 4.312676942434792,
+      "hits_to_die": 0,
+      "margin_multiplier": 0.23187454412837,
+      "dominant_type": "Physical",
+      "taken_after_mitigation": {
+        "Physical": 13710
+      },
+      "total_taken": 13710,
+      "verdict": "one_shot",
+      "preset_check": {
+        "expected_raw_damage": 13710,
+        "engine_raw_damage": 13710,
+        "status": "matches"
+      },
+      "cross_check": {
+        "method": "sum of damage/max-hit fractions per source type (linear approximation for mixed hits; conversion handled by the engine max hit of the source type)",
+        "damage_fraction_of_max_hit": 4.263059701492537,
+        "rows": [
+          {
+            "type": "Physical",
+            "damage": 13710,
+            "max_hit": 3216,
+            "ratio": 4.263059701492537
+          }
+        ]
+      },
+      "method": "PoB NumberOfDamagingHits for the configured preset hit; fraction = 1 / hits",
+      "caveats": [
+        "Uber variant cannot be evaded, blocked or dodged; requires Cosmic Wounds for the uber multiplier."
+      ]
+    },
+    {
+      "skill": "Shaper Beam",
+      "kind": "damage_over_time",
+      "damage_type": "DamageOverTime",
+      "penetration": {},
+      "flags": [],
+      "conversion": {},
+      "calculation_id": "961885b759ff7f99c8760de0f2b64ff8373471dabbcefcbb55b4bdd171dde6ba",
+      "incoming_raw_dps": 27008,
+      "by_type": {
+        "Cold": 7508,
+        "Fire": 9155,
+        "Lightning": 10345
+      },
+      "recovery_stat": "LifeRegenRecovery",
+      "recovery_per_second": 22.2,
+      "verdict": "requires_engine_dot_check",
+      "note": "Raw degen before resistances/damage taken; compare only with an engine DoT breakdown. No verdict is derived here.",
+      "caveats": []
+    }
+  ],
+  "missing": [],
+  "disclaimer": "Numeric experiment from PoB configured boss hits; not a game test. Avoidance (block, suppression, evasion) and recovery between hits are not included; flags list layers that do not apply.",
+  "timing": {
+    "engine_runs": 3,
+    "batch_elapsed_ms": 356
+  }
+}

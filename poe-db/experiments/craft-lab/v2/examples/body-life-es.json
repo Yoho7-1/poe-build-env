@@ -1,0 +1,8 @@
+{
+  "item": { "base": "Vaal Regalia", "item_level": 86, "rarity": "normal", "sockets": { "colours": ["W", "W", "W", "W", "W", "W"], "links": [1, 1, 1, 1, 1, 1] } },
+  "seed": 42,
+  "budget": null,
+  "unlocked_recipes": "all_assumed",
+  "start_cost": null,
+  "target": { "all": [ { "min_tier": [{ "group": "IncreasedLife", "tier": 2 }] }, { "stats": [{ "id": "local_energy_shield_+%", "min": 100 }] } ] }
+}

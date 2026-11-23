@@ -1,0 +1,2945 @@
+[
+  {
+    "name": "Amplification Rod",
+    "page_name": "Amplification Rod",
+    "class": "Wand",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Amplification_Rod"
+  },
+  {
+    "name": "Anatomical Knowledge",
+    "page_name": "Anatomical Knowledge",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Anatomical_Knowledge"
+  },
+  {
+    "name": "Ancient Waystones",
+    "page_name": "Ancient Waystones",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Ancient_Waystones"
+  },
+  {
+    "name": "Apparitions",
+    "page_name": "Apparitions (jewel)",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Apparitions_(jewel)"
+  },
+  {
+    "name": "Arbitrary Tenets",
+    "page_name": "Arbitrary Tenets (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Arbitrary_Tenets_(idol)"
+  },
+  {
+    "name": "Ashes of the Sun",
+    "page_name": "Ashes of the Sun",
+    "class": "One-Handed Mace",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Ashes_of_the_Sun"
+  },
+  {
+    "name": "Assassin's Haste",
+    "page_name": "Assassin's Haste",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Assassin's_Haste"
+  },
+  {
+    "name": "Band of the Victor",
+    "page_name": "Band of the Victor",
+    "class": "Ring",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Band_of_the_Victor"
+  },
+  {
+    "name": "Black Thumb",
+    "page_name": "Black Thumb (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Black_Thumb_(idol)"
+  },
+  {
+    "name": "Blood of Summer",
+    "page_name": "Blood of Summer",
+    "class": "One-Handed Sword",
+    "reason": "not_marked_in_game",
+    "release_version": "1.1.4",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Blood_of_Summer"
+  },
+  {
+    "name": "Blood Sacrifice",
+    "page_name": "Blood Sacrifice",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Blood_Sacrifice"
+  },
+  {
+    "name": "Bold Undertakings",
+    "page_name": "Bold Undertakings (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Bold_Undertakings_(idol)"
+  },
+  {
+    "name": "Brawn",
+    "page_name": "Brawn",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Brawn"
+  },
+  {
+    "name": "Brittle Barrier",
+    "page_name": "Brittle Barrier",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Brittle_Barrier"
+  },
+  {
+    "name": "Broadstroke",
+    "page_name": "Broadstroke",
+    "class": "Quiver",
+    "reason": "removed_by_target_patch",
+    "release_version": "0.9.5",
+    "removal_version": "1.2.0",
+    "source_url": "https://www.poewiki.net/wiki/Broadstroke"
+  },
+  {
+    "name": "Cannibalistic Habits",
+    "page_name": "Cannibalistic Habits",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Cannibalistic_Habits"
+  },
+  {
+    "name": "Cassia's Pride",
+    "page_name": "Cassia's Pride (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Cassia's_Pride_(idol)"
+  },
+  {
+    "name": "Chaber Cairn",
+    "page_name": "Chaber Cairn",
+    "class": "Two-Handed Mace",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.4.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Chaber_Cairn"
+  },
+  {
+    "name": "Chains of Time",
+    "page_name": "Chains of Time",
+    "class": "Belt",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Chains_of_Time"
+  },
+  {
+    "name": "Cheap Construction",
+    "page_name": "Cheap Construction",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Cheap_Construction"
+  },
+  {
+    "name": "Chitus' Needle",
+    "page_name": "Chitus' Needle",
+    "class": "Thrusting One-Handed Sword",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.5b",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Chitus'_Needle"
+  },
+  {
+    "name": "Circle of Anguish",
+    "page_name": "Circle of Anguish (Fractured)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Circle_of_Anguish_(Fractured)"
+  },
+  {
+    "name": "Circle of Fear",
+    "page_name": "Circle of Fear (Fractured)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.6.6b",
+    "source_url": "https://www.poewiki.net/wiki/Circle_of_Fear_(Fractured)"
+  },
+  {
+    "name": "Circle of Guilt",
+    "page_name": "Circle of Guilt (Fractured)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Circle_of_Guilt_(Fractured)"
+  },
+  {
+    "name": "Circle of Regret",
+    "page_name": "Circle of Regret (Fractured)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.7.0",
+    "source_url": "https://www.poewiki.net/wiki/Circle_of_Regret_(Fractured)"
+  },
+  {
+    "name": "Clear Mind",
+    "page_name": "Clear Mind",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Clear_Mind"
+  },
+  {
+    "name": "Coated Shrapnel",
+    "page_name": "Coated Shrapnel",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Coated_Shrapnel"
+  },
+  {
+    "name": "Coated Weapons",
+    "page_name": "Coated Weapons",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Coated_Weapons"
+  },
+  {
+    "name": "Cold Steel",
+    "page_name": "Cold Steel",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Cold_Steel"
+  },
+  {
+    "name": "Collateral Damage",
+    "page_name": "Collateral Damage",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.9.0",
+    "source_url": "https://www.poewiki.net/wiki/Collateral_Damage"
+  },
+  {
+    "name": "Combustibles",
+    "page_name": "Combustibles",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Combustibles"
+  },
+  {
+    "name": "Conqueror's Efficiency",
+    "page_name": "Conqueror's Efficiency",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Conqueror's_Efficiency"
+  },
+  {
+    "name": "Conqueror's Longevity",
+    "page_name": "Conqueror's Longevity",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Conqueror's_Longevity"
+  },
+  {
+    "name": "Conqueror's Potency",
+    "page_name": "Conqueror's Potency",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Conqueror's_Potency"
+  },
+  {
+    "name": "Controlled Energy",
+    "page_name": "Controlled Energy",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Controlled_Energy"
+  },
+  {
+    "name": "Corona Solaris",
+    "page_name": "Corona Solaris",
+    "class": "Wand",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.2b",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Corona_Solaris"
+  },
+  {
+    "name": "Corrupted Energy",
+    "page_name": "Corrupted Energy",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Corrupted_Energy"
+  },
+  {
+    "name": "Cragfall",
+    "page_name": "Cragfall",
+    "class": "Quiver",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Cragfall"
+  },
+  {
+    "name": "Crop Rotation",
+    "page_name": "Crop Rotation (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Crop_Rotation_(idol)"
+  },
+  {
+    "name": "Crystallised Power",
+    "page_name": "Crystallised Power",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Crystallised_Power"
+  },
+  {
+    "name": "Dance of Destruction",
+    "page_name": "Dance of Destruction (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Dance_of_Destruction_(idol)"
+  },
+  {
+    "name": "Dark Thoughts",
+    "page_name": "Dark Thoughts",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Dark_Thoughts"
+  },
+  {
+    "name": "Death's Opus",
+    "page_name": "Death's Opus",
+    "class": "Bow",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Death's_Opus"
+  },
+  {
+    "name": "Demigod's Authority",
+    "page_name": "Demigod's Authority",
+    "class": "One-Handed Sword",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "3.12.5b",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Authority"
+  },
+  {
+    "name": "Demigod's Bounty",
+    "page_name": "Demigod's Bounty",
+    "class": "Belt",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.1.1c",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Bounty"
+  },
+  {
+    "name": "Demigod's Eye",
+    "page_name": "Demigod's Eye",
+    "class": "Ring",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.2.4",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Eye"
+  },
+  {
+    "name": "Destructive Play",
+    "page_name": "Destructive Play (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Destructive_Play_(idol)"
+  },
+  {
+    "name": "Dimensional Barrier",
+    "page_name": "Dimensional Barrier (idol)",
+    "class": "Idol",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.25.3d",
+    "removal_version": "3.27.0g",
+    "source_url": "https://www.poewiki.net/wiki/Dimensional_Barrier_(idol)"
+  },
+  {
+    "name": "Divine Inferno",
+    "page_name": "Divine Inferno",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.17.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Divine_Inferno"
+  },
+  {
+    "name": "Dreadbeak",
+    "page_name": "Dreadbeak",
+    "class": "One-Handed Sword",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Dreadbeak"
+  },
+  {
+    "name": "Dreadsurge",
+    "page_name": "Dreadsurge",
+    "class": "One-Handed Axe",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Dreadsurge"
+  },
+  {
+    "name": "Eldritch Gaze",
+    "page_name": "Eldritch Gaze (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Eldritch_Gaze_(idol)"
+  },
+  {
+    "name": "Eldritch Knowledge",
+    "page_name": "Eldritch Knowledge",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Eldritch_Knowledge"
+  },
+  {
+    "name": "Endless Misery",
+    "page_name": "Endless Misery",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.23.0",
+    "source_url": "https://www.poewiki.net/wiki/Endless_Misery"
+  },
+  {
+    "name": "Endless Tide",
+    "page_name": "Endless Tide (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Endless_Tide_(idol)"
+  },
+  {
+    "name": "Escalation",
+    "page_name": "Escalation",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.18.1f",
+    "source_url": "https://www.poewiki.net/wiki/Escalation"
+  },
+  {
+    "name": "Extreme Archaeology",
+    "page_name": "Extreme Archaeology (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Extreme_Archaeology_(idol)"
+  },
+  {
+    "name": "Fight for Survival",
+    "page_name": "Fight for Survival",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Fight_for_Survival"
+  },
+  {
+    "name": "Fireborn",
+    "page_name": "Fireborn",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Fireborn"
+  },
+  {
+    "name": "First Piece of Brutality",
+    "page_name": "First Piece of Brutality",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/First_Piece_of_Brutality"
+  },
+  {
+    "name": "First Piece of Directions",
+    "page_name": "First Piece of Directions",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/First_Piece_of_Directions"
+  },
+  {
+    "name": "First Piece of Focus",
+    "page_name": "First Piece of Focus",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/First_Piece_of_Focus"
+  },
+  {
+    "name": "First Piece of Storms",
+    "page_name": "First Piece of Storms",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/First_Piece_of_Storms"
+  },
+  {
+    "name": "First Piece of the Arcane",
+    "page_name": "First Piece of the Arcane",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/First_Piece_of_the_Arcane"
+  },
+  {
+    "name": "First Piece of Time",
+    "page_name": "First Piece of Time",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/First_Piece_of_Time"
+  },
+  {
+    "name": "First Snow",
+    "page_name": "First Snow",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/First_Snow"
+  },
+  {
+    "name": "Fortified Legion",
+    "page_name": "Fortified Legion",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Fortified_Legion"
+  },
+  {
+    "name": "Fourth Piece of Focus",
+    "page_name": "Fourth Piece of Focus",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Fourth_Piece_of_Focus"
+  },
+  {
+    "name": "Fragile Bloom",
+    "page_name": "Fragile Bloom",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Fragile_Bloom"
+  },
+  {
+    "name": "From Dust",
+    "page_name": "From Dust",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/From_Dust"
+  },
+  {
+    "name": "Frozen Trail",
+    "page_name": "Frozen Trail",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Frozen_Trail"
+  },
+  {
+    "name": "Fungal Remission",
+    "page_name": "Fungal Remission (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Fungal_Remission_(idol)"
+  },
+  {
+    "name": "Geofri's Devotion",
+    "page_name": "Geofri's Devotion",
+    "class": "Two-Handed Mace",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Geofri's_Devotion"
+  },
+  {
+    "name": "Growing Agony",
+    "page_name": "Growing Agony",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Growing_Agony"
+  },
+  {
+    "name": "Gruelling Gauntlet",
+    "page_name": "Gruelling Gauntlet (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Gruelling_Gauntlet_(idol)"
+  },
+  {
+    "name": "Hair Trigger",
+    "page_name": "Hair Trigger",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.2.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Hair_Trigger"
+  },
+  {
+    "name": "Hazardous Research",
+    "page_name": "Hazardous Research",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Hazardous_Research"
+  },
+  {
+    "name": "Honoured Alliance",
+    "page_name": "Honoured Alliance",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.22.0",
+    "removal_version": "3.22.2b",
+    "source_url": "https://www.poewiki.net/wiki/Honoured_Alliance"
+  },
+  {
+    "name": "Hotheaded",
+    "page_name": "Hotheaded",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Hotheaded"
+  },
+  {
+    "name": "Hrimnor's Dirge",
+    "page_name": "Hrimnor's Dirge",
+    "class": "Two-Handed Mace",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Hrimnor's_Dirge"
+  },
+  {
+    "name": "Hungry Abyss",
+    "page_name": "Hungry Abyss",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Hungry_Abyss"
+  },
+  {
+    "name": "Hyrri's Demise",
+    "page_name": "Hyrri's Demise",
+    "class": "Quiver",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Hyrri's_Demise"
+  },
+  {
+    "name": "Immutable Dogma",
+    "page_name": "Immutable Dogma (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Immutable_Dogma_(idol)"
+  },
+  {
+    "name": "Inevitability",
+    "page_name": "Inevitability",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Inevitability"
+  },
+  {
+    "name": "Infused Beachhead",
+    "page_name": "Infused Beachhead",
+    "class": "Map",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.11.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Infused_Beachhead"
+  },
+  {
+    "name": "Insomnia",
+    "page_name": "Insomnia",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Insomnia"
+  },
+  {
+    "name": "Izaro's Dilemma",
+    "page_name": "Izaro's Dilemma",
+    "class": "Claw",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.5",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Izaro's_Dilemma"
+  },
+  {
+    "name": "Izaro's Turmoil",
+    "page_name": "Izaro's Turmoil",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.5b",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Izaro's_Turmoil"
+  },
+  {
+    "name": "Kaom's Way",
+    "page_name": "Kaom's Way",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Kaom's_Way"
+  },
+  {
+    "name": "Lord of Steel",
+    "page_name": "Lord of Steel (Impale chance)",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Lord_of_Steel_(Impale_chance)"
+  },
+  {
+    "name": "Lord of Steel",
+    "page_name": "Lord of Steel (Impale effect)",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Lord_of_Steel_(Impale_effect)"
+  },
+  {
+    "name": "Lord of Steel",
+    "page_name": "Lord of Steel (Overwhelm)",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Lord_of_Steel_(Overwhelm)"
+  },
+  {
+    "name": "Loved by the Sun",
+    "page_name": "Loved by the Sun (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Loved_by_the_Sun_(idol)"
+  },
+  {
+    "name": "Lucid Dreams",
+    "page_name": "Lucid Dreams (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Lucid_Dreams_(idol)"
+  },
+  {
+    "name": "Malicious Intent",
+    "page_name": "Malicious Intent",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Malicious_Intent"
+  },
+  {
+    "name": "Mantra of Flames",
+    "page_name": "Mantra of Flames",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Mantra_of_Flames"
+  },
+  {
+    "name": "Mantra of Force",
+    "page_name": "Mantra of Force",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Mantra_of_Force"
+  },
+  {
+    "name": "Martial Artistry",
+    "page_name": "Martial Artistry",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Martial_Artistry"
+  },
+  {
+    "name": "Meticulous Appraiser",
+    "page_name": "Meticulous Appraiser (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Meticulous_Appraiser_(idol)"
+  },
+  {
+    "name": "Might in All Forms",
+    "page_name": "Might in All Forms",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Might_in_All_Forms"
+  },
+  {
+    "name": "Mirebough",
+    "page_name": "Mirebough",
+    "class": "Staff",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Mirebough"
+  },
+  {
+    "name": "Miser of Misery",
+    "page_name": "Miser of Misery",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Miser_of_Misery"
+  },
+  {
+    "name": "Mutated Growth",
+    "page_name": "Mutated Growth",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Mutated_Growth"
+  },
+  {
+    "name": "Nebulis",
+    "page_name": "Nebulis (Fractured)",
+    "class": "Sceptre",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.6.6c",
+    "source_url": "https://www.poewiki.net/wiki/Nebulis_(Fractured)"
+  },
+  {
+    "name": "Omen on the Winds",
+    "page_name": "Omen on the Winds",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Omen_on_the_Winds"
+  },
+  {
+    "name": "Ominous Silence",
+    "page_name": "Ominous Silence (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Ominous_Silence_(idol)"
+  },
+  {
+    "name": "Overwhelming Odds",
+    "page_name": "Overwhelming Odds",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Overwhelming_Odds"
+  },
+  {
+    "name": "Panquetzaliztli",
+    "page_name": "Panquetzaliztli",
+    "class": "Two-Handed Mace",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Panquetzaliztli"
+  },
+  {
+    "name": "Perceived Greatness",
+    "page_name": "Perceived Greatness",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Perceived_Greatness"
+  },
+  {
+    "name": "Pitch Darkness",
+    "page_name": "Pitch Darkness",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.9.0",
+    "source_url": "https://www.poewiki.net/wiki/Pitch_Darkness"
+  },
+  {
+    "name": "Poacher's Aim",
+    "page_name": "Poacher's Aim",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Poacher's_Aim"
+  },
+  {
+    "name": "Projected Force",
+    "page_name": "Projected Force",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Projected_Force"
+  },
+  {
+    "name": "Pugilist",
+    "page_name": "Pugilist",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Pugilist"
+  },
+  {
+    "name": "Queen's Escape",
+    "page_name": "Queen's Escape",
+    "class": "Two-Handed Sword",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Queen's_Escape"
+  },
+  {
+    "name": "Rapid Expansion",
+    "page_name": "Rapid Expansion",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Rapid_Expansion"
+  },
+  {
+    "name": "Refiner's Bargain",
+    "page_name": "Refiner's Bargain (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.27.0g",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Refiner's_Bargain_(idol)"
+  },
+  {
+    "name": "Relic of the Cycle",
+    "page_name": "Relic of the Cycle",
+    "class": "Bow",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Relic_of_the_Cycle"
+  },
+  {
+    "name": "Replica Blood Sacrifice",
+    "page_name": "Replica Blood Sacrifice",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Blood_Sacrifice"
+  },
+  {
+    "name": "Replica Cheap Construction",
+    "page_name": "Replica Cheap Construction",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Cheap_Construction"
+  },
+  {
+    "name": "Replica Conqueror's Efficiency",
+    "page_name": "Replica Conqueror's Efficiency",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Conqueror's_Efficiency"
+  },
+  {
+    "name": "Replica Fragile Bloom",
+    "page_name": "Replica Fragile Bloom",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Fragile_Bloom"
+  },
+  {
+    "name": "Replica Hotheaded",
+    "page_name": "Replica Hotheaded",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Hotheaded"
+  },
+  {
+    "name": "Replica Pure Talent",
+    "page_name": "Replica Pure Talent",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Pure_Talent"
+  },
+  {
+    "name": "Replica Soul Taker",
+    "page_name": "Replica Soul Taker",
+    "class": "One-Handed Axe",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Soul_Taker"
+  },
+  {
+    "name": "Replica Unstable Payload",
+    "page_name": "Replica Unstable Payload",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Unstable_Payload"
+  },
+  {
+    "name": "Ring of Blades",
+    "page_name": "Ring of Blades",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Ring_of_Blades"
+  },
+  {
+    "name": "Rolling Flames",
+    "page_name": "Rolling Flames",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Rolling_Flames"
+  },
+  {
+    "name": "Ruinous Wager",
+    "page_name": "Ruinous Wager (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Ruinous_Wager_(idol)"
+  },
+  {
+    "name": "Rust of Winter",
+    "page_name": "Rust of Winter",
+    "class": "One-Handed Axe",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Rust_of_Winter"
+  },
+  {
+    "name": "Sacrificial Harvest",
+    "page_name": "Sacrificial Harvest",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Sacrificial_Harvest"
+  },
+  {
+    "name": "Scar of Fate",
+    "page_name": "Scar of Fate",
+    "class": "Claw",
+    "reason": "not_marked_in_game",
+    "release_version": "1.1.4",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Scar_of_Fate"
+  },
+  {
+    "name": "Sealed Domain",
+    "page_name": "Sealed Domain (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Sealed_Domain_(idol)"
+  },
+  {
+    "name": "Second Piece of Brutality",
+    "page_name": "Second Piece of Brutality",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Second_Piece_of_Brutality"
+  },
+  {
+    "name": "Second Piece of Directions",
+    "page_name": "Second Piece of Directions",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Second_Piece_of_Directions"
+  },
+  {
+    "name": "Second Piece of Focus",
+    "page_name": "Second Piece of Focus",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Second_Piece_of_Focus"
+  },
+  {
+    "name": "Second Piece of Storms",
+    "page_name": "Second Piece of Storms",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Second_Piece_of_Storms"
+  },
+  {
+    "name": "Second Piece of the Arcane",
+    "page_name": "Second Piece of the Arcane",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Second_Piece_of_the_Arcane"
+  },
+  {
+    "name": "Second Piece of Time",
+    "page_name": "Second Piece of Time",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Second_Piece_of_Time"
+  },
+  {
+    "name": "Secular Focus",
+    "page_name": "Secular Focus (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Secular_Focus_(idol)"
+  },
+  {
+    "name": "Selfless Leadership",
+    "page_name": "Selfless Leadership",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Selfless_Leadership"
+  },
+  {
+    "name": "Serle's Masterwork",
+    "page_name": "Serle's Masterwork",
+    "class": "One-Handed Mace",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.25.0",
+    "removal_version": "3.26.0",
+    "source_url": "https://www.poewiki.net/wiki/Serle's_Masterwork"
+  },
+  {
+    "name": "Servant of Order",
+    "page_name": "Servant of Order (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Servant_of_Order_(idol)"
+  },
+  {
+    "name": "Shadow Shaping",
+    "page_name": "Shadow Shaping (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Shadow_Shaping_(idol)"
+  },
+  {
+    "name": "Shattered Chains",
+    "page_name": "Shattered Chains",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.11.0",
+    "source_url": "https://www.poewiki.net/wiki/Shattered_Chains"
+  },
+  {
+    "name": "Silverbough",
+    "page_name": "Silverbough",
+    "class": "Bow",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Silverbough"
+  },
+  {
+    "name": "Singular Focus",
+    "page_name": "Singular Focus (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Singular_Focus_(idol)"
+  },
+  {
+    "name": "Slivers of Providence",
+    "page_name": "Slivers of Providence",
+    "class": "Quiver",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Slivers_of_Providence"
+  },
+  {
+    "name": "Smash and Grab",
+    "page_name": "Smash and Grab",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Smash_and_Grab"
+  },
+  {
+    "name": "Soul's Wick",
+    "page_name": "Soul's Wick",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.1.0",
+    "removal_version": "3.23.0",
+    "source_url": "https://www.poewiki.net/wiki/Soul's_Wick"
+  },
+  {
+    "name": "Speaker of the Dead",
+    "page_name": "Speaker of the Dead (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Speaker_of_the_Dead_(idol)"
+  },
+  {
+    "name": "Specialised",
+    "page_name": "Specialised",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Specialised"
+  },
+  {
+    "name": "Spine of the First Claimant",
+    "page_name": "Spine of the First Claimant",
+    "class": "Sceptre",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.5",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Spine_of_the_First_Claimant"
+  },
+  {
+    "name": "Spire of Stone",
+    "page_name": "Spire of Stone",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Spire_of_Stone"
+  },
+  {
+    "name": "Spirit Guards",
+    "page_name": "Spirit Guards",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.23.0",
+    "source_url": "https://www.poewiki.net/wiki/Spirit_Guards"
+  },
+  {
+    "name": "Spirited Response",
+    "page_name": "Spirited Response",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Spirited_Response"
+  },
+  {
+    "name": "Splinter of the Moon",
+    "page_name": "Splinter of the Moon",
+    "class": "Wand",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Splinter_of_the_Moon"
+  },
+  {
+    "name": "Spreading Rot",
+    "page_name": "Spreading Rot",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Spreading_Rot"
+  },
+  {
+    "name": "Static Electricity",
+    "page_name": "Static Electricity",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Static_Electricity"
+  },
+  {
+    "name": "Steel Spirit",
+    "page_name": "Steel Spirit",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Steel_Spirit"
+  },
+  {
+    "name": "Stimulated Growth",
+    "page_name": "Stimulated Growth",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Stimulated_Growth"
+  },
+  {
+    "name": "Straight and Narrow",
+    "page_name": "Straight and Narrow (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Straight_and_Narrow_(idol)"
+  },
+  {
+    "name": "Sturdy Growth",
+    "page_name": "Sturdy Growth",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Sturdy_Growth"
+  },
+  {
+    "name": "Sudden Ignition",
+    "page_name": "Sudden Ignition",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.9.0",
+    "source_url": "https://www.poewiki.net/wiki/Sudden_Ignition"
+  },
+  {
+    "name": "Surplus",
+    "page_name": "Surplus",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Surplus"
+  },
+  {
+    "name": "Survival Instincts",
+    "page_name": "Survival Instincts",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Survival_Instincts"
+  },
+  {
+    "name": "Survival Secrets",
+    "page_name": "Survival Secrets",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Survival_Secrets"
+  },
+  {
+    "name": "Survival Skills",
+    "page_name": "Survival Skills",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Survival_Skills"
+  },
+  {
+    "name": "That Which Was Taken",
+    "page_name": "That Which Was Taken",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.23.0",
+    "removal_version": "3.23.2c",
+    "source_url": "https://www.poewiki.net/wiki/That_Which_Was_Taken"
+  },
+  {
+    "name": "The Ancient Angler",
+    "page_name": "The Ancient Angler",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Ancient_Angler"
+  },
+  {
+    "name": "The Angel of Vengeance",
+    "page_name": "The Angel of Vengeance",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Angel_of_Vengeance"
+  },
+  {
+    "name": "The Arbiter",
+    "page_name": "The Arbiter",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Arbiter"
+  },
+  {
+    "name": "The Basilisk",
+    "page_name": "The Basilisk (sentinel)",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Basilisk_(sentinel)"
+  },
+  {
+    "name": "The Beachhead",
+    "page_name": "The Beachhead (High Tier)",
+    "class": "Map",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Beachhead_(High_Tier)"
+  },
+  {
+    "name": "The Beachhead",
+    "page_name": "The Beachhead (Low Tier)",
+    "class": "Map",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Beachhead_(Low_Tier)"
+  },
+  {
+    "name": "The Beachhead",
+    "page_name": "The Beachhead (Mid Tier)",
+    "class": "Map",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Beachhead_(Mid_Tier)"
+  },
+  {
+    "name": "The Benefactor",
+    "page_name": "The Benefactor",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Benefactor"
+  },
+  {
+    "name": "The Broken Elegy",
+    "page_name": "The Broken Elegy",
+    "class": "Warstaff",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "3.28.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/The_Broken_Elegy"
+  },
+  {
+    "name": "The Cauteriser",
+    "page_name": "The Cauteriser",
+    "class": "Two-Handed Axe",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Cauteriser"
+  },
+  {
+    "name": "The Dancing Duo",
+    "page_name": "The Dancing Duo",
+    "class": "Two-Handed Sword",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Dancing_Duo"
+  },
+  {
+    "name": "The Depraved",
+    "page_name": "The Depraved",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Depraved"
+  },
+  {
+    "name": "The Epiphany",
+    "page_name": "The Epiphany",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Epiphany"
+  },
+  {
+    "name": "The Geomantic Gyre",
+    "page_name": "The Geomantic Gyre",
+    "class": "Staff",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.21.0",
+    "removal_version": "3.21.2c",
+    "source_url": "https://www.poewiki.net/wiki/The_Geomantic_Gyre"
+  },
+  {
+    "name": "The Goddess Unleashed",
+    "page_name": "The Goddess Unleashed",
+    "class": "One-Handed Sword",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.1.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Goddess_Unleashed"
+  },
+  {
+    "name": "The Gryphon",
+    "page_name": "The Gryphon",
+    "class": "One-Handed Axe",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Gryphon"
+  },
+  {
+    "name": "The Hollow-Eyed Skull",
+    "page_name": "The Hollow-Eyed Skull",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Hollow-Eyed_Skull"
+  },
+  {
+    "name": "The Infested",
+    "page_name": "The Infested",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Infested"
+  },
+  {
+    "name": "The Long Winter",
+    "page_name": "The Long Winter",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.1.0",
+    "removal_version": "3.12.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Long_Winter"
+  },
+  {
+    "name": "The Megalomaniac",
+    "page_name": "The Megalomaniac",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Megalomaniac"
+  },
+  {
+    "name": "The Narcissist",
+    "page_name": "The Narcissist",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Narcissist"
+  },
+  {
+    "name": "The Nomad",
+    "page_name": "The Nomad",
+    "class": "Belt",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Nomad"
+  },
+  {
+    "name": "The Perandus Manor",
+    "page_name": "The Perandus Manor",
+    "class": "Map",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.2.0",
+    "removal_version": "3.16.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Perandus_Manor"
+  },
+  {
+    "name": "The Perandus Pact",
+    "page_name": "The Perandus Pact",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.24.0",
+    "removal_version": "3.25.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Perandus_Pact"
+  },
+  {
+    "name": "The Raging Inferno",
+    "page_name": "The Raging Inferno",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Raging_Inferno"
+  },
+  {
+    "name": "The Redblade",
+    "page_name": "The Redblade",
+    "class": "One-Handed Sword",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.21.0",
+    "removal_version": "3.21.2c",
+    "source_url": "https://www.poewiki.net/wiki/The_Redblade"
+  },
+  {
+    "name": "The Sands of Time",
+    "page_name": "The Sands of Time",
+    "class": "Sceptre",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "3.28.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/The_Sands_of_Time"
+  },
+  {
+    "name": "The Stormwall",
+    "page_name": "The Stormwall",
+    "class": "Staff",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Stormwall"
+  },
+  {
+    "name": "The Tactician",
+    "page_name": "The Tactician",
+    "class": "Belt",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Tactician"
+  },
+  {
+    "name": "The Tempest",
+    "page_name": "The Tempest",
+    "class": "Bow",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Tempest"
+  },
+  {
+    "name": "The Torturer",
+    "page_name": "The Torturer",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Torturer"
+  },
+  {
+    "name": "The Tower of Ordeals",
+    "page_name": "The Tower of Ordeals",
+    "class": "Map",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.19.0",
+    "removal_version": "3.23.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Tower_of_Ordeals"
+  },
+  {
+    "name": "The Twisted Trinity",
+    "page_name": "The Twisted Trinity",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Twisted_Trinity"
+  },
+  {
+    "name": "The Unbridled Tempest",
+    "page_name": "The Unbridled Tempest",
+    "class": "Sentinel",
+    "reason": "not_marked_in_game",
+    "release_version": "3.18.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Unbridled_Tempest"
+  },
+  {
+    "name": "The Vigil",
+    "page_name": "The Vigil",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Vigil"
+  },
+  {
+    "name": "Third Piece of Brutality",
+    "page_name": "Third Piece of Brutality",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Third_Piece_of_Brutality"
+  },
+  {
+    "name": "Third Piece of Directions",
+    "page_name": "Third Piece of Directions",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Third_Piece_of_Directions"
+  },
+  {
+    "name": "Third Piece of Focus",
+    "page_name": "Third Piece of Focus",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Third_Piece_of_Focus"
+  },
+  {
+    "name": "Third Piece of Storms",
+    "page_name": "Third Piece of Storms",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Third_Piece_of_Storms"
+  },
+  {
+    "name": "Third Piece of the Arcane",
+    "page_name": "Third Piece of the Arcane",
+    "class": "Item Piece",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.0.0",
+    "removal_version": "3.28.0",
+    "source_url": "https://www.poewiki.net/wiki/Third_Piece_of_the_Arcane"
+  },
+  {
+    "name": "Thorough Exploration",
+    "page_name": "Thorough Exploration (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Thorough_Exploration_(idol)"
+  },
+  {
+    "name": "Thunder of the Dawn",
+    "page_name": "Thunder of the Dawn",
+    "class": "Two-Handed Sword",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Thunder_of_the_Dawn"
+  },
+  {
+    "name": "Timeless Conflict",
+    "page_name": "Timeless Conflict (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Timeless_Conflict_(idol)"
+  },
+  {
+    "name": "Trade Embargo",
+    "page_name": "Trade Embargo (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Trade_Embargo_(idol)"
+  },
+  {
+    "name": "Twist of Fate",
+    "page_name": "Twist of Fate (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Twist_of_Fate_(idol)"
+  },
+  {
+    "name": "Twisted Wish",
+    "page_name": "Twisted Wish",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Twisted_Wish"
+  },
+  {
+    "name": "Unending Nightmare",
+    "page_name": "Unending Nightmare (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Unending_Nightmare_(idol)"
+  },
+  {
+    "name": "Unstable Payload",
+    "page_name": "Unstable Payload",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.2.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Unstable_Payload"
+  },
+  {
+    "name": "Vaal Sentencing",
+    "page_name": "Vaal Sentencing",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Vaal_Sentencing"
+  },
+  {
+    "name": "Vampire's Might",
+    "page_name": "Vampire's Might",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Vampire's_Might"
+  },
+  {
+    "name": "Vestige of Divinity",
+    "page_name": "Vestige of Divinity",
+    "class": "Staff",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Vestige_of_Divinity"
+  },
+  {
+    "name": "Violent Dead",
+    "page_name": "Violent Dead",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Violent_Dead"
+  },
+  {
+    "name": "Voidheart",
+    "page_name": "Voidheart",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Voidheart"
+  },
+  {
+    "name": "Volley Fire",
+    "page_name": "Volley Fire",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Volley_Fire"
+  },
+  {
+    "name": "Warlord's Reach",
+    "page_name": "Warlord's Reach",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Warlord's_Reach"
+  },
+  {
+    "name": "Warrior's Tale",
+    "page_name": "Warrior's Tale",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.22.0",
+    "removal_version": "3.22.2b",
+    "source_url": "https://www.poewiki.net/wiki/Warrior's_Tale"
+  },
+  {
+    "name": "Weight of Sin",
+    "page_name": "Weight of Sin",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.0.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Weight_of_Sin"
+  },
+  {
+    "name": "Weight of the Empire",
+    "page_name": "Weight of the Empire",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Weight_of_the_Empire"
+  },
+  {
+    "name": "Well Supplied",
+    "page_name": "Well Supplied",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Well_Supplied"
+  },
+  {
+    "name": "Wellspring of Creation",
+    "page_name": "Wellspring of Creation (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Wellspring_of_Creation_(idol)"
+  },
+  {
+    "name": "Wildfire",
+    "page_name": "Wildfire",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Wildfire"
+  },
+  {
+    "name": "Winter Burial",
+    "page_name": "Winter Burial",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Winter_Burial"
+  },
+  {
+    "name": "Winter's Bounty",
+    "page_name": "Winter's Bounty",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.1.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Winter's_Bounty"
+  },
+  {
+    "name": "Winterweave",
+    "page_name": "Winterweave (fated)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Winterweave_(fated)"
+  },
+  {
+    "name": "Wisdom of the Path Not Taken",
+    "page_name": "Wisdom of the Path Not Taken",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Wisdom_of_the_Path_Not_Taken"
+  },
+  {
+    "name": "Wrath of the Cosmos",
+    "page_name": "Wrath of the Cosmos (idol)",
+    "class": "Idol",
+    "reason": "outside_standard_covens_scope",
+    "release_version": "3.25.3d",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Wrath_of_the_Cosmos_(idol)"
+  },
+  {
+    "name": "Zerphi's Youth",
+    "page_name": "Zerphi's Youth",
+    "class": "Jewel",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Zerphi's_Youth"
+  },
+  {
+    "name": "Timetwist",
+    "page_name": "Timetwist",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Timetwist"
+  },
+  {
+    "name": "Realm Ender",
+    "page_name": "Realm Ender",
+    "class": "Warstaff",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Realm_Ender"
+  },
+  {
+    "name": "Sanguine Gambol",
+    "page_name": "Sanguine Gambol",
+    "class": "Dagger",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Sanguine_Gambol"
+  },
+  {
+    "name": "Fragment of Eternity",
+    "page_name": "Fragment of Eternity",
+    "class": "Dagger",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Fragment_of_Eternity"
+  },
+  {
+    "name": "Asenath's Chant",
+    "page_name": "Asenath's Chant",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Asenath's_Chant"
+  },
+  {
+    "name": "Deidbellow",
+    "page_name": "Deidbellow",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Deidbellow"
+  },
+  {
+    "name": "Demigod's Immortality",
+    "page_name": "Demigod's Immortality",
+    "class": "Helmet",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "3.6.4",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Immortality"
+  },
+  {
+    "name": "Demigod's Triumph",
+    "page_name": "Demigod's Triumph",
+    "class": "Helmet",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "0.10.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Triumph"
+  },
+  {
+    "name": "El'Abin's Visage",
+    "page_name": "El'Abin's Visage",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.21.0",
+    "removal_version": "3.21.2c",
+    "source_url": "https://www.poewiki.net/wiki/El'Abin's_Visage"
+  },
+  {
+    "name": "Ezomyte Hold",
+    "page_name": "Ezomyte Hold",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Ezomyte_Hold"
+  },
+  {
+    "name": "Frostferno",
+    "page_name": "Frostferno",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Frostferno"
+  },
+  {
+    "name": "Geofri's Legacy",
+    "page_name": "Geofri's Legacy",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.4.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Geofri's_Legacy"
+  },
+  {
+    "name": "Malachai's Awakening",
+    "page_name": "Malachai's Awakening",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Malachai's_Awakening"
+  },
+  {
+    "name": "Martyr's Crown",
+    "page_name": "Martyr's Crown",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Martyr's_Crown"
+  },
+  {
+    "name": "Mask of the Tribunal",
+    "page_name": "Mask of the Tribunal (Fractured)",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Mask_of_the_Tribunal_(Fractured)"
+  },
+  {
+    "name": "Tear of Entropy",
+    "page_name": "Tear of Entropy",
+    "class": "Helmet",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Tear_of_Entropy"
+  },
+  {
+    "name": "The Peregrine",
+    "page_name": "The Peregrine",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "0.9.6",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Peregrine"
+  },
+  {
+    "name": "Crystal Vault",
+    "page_name": "Crystal Vault",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Crystal_Vault"
+  },
+  {
+    "name": "Demigod's Dominance",
+    "page_name": "Demigod's Dominance",
+    "class": "Body Armour",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "2.1.2",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Dominance"
+  },
+  {
+    "name": "Fox's Fortune",
+    "page_name": "Fox's Fortune",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Fox's_Fortune"
+  },
+  {
+    "name": "Garb of the Ephemeral",
+    "page_name": "Garb of the Ephemeral (Fractured)",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.6.6b",
+    "source_url": "https://www.poewiki.net/wiki/Garb_of_the_Ephemeral_(Fractured)"
+  },
+  {
+    "name": "Rotting Legion",
+    "page_name": "Rotting Legion",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.8.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Rotting_Legion"
+  },
+  {
+    "name": "Shroud of the Lightless",
+    "page_name": "Shroud of the Lightless (1 Abyssal Socket)",
+    "class": "Body Armour",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "3.1.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Shroud_of_the_Lightless_(1_Abyssal_Socket)"
+  },
+  {
+    "name": "The Iron Fortress",
+    "page_name": "The Iron Fortress (fated)",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.4.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Iron_Fortress_(fated)"
+  },
+  {
+    "name": "Viper's Scales",
+    "page_name": "Viper's Scales",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Viper's_Scales"
+  },
+  {
+    "name": "Wall of Brambles",
+    "page_name": "Wall of Brambles",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Wall_of_Brambles"
+  },
+  {
+    "name": "Wildwrap",
+    "page_name": "Wildwrap",
+    "class": "Body Armour",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Wildwrap"
+  },
+  {
+    "name": "Demigod's Touch",
+    "page_name": "Demigod's Touch",
+    "class": "Gloves",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Touch"
+  },
+  {
+    "name": "Doedre's Malevolence",
+    "page_name": "Doedre's Malevolence",
+    "class": "Gloves",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Doedre's_Malevolence"
+  },
+  {
+    "name": "Hrimburn",
+    "page_name": "Hrimburn",
+    "class": "Gloves",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Hrimburn"
+  },
+  {
+    "name": "Offering to the Serpent",
+    "page_name": "Offering to the Serpent (Fractured)",
+    "class": "Gloves",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Offering_to_the_Serpent_(Fractured)"
+  },
+  {
+    "name": "Storm's Gift",
+    "page_name": "Storm's Gift (Fractured)",
+    "class": "Gloves",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.6.6c",
+    "source_url": "https://www.poewiki.net/wiki/Storm's_Gift_(Fractured)"
+  },
+  {
+    "name": "Storm's Gift",
+    "page_name": "Storm's Gift (Synthesised)",
+    "class": "Gloves",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "3.6.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Storm's_Gift_(Synthesised)"
+  },
+  {
+    "name": "Demigod's Stride",
+    "page_name": "Demigod's Stride",
+    "class": "Boots",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "0.11.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Stride"
+  },
+  {
+    "name": "Duskblight",
+    "page_name": "Duskblight",
+    "class": "Boots",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Duskblight"
+  },
+  {
+    "name": "Greedtrap",
+    "page_name": "Greedtrap",
+    "class": "Boots",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Greedtrap"
+  },
+  {
+    "name": "Shavronne's Gambit",
+    "page_name": "Shavronne's Gambit",
+    "class": "Boots",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Shavronne's_Gambit"
+  },
+  {
+    "name": "Sunspite",
+    "page_name": "Sunspite",
+    "class": "Boots",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Sunspite"
+  },
+  {
+    "name": "Windshriek",
+    "page_name": "Windshriek",
+    "class": "Boots",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Windshriek"
+  },
+  {
+    "name": "Demigod's Beacon",
+    "page_name": "Demigod's Beacon",
+    "class": "Shield",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "2.0.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Beacon"
+  },
+  {
+    "name": "Glitterdisc",
+    "page_name": "Glitterdisc",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.2.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Glitterdisc"
+  },
+  {
+    "name": "Kaltensoul",
+    "page_name": "Kaltensoul",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Kaltensoul"
+  },
+  {
+    "name": "Perepiteia",
+    "page_name": "Perepiteia (Fractured)",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.6.6c",
+    "source_url": "https://www.poewiki.net/wiki/Perepiteia_(Fractured)"
+  },
+  {
+    "name": "Remnant of Empires",
+    "page_name": "Remnant of Empires",
+    "class": "Shield",
+    "reason": "not_marked_in_game",
+    "release_version": "1.0.1",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Remnant_of_Empires"
+  },
+  {
+    "name": "The Oak",
+    "page_name": "The Oak",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Oak"
+  },
+  {
+    "name": "Thirst for Horrors",
+    "page_name": "Thirst for Horrors",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Thirst_for_Horrors"
+  },
+  {
+    "name": "Whakatutuki o Matua",
+    "page_name": "Whakatutuki o Matua",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.5.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Whakatutuki_o_Matua"
+  },
+  {
+    "name": "Bisco's Collar",
+    "page_name": "Bisco's Collar",
+    "class": "Amulet",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.25.0",
+    "source_url": "https://www.poewiki.net/wiki/Bisco's_Collar"
+  },
+  {
+    "name": "Demigod's Presence",
+    "page_name": "Demigod's Presence",
+    "class": "Amulet",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "0.9.3h",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Demigod's_Presence"
+  },
+  {
+    "name": "Ngamahu Tiki",
+    "page_name": "Ngamahu Tiki",
+    "class": "Amulet",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Ngamahu_Tiki"
+  },
+  {
+    "name": "The Ascetic",
+    "page_name": "The Ascetic",
+    "class": "Amulet",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.25.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Ascetic"
+  },
+  {
+    "name": "The Effigon",
+    "page_name": "The Effigon",
+    "class": "Amulet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.2.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Effigon"
+  },
+  {
+    "name": "Talisman of the Victor",
+    "page_name": "Talisman of the Victor",
+    "class": "Amulet",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.3.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Talisman_of_the_Victor"
+  },
+  {
+    "name": "Atop the Atlas",
+    "page_name": "Atop the Atlas",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Atop_the_Atlas"
+  },
+  {
+    "name": "Booming Populace",
+    "page_name": "Booming Populace",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.9.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Booming_Populace"
+  },
+  {
+    "name": "Irresistable Temptation",
+    "page_name": "Irresistable Temptation",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.9.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Irresistable_Temptation"
+  },
+  {
+    "name": "Misinformation",
+    "page_name": "Misinformation",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.9.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Misinformation"
+  },
+  {
+    "name": "Restless Cycles",
+    "page_name": "Restless Cycles",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Restless_Cycles"
+  },
+  {
+    "name": "Stalwart Defenders",
+    "page_name": "Stalwart Defenders",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.9.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Stalwart_Defenders"
+  },
+  {
+    "name": "Territories Unknown",
+    "page_name": "Territories Unknown",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.9.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Territories_Unknown"
+  },
+  {
+    "name": "Terror",
+    "page_name": "Terror",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.9.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Terror"
+  },
+  {
+    "name": "The Builder",
+    "page_name": "The Builder",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Builder"
+  },
+  {
+    "name": "The Claim",
+    "page_name": "The Claim",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Claim"
+  },
+  {
+    "name": "The Closest Peak",
+    "page_name": "The Closest Peak",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Closest_Peak"
+  },
+  {
+    "name": "The False Hope",
+    "page_name": "The False Hope",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_False_Hope"
+  },
+  {
+    "name": "The Vast Horizon",
+    "page_name": "The Vast Horizon",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Vast_Horizon"
+  },
+  {
+    "name": "The Walls",
+    "page_name": "The Walls",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.13.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Walls"
+  },
+  {
+    "name": "War Among the Stars",
+    "page_name": "War Among the Stars",
+    "class": "Watchstone",
+    "reason": "not_marked_in_game",
+    "release_version": "3.9.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/War_Among_the_Stars"
+  },
+  {
+    "name": "Might and Influence",
+    "page_name": "Might and Influence",
+    "class": "Jewel",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.6.0",
+    "removal_version": "3.20.0",
+    "source_url": "https://www.poewiki.net/wiki/Might_and_Influence"
+  },
+  {
+    "name": "Qotra's Hypothesis",
+    "page_name": "User:Blvcksvn",
+    "class": "Belt",
+    "reason": "not_marked_in_game",
+    "release_version": null,
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/User%3ABlvcksvn"
+  },
+  {
+    "name": "Untainted Paradise",
+    "page_name": "Untainted Paradise",
+    "class": "Map",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.2.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Untainted_Paradise"
+  },
+  {
+    "name": "Karui Charge",
+    "page_name": "Karui Charge",
+    "class": "Amulet",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Karui_Charge"
+  },
+  {
+    "name": "Doomfletch's Prism",
+    "page_name": "Doomfletch's Prism",
+    "class": "Bow",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Doomfletch's_Prism"
+  },
+  {
+    "name": "Atziri's Mirror",
+    "page_name": "Atziri's Mirror",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "0.9.13b",
+    "removal_version": "3.17.0",
+    "source_url": "https://www.poewiki.net/wiki/Atziri's_Mirror"
+  },
+  {
+    "name": "The Signal Fire",
+    "page_name": "The Signal Fire",
+    "class": "Quiver",
+    "reason": "removed_by_target_patch",
+    "release_version": "2.3.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Signal_Fire"
+  },
+  {
+    "name": "Doryani's Invitation",
+    "page_name": "Doryani's Invitation (Lightning Damage)",
+    "class": "Belt",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.1.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Doryani's_Invitation_(Lightning_Damage)"
+  },
+  {
+    "name": "Doryani's Invitation",
+    "page_name": "Doryani's Invitation (Physical Damage)",
+    "class": "Belt",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.1.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Doryani's_Invitation_(Physical_Damage)"
+  },
+  {
+    "name": "Doryani's Invitation",
+    "page_name": "Doryani's Invitation (Fire Damage)",
+    "class": "Belt",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.1.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Doryani's_Invitation_(Fire_Damage)"
+  },
+  {
+    "name": "Doryani's Invitation",
+    "page_name": "Doryani's Invitation (Cold Damage)",
+    "class": "Belt",
+    "reason": "acquisition_not_confirmed_by_source",
+    "release_version": "1.1.0",
+    "removal_version": null,
+    "source_url": "https://www.poewiki.net/wiki/Doryani's_Invitation_(Cold_Damage)"
+  },
+  {
+    "name": "Dread Captain's Cutlass",
+    "page_name": "Dread Captain's Cutlass",
+    "class": "One-Handed Sword",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/Dread_Captain's_Cutlass"
+  },
+  {
+    "name": "The Draugur's Lantern",
+    "page_name": "The Draugur's Lantern",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.1",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Draugur's_Lantern"
+  },
+  {
+    "name": "Rotmother's Mutiny",
+    "page_name": "Rotmother's Mutiny",
+    "class": "Amulet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/Rotmother's_Mutiny"
+  },
+  {
+    "name": "Seablister",
+    "page_name": "Seablister",
+    "class": "Shield",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/Seablister"
+  },
+  {
+    "name": "Stormblood",
+    "page_name": "Stormblood (Lightning)",
+    "class": "Utility Flask",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/Stormblood_(Lightning)"
+  },
+  {
+    "name": "Stormblood",
+    "page_name": "Stormblood (Cold)",
+    "class": "Utility Flask",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/Stormblood_(Cold)"
+  },
+  {
+    "name": "Pearl of Tsoatha",
+    "page_name": "Pearl of Tsoatha (1 support)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/Pearl_of_Tsoatha_(1_support)"
+  },
+  {
+    "name": "Pearl of Tsoatha",
+    "page_name": "Pearl of Tsoatha (2 supports)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/Pearl_of_Tsoatha_(2_supports)"
+  },
+  {
+    "name": "Circle of Nostalgia",
+    "page_name": "Circle of Nostalgia (Fractured)",
+    "class": "Ring",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.6.0",
+    "removal_version": "3.8.0",
+    "source_url": "https://www.poewiki.net/wiki/Circle_of_Nostalgia_(Fractured)"
+  },
+  {
+    "name": "The Crustacean's Call",
+    "page_name": "The Crustacean's Call",
+    "class": "Staff",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Crustacean's_Call"
+  },
+  {
+    "name": "Replica Forbidden Shako",
+    "page_name": "Replica Forbidden Shako",
+    "class": "Helmet",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.12.0",
+    "removal_version": "3.16.0",
+    "source_url": "https://www.poewiki.net/wiki/Replica_Forbidden_Shako"
+  },
+  {
+    "name": "The Wellhook",
+    "page_name": "The Wellhook",
+    "class": "Fishing Rod",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.29.0",
+    "removal_version": "3.30.0",
+    "source_url": "https://www.poewiki.net/wiki/The_Wellhook"
+  },
+  {
+    "name": "Worldcarver",
+    "page_name": "Worldcarver",
+    "class": "Gloves",
+    "reason": "removed_by_target_patch",
+    "release_version": "3.5.0",
+    "removal_version": "3.19.0",
+    "source_url": "https://www.poewiki.net/wiki/Worldcarver"
+  }
+]

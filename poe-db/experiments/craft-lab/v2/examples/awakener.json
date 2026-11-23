@@ -1,0 +1,6 @@
+{
+  "item": { "base": "Vaal Regalia", "item_level": 86, "rarity": "rare", "influences": ["Shaper"], "mods": ["IncreasedLife10"] },
+  "inventory": { "donor": { "base": "Vaal Regalia", "item_level": 86, "rarity": "rare", "influences": ["Elder"], "mods": ["FireResist6"] } },
+  "seed": 7,
+  "start_cost": null
+}

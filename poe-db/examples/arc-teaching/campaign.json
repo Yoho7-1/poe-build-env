@@ -1,0 +1,96 @@
+{
+  "sets": [
+    {
+      "type": "tree",
+      "action": "new",
+      "title": "Campaign Act 3",
+      "activate": true
+    }
+  ],
+  "tree": {
+    "ascendancy": "Elementalist",
+    "allocate": [
+      "Arcanist's Dominion",
+      "Lightning Walker",
+      "Heart and Soul",
+      "Crackling Speed",
+      "Deep Thoughts",
+      "Quick Recovery",
+      "Mental Rapidity",
+      "Cruel Preparation",
+      "Shaper of Storms",
+      "Elemental Overload",
+      "Prodigal Perfection",
+      "Retribution",
+      "Annihilation"
+    ],
+    "quest_points": 6,
+    "ascendancy_points": 2
+  },
+  "skills": {
+    "add_groups": [
+      {
+        "label": "Main",
+        "main": true,
+        "include_in_full_dps": true,
+        "gems": [
+          {
+            "name": "Arc",
+            "level": 6
+          },
+          {
+            "name": "Added Lightning Damage",
+            "level": 8
+          },
+          {
+            "name": "Arcane Surge",
+            "level": 10
+          }
+        ]
+      },
+      {
+        "label": "Auras",
+        "gems": [
+          {
+            "name": "Clarity",
+            "level": 7
+          },
+          {
+            "name": "Herald of Thunder",
+            "level": 5
+          }
+        ]
+      },
+      {
+        "label": "Movement",
+        "gems": [
+          {
+            "name": "Flame Dash",
+            "level": 7
+          }
+        ]
+      }
+    ]
+  },
+  "replace_items": [
+    {
+      "slot": "Weapon 1",
+      "text": "Rarity: RARE\nTeaching Spark\nDriftwood Wand\nAdds 2 to 18 Lightning Damage to Spells\n+15 to maximum Mana"
+    },
+    {
+      "slot": "Body Armour",
+      "text": "Rarity: RARE\nTeaching Robe\nSimple Robe\n+35 to maximum Life\n+20% to Lightning Resistance"
+    },
+    {
+      "slot": "Boots",
+      "text": "Rarity: RARE\nTeaching Shoes\nWool Shoes\n10% increased Movement Speed\n+25 to maximum Life\n+20% to Fire Resistance"
+    },
+    {
+      "slot": "Ring 1",
+      "text": "Rarity: RARE\nTeaching Loop\nIron Ring\n+20% to Cold Resistance\n+20 to maximum Life"
+    }
+  ],
+  "config": {
+    "resistancePenalty": 0
+  }
+}

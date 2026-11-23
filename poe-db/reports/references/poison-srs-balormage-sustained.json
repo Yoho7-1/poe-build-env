@@ -1,0 +1,720 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "source_fingerprint": "69f485b75803afa2b940ae2f6b2508b4365c2b7171864a8a36cb3af4460b8842",
+    "timeless_types": [
+      "GloriousVanity"
+    ]
+  },
+  "calculation_contract_sha256": "f7ae11fe09398b4f4db55fe9c3f6f33f50e0d08ac16795efce0d26c166d9a115",
+  "input_sha256": "5744fd01aabc6c76e17e06f179237a1ba08e810163020f26851f2c8731801806",
+  "adapter_sha256": "e707250326a4a6423a7ec3502c4d5d956233b1773ff74e9cf6fc02778605607a",
+  "scenario": "sustained",
+  "scenario_definition": {
+    "label": "Sustained boss audit",
+    "config": {
+      "conditionKilledRecently": false,
+      "multiplierKilledRecently": 0,
+      "buffOnslaught": false
+    },
+    "note": "Only the listed toggles are overridden. Flasks, charges, ailments and skill counts still require individual evidence."
+  },
+  "changes": {},
+  "calculation_id": "7e7bb8358111d67c27bbaadf4ffe78705e7ccd5c03f972ce307053a371d8ec32",
+  "computed_at": "2026-11-23T19:56:59.226Z",
+  "output": {
+    "FullDPS": 48323617.489007,
+    "CombinedDPS": 0,
+    "TotalDPS": 0,
+    "AverageDamage": 0,
+    "Speed": 3.58,
+    "HitChance": 100,
+    "CritChance": 0,
+    "Life": 5061,
+    "LifeUnreserved": 5061,
+    "EnergyShield": 2186,
+    "Mana": 1079,
+    "ManaUnreserved": 30,
+    "ManaCost": 88,
+    "ManaPerSecondCost": 0,
+    "ManaRegen": 40.6,
+    "ManaRegenRecovery": 40.6,
+    "ManaLeechGainRate": 0,
+    "LifeRegen": 294.1,
+    "LifeRegenRecovery": 294.1,
+    "LifeLeechGainRate": 0,
+    "Armour": 19640,
+    "Evasion": 1649,
+    "EffectiveMovementSpeedMod": 1.74,
+    "FireResist": 78,
+    "ColdResist": 84,
+    "LightningResist": 78,
+    "ChaosResist": 75,
+    "BlockChance": 75,
+    "SpellBlockChance": 75,
+    "SpellSuppressionChance": 100,
+    "PhysicalMaximumHitTaken": 27098,
+    "FireMaximumHitTaken": 65873,
+    "ColdMaximumHitTaken": 86675,
+    "LightningMaximumHitTaken": 65873,
+    "ChaosMaximumHitTaken": 41840,
+    "TotalEHP": 128993.97985927
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "None",
+    "bloodsoakedBannerStages": 1,
+    "buffOnslaught": false,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionEnemyBlinded": true,
+    "conditionKilledRecently": false,
+    "conditionSacrificeMinion": true,
+    "conditionUsedMinionSkillRecently": true,
+    "conditionUsingFlask": true,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "feedingFrenzyFeedingFrenzyActive": true,
+    "maniaDebuffsCount": 15,
+    "minionBuffOnslaught": true,
+    "minionbuffUnholyMight": true,
+    "multiplierBeenHitRecently": 5,
+    "multiplierCorpseConsumedRecently": 5,
+    "multiplierKilledRecently": 0,
+    "multiplierNearbyCorpse": 2,
+    "multiplierSummonedMinion": 20,
+    "multiplierWitheredStackCount": 15,
+    "overrideFortification": 10,
+    "pantheonMajorGod": "TheBrineKing",
+    "pantheonMinorGod": "Gruthkul",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": -60,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10,
+    "useEnduranceCharges": true
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSummonRagingSpirit",
+          "level": 20,
+          "name": "Summon Raging Spirit",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportUnleash",
+          "level": 20,
+          "name": "Unleash",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportUnboundAilments",
+          "level": 20,
+          "name": "Unbound Ailments",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportVoidManipulation",
+          "level": 20,
+          "name": "Void Manipulation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportMinionDamage",
+          "level": 20,
+          "name": "Minion Damage",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportMultistrike",
+          "level": 20,
+          "name": "Multistrike",
+          "quality": 20
+        },
+        {
+          "enabled": false,
+          "id": "Metadata/Items/Gems/SkillGemSupportMeleeSplash",
+          "level": 20,
+          "name": "Melee Splash",
+          "quality": 20
+        }
+      ],
+      "index": 1,
+      "slot": "Body Armour"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemConvocation",
+          "level": 1,
+          "name": "Convocation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSummonStoneGolem",
+          "level": 20,
+          "name": "Summon Stone Golem",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportFeedingFrenzy",
+          "level": 20,
+          "name": "Feeding Frenzy",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemTempestShield",
+          "level": 20,
+          "name": "Tempest Shield",
+          "quality": 20
+        }
+      ],
+      "index": 2,
+      "slot": "Gloves"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFrostblink",
+          "level": 20,
+          "name": "Frostblink",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemShieldCharge",
+          "level": 20,
+          "name": "Shield Charge",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportFasterAttacks",
+          "level": 20,
+          "name": "Faster Attacks",
+          "quality": 20
+        }
+      ],
+      "index": 3,
+      "slot": "Weapon 2"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemDiscipline",
+          "level": 20,
+          "name": "Discipline",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEnlighten",
+          "level": 4,
+          "name": "Enlighten",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemMalevolence",
+          "level": 20,
+          "name": "Malevolence",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemHaste",
+          "level": 20,
+          "name": "Haste",
+          "quality": 20
+        }
+      ],
+      "index": 4,
+      "slot": "Boots"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemRaiseSpectre",
+          "level": 21,
+          "name": "Raise Spectre",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportMinionLife",
+          "level": 21,
+          "name": "Minion Life",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportMeatShield",
+          "level": 21,
+          "name": "Meat Shield",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemAnimateGuardian",
+          "level": 21,
+          "name": "Animate Guardian",
+          "quality": 20
+        }
+      ],
+      "index": 5,
+      "slot": "Helmet"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemDesecrate",
+          "level": 1,
+          "name": "Desecrate",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemDespair",
+          "level": 21,
+          "name": "Despair",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFleshOffering",
+          "level": 20,
+          "name": "Flesh Offering",
+          "quality": 20
+        }
+      ],
+      "index": 6,
+      "slot": "Weapon 1"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemDetermination",
+          "level": 20,
+          "name": "Determination",
+          "quality": 20
+        }
+      ],
+      "index": 7,
+      "slot": "Ring 2"
+    },
+    {
+      "enabled": true,
+      "gems": [],
+      "index": 8
+    },
+    {
+      "enabled": true,
+      "gems": [],
+      "index": 9
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemTemporalChains",
+          "level": 1,
+          "name": "Temporal Chains",
+          "quality": 0
+        }
+      ],
+      "index": 10
+    }
+  ],
+  "level": 100,
+  "unparsed_item_modifiers": [
+    {
+      "line": "Spells Triggered this way have 150% more Cost",
+      "slot": "Weapon 1",
+      "unparsed": "Spells Triggered this way have 150% more Cost"
+    },
+    {
+      "line": "Nearby Enemies grant 25% increased Flask Charges",
+      "slot": "Amulet",
+      "unparsed": "Nearby Enemies grant 25% increased Flask Charges"
+    },
+    {
+      "line": "Hits against Nearby Enemies have 50% increased Critical Strike Chance",
+      "slot": "Amulet",
+      "unparsed": "Hits against Nearby Enemies have 50% increased Critical Strike Chance"
+    },
+    {
+      "line": "Passives granting Cold Resistance or all Elemental Resistances in Radius",
+      "slot": "Jewel 33631",
+      "unparsed": "Passives granting Cold Resistance or all Elemental Resistances in Radius"
+    },
+    {
+      "line": "also grant an equal chance to gain a Frenzy Charge on Kill",
+      "slot": "Jewel 33631",
+      "unparsed": "also grant an equal chance to gain a Frenzy Charge on Kill"
+    },
+    {
+      "line": "Minions have 7% chance to Taunt on Hit with Attacks",
+      "slot": "Jewel 36634",
+      "unparsed": " to Taunt  with Attacks Minions deal 17 to 23 additional  "
+    },
+    {
+      "line": "Minions have 5% chance to Blind on Hit with Attacks",
+      "slot": "Jewel 64583",
+      "unparsed": " to Blind  with Attacks "
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 3",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 4",
+      "unparsed": "Used when Charges reach full"
+    }
+  ],
+  "tree_version": "3_30",
+  "minion_output": {
+    "CombinedDPS": 2174562.7870053,
+    "TotalDPS": 540823.380552,
+    "AverageDamage": 46426.103451,
+    "Speed": 11.649122807018,
+    "HitChance": 100,
+    "CritChance": 5,
+    "Life": 11293,
+    "LifeUnreserved": 11293,
+    "EnergyShield": 4815,
+    "Mana": 0,
+    "ManaCost": 0,
+    "ManaPerSecondCost": 0,
+    "ManaRegen": 0,
+    "ManaRegenRecovery": 0,
+    "ManaLeechGainRate": 0,
+    "LifeRegen": 112.9,
+    "LifeRegenRecovery": 112.9,
+    "LifeLeechGainRate": 0,
+    "Armour": 71441,
+    "Evasion": 8120,
+    "EffectiveMovementSpeedMod": 2.06,
+    "FireResist": 75,
+    "ColdResist": 75,
+    "LightningResist": 75,
+    "ChaosResist": 20,
+    "BlockChance": 0,
+    "SpellBlockChance": 0,
+    "SpellSuppressionChance": 0,
+    "PhysicalMaximumHitTaken": 28033,
+    "FireMaximumHitTaken": 63921,
+    "ColdMaximumHitTaken": 63921,
+    "LightningMaximumHitTaken": 63921,
+    "ChaosMaximumHitTaken": 15685,
+    "TotalEHP": 83895.402078984
+  },
+  "selection": {
+    "character_level": 100,
+    "item_set": 4,
+    "main_socket_group": 1,
+    "skill_set": 7,
+    "tree_spec": 1
+  },
+  "equipped_items": [
+    {
+      "active": false,
+      "base": "Convoking Wand",
+      "id": 69,
+      "name": "New Item, Convoking Wand",
+      "rarity": "RARE",
+      "slot": "Weapon 1"
+    },
+    {
+      "active": false,
+      "base": "Onyx Amulet",
+      "id": 62,
+      "name": "Aul's Uprising, Onyx Amulet",
+      "rarity": "UNIQUE",
+      "slot": "Amulet"
+    },
+    {
+      "active": false,
+      "base": "Silken Hood",
+      "id": 60,
+      "item_level": 85,
+      "name": "Miracle Guardian, Silken Hood",
+      "rarity": "RARE",
+      "slot": "Helmet"
+    },
+    {
+      "active": false,
+      "base": "Champion Kite Shield",
+      "id": 65,
+      "name": "Aegis Aurora, Champion Kite Shield",
+      "rarity": "UNIQUE",
+      "slot": "Weapon 2"
+    },
+    {
+      "active": false,
+      "base": "Spidersilk Robe",
+      "id": 63,
+      "name": "The Covenant, Spidersilk Robe",
+      "rarity": "UNIQUE",
+      "slot": "Body Armour"
+    },
+    {
+      "active": false,
+      "base": "Wyrmscale Gauntlets",
+      "id": 58,
+      "item_level": 85,
+      "name": "Torment Talons, Wyrmscale Gauntlets",
+      "rarity": "RARE",
+      "slot": "Gloves"
+    },
+    {
+      "active": false,
+      "base": "Dragonscale Boots",
+      "id": 61,
+      "item_level": 85,
+      "name": "Pandemonium Pace, Dragonscale Boots",
+      "rarity": "RARE",
+      "slot": "Boots"
+    },
+    {
+      "active": false,
+      "base": "Bone Ring",
+      "id": 43,
+      "item_level": 83,
+      "name": "Foe Hold, Bone Ring",
+      "rarity": "RARE",
+      "slot": "Ring 1"
+    },
+    {
+      "active": false,
+      "base": "Unset Ring",
+      "id": 44,
+      "item_level": 85,
+      "name": "Pandemonium Knot, Unset Ring",
+      "rarity": "RARE",
+      "slot": "Ring 2"
+    },
+    {
+      "active": true,
+      "base": "Amethyst Flask",
+      "id": 67,
+      "name": "Progenesis, Amethyst Flask",
+      "rarity": "UNIQUE",
+      "slot": "Flask 5"
+    },
+    {
+      "active": false,
+      "base": "Ghastly Eye Jewel",
+      "id": 1,
+      "name": "Min/Max, Ghastly Eye Jewel",
+      "rarity": "RARE",
+      "slot": "Belt Abyssal Socket 2"
+    },
+    {
+      "base": "Large Cluster Jewel",
+      "id": 52,
+      "name": "New Item, Large Cluster Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 21984"
+    },
+    {
+      "base": "Ghastly Eye Jewel",
+      "id": 1,
+      "name": "Min/Max, Ghastly Eye Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 26196"
+    },
+    {
+      "base": "Viridian Jewel",
+      "id": 54,
+      "name": "The Green Nightmare, Viridian Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 33631"
+    },
+    {
+      "base": "Ghastly Eye Jewel",
+      "id": 70,
+      "name": "min/max Taunt, Ghastly Eye Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 36634"
+    },
+    {
+      "base": "Ghastly Eye Jewel",
+      "id": 55,
+      "item_level": 89,
+      "name": "Amanamu's Gaze, Ghastly Eye Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 61419"
+    },
+    {
+      "base": "Ghastly Eye Jewel",
+      "id": 71,
+      "name": "min/max Blind, Ghastly Eye Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 64583"
+    },
+    {
+      "active": false,
+      "base": "Stygian Vise",
+      "id": 46,
+      "name": "Darkness Enthroned, Stygian Vise",
+      "rarity": "UNIQUE",
+      "slot": "Belt"
+    },
+    {
+      "active": false,
+      "base": "Ghastly Eye Jewel",
+      "id": 1,
+      "name": "Min/Max, Ghastly Eye Jewel",
+      "rarity": "RARE",
+      "slot": "Belt Abyssal Socket 1"
+    },
+    {
+      "active": true,
+      "base": "Divine Life Flask",
+      "id": 47,
+      "item_level": 82,
+      "name": "Undiluted Divine Life Flask of Assuaging",
+      "rarity": "MAGIC",
+      "slot": "Flask 1"
+    },
+    {
+      "active": true,
+      "base": "Granite Flask",
+      "id": 66,
+      "name": "Chemist's Granite Flask of the Owl",
+      "rarity": "MAGIC",
+      "slot": "Flask 2"
+    },
+    {
+      "active": true,
+      "base": "Silver Flask",
+      "id": 49,
+      "item_level": 85,
+      "name": "Chemist's Silver Flask of the Lynx",
+      "rarity": "MAGIC",
+      "slot": "Flask 3"
+    },
+    {
+      "active": true,
+      "base": "Quartz Flask",
+      "id": 50,
+      "item_level": 83,
+      "name": "Continuous Quartz Flask of the Pangolin",
+      "rarity": "MAGIC",
+      "slot": "Flask 4"
+    },
+    {
+      "base": "Small Cluster Jewel",
+      "id": 6,
+      "name": "New Item, Small Cluster Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 13170"
+    }
+  ],
+  "applied_supports": [
+    {
+      "id": "SupportAddedChaosDamage",
+      "level": 29,
+      "name": "Added Chaos Damage",
+      "quality": 0
+    },
+    {
+      "id": "SupportUnleash",
+      "level": 21,
+      "name": "Unleash",
+      "quality": 30
+    },
+    {
+      "id": "SupportUnboundAilments",
+      "level": 21,
+      "name": "Unbound Ailments",
+      "quality": 30
+    },
+    {
+      "id": "SupportVoidManipulation",
+      "level": 21,
+      "name": "Void Manipulation",
+      "quality": 20
+    },
+    {
+      "id": "SupportMinionDamage",
+      "level": 21,
+      "name": "Minion Damage",
+      "quality": 30
+    },
+    {
+      "id": "SupportMultistrike",
+      "level": 21,
+      "name": "Multistrike",
+      "quality": 20
+    }
+  ],
+  "allocated_points": {
+    "ascendancy_total": 8,
+    "bloodline_subset": 0,
+    "passive": 123
+  },
+  "engine_warnings": [
+    "You do not meet the Dexterity requirement of Haste"
+  ],
+  "interpretation": "CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.",
+  "warnings": [
+    {
+      "code": "conditional_config",
+      "detail": "Recent/on-kill conditions are configured; inspect boss uptime."
+    },
+    {
+      "code": "ailment_or_stack_assumptions",
+      "detail": "Configured ailments/stacks need magnitude, application and uptime evidence."
+    },
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": true
+}

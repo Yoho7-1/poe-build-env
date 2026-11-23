@@ -1,0 +1,521 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac"
+  },
+  "input_sha256": "a153b5b6698a6959fe547014d8b138026cc337fc8164a96375adedd6398e57e9",
+  "adapter_sha256": "3d093c9236520c84b4f7b72571a660f3ae3db503bcdf46e0b32b530c1fa26ff0",
+  "scenario": "imported",
+  "scenario_definition": {
+    "label": "Imported configuration, unchanged",
+    "config": {},
+    "note": "No uptime or enemy assumptions are corrected automatically."
+  },
+  "changes": {},
+  "calculation_id": "22203530c13f5a74d49a501387574a88bc1d999374bc5e7683b7073081ba03a7",
+  "computed_at": "2026-11-23T19:35:20.470Z",
+  "output": {
+    "FullDPS": 20705041.180439,
+    "CombinedDPS": 17140361.989013,
+    "TotalDPS": 3052.0652083085,
+    "AverageDamage": 115.7321536,
+    "Speed": 5.27436,
+    "HitChance": 64,
+    "CritChance": 3.2,
+    "Life": 5977,
+    "LifeUnreserved": 5977,
+    "EnergyShield": 0,
+    "Mana": 713,
+    "ManaUnreserved": 44,
+    "ManaCost": 2,
+    "ManaPerSecondCost": 10.54872,
+    "ManaRegen": 15,
+    "ManaRegenRecovery": 15,
+    "ManaLeechGainRate": 33.755904,
+    "LifeRegen": 119.5,
+    "LifeRegenRecovery": 3269.2,
+    "LifeLeechGainRate": 0,
+    "Armour": 1690,
+    "Evasion": 6100,
+    "EffectiveMovementSpeedMod": 3.768,
+    "FireResist": 75,
+    "ColdResist": 75,
+    "LightningResist": 85,
+    "ChaosResist": 75,
+    "BlockChance": 0,
+    "SpellBlockChance": 0,
+    "SpellSuppressionChance": 100,
+    "PhysicalMaximumHitTaken": 49500,
+    "FireMaximumHitTaken": 92967,
+    "ColdMaximumHitTaken": 92967,
+    "LightningMaximumHitTaken": 144616,
+    "ChaosMaximumHitTaken": 67680,
+    "TotalEHP": 114336.47037489
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "None",
+    "bloodSandStance": "SAND",
+    "bloodsoakedBannerStages": 1,
+    "buffAlchemistsGenius": true,
+    "buffLifetap": true,
+    "buffOnslaught": true,
+    "buffTailwind": true,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionHitRecently": true,
+    "conditionSacrificeMinion": true,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "maniaDebuffsCount": 15,
+    "multiplierEnsnaredStackCount": 3,
+    "multiplierGaleForce": 10,
+    "multiplierWitheredStackCount": 15,
+    "pantheonMajorGod": "Lunaris",
+    "pantheonMinorGod": "Ryslatha",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": -60,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10,
+    "toxicRainPodOverlap": 5,
+    "useFrenzyCharges": true
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemToxicRain",
+          "level": 21,
+          "name": "Toxic Rain",
+          "quality": 23
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportVoidManipulation",
+          "level": 21,
+          "name": "Void Manipulation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportViciousProjectiles",
+          "level": 21,
+          "name": "Vicious Projectiles",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportMirageArcher",
+          "level": 20,
+          "name": "Mirage Archer",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEfficacy",
+          "level": 20,
+          "name": "Efficacy",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEmpower",
+          "level": 4,
+          "name": "Empower",
+          "quality": 0
+        }
+      ],
+      "index": 1,
+      "slot": "Body Armour"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemVaalCausticArrow",
+          "level": 20,
+          "name": "Vaal Caustic Arrow",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportLifetap",
+          "level": 20,
+          "name": "Lifetap",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportViciousProjectiles",
+          "level": 21,
+          "name": "Vicious Projectiles",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportVoidManipulation",
+          "level": 21,
+          "name": "Void Manipulation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportManaforgedArrows",
+          "level": 20,
+          "name": "Manaforged Arrows",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportArrowNova",
+          "level": 21,
+          "name": "Arrow Nova",
+          "quality": 20
+        }
+      ],
+      "index": 2,
+      "slot": "Weapon 1"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemToxicRainAltY",
+          "level": 20,
+          "name": "Toxic Rain of Withering",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFrenzy",
+          "level": 20,
+          "name": "Frenzy",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportCullingStrike",
+          "level": 20,
+          "name": "Culling Strike",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportManaforgedArrows",
+          "level": 20,
+          "name": "Manaforged Arrows",
+          "quality": 20
+        }
+      ],
+      "index": 3,
+      "slot": "Gloves"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemVaalHaste",
+          "level": 20,
+          "name": "Vaal Haste",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemMalevolence",
+          "level": 20,
+          "name": "Malevolence",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemPetrifiedBlood",
+          "level": 20,
+          "name": "Petrified Blood",
+          "quality": 0
+        }
+      ],
+      "index": 4,
+      "slot": "Helmet"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemWitheringStep",
+          "level": 21,
+          "name": "Withering Step",
+          "quality": 23
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemAutomation",
+          "level": 20,
+          "name": "Automation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemImmortalCall",
+          "level": 20,
+          "name": "Immortal Call",
+          "quality": 20
+        }
+      ],
+      "index": 5,
+      "slot": "Boots"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFlameDash",
+          "level": 12,
+          "name": "Flame Dash",
+          "quality": 20
+        }
+      ],
+      "index": 6,
+      "slot": "Boots"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemBlinkArrow",
+          "level": 20,
+          "name": "Blink Arrow",
+          "quality": 20
+        }
+      ],
+      "index": 7,
+      "slot": "Helmet"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "level": 1,
+          "name": "Despair",
+          "quality": 0
+        }
+      ],
+      "index": 8,
+      "slot": "Ring 1"
+    }
+  ],
+  "level": 99,
+  "unparsed_item_modifiers": [
+    {
+      "line": "5% chance to Blind Enemies on Hit with Attacks",
+      "slot": "Weapon 2 Swap",
+      "unparsed": " to Blind Enemies  with Attacks "
+    },
+    {
+      "line": "Your Empowering Towers have 25% increased Range",
+      "slot": "Ring 2",
+      "unparsed": "Your Empowering Towers have 25% increased Range"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 5",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 2",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 3",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 4",
+      "unparsed": "Used when Charges reach full"
+    }
+  ],
+  "tree_version": "3_30",
+  "migration": {
+    "method": "PoB TreeTab:ConvertAllToVersion; originals retained outside the working copy",
+    "target": "3_30",
+    "trees": [
+      {
+        "index": 1,
+        "title": "Act 1 {1}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 0
+      },
+      {
+        "index": 2,
+        "title": "Act 3 {2}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 0
+      },
+      {
+        "index": 3,
+        "title": "Act 5 {3}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 0
+      },
+      {
+        "index": 4,
+        "title": "Act 7 {4}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 0
+      },
+      {
+        "index": 5,
+        "title": "Act 10 {5}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 1
+      },
+      {
+        "index": 6,
+        "title": "Early Maps {6}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 1
+      },
+      {
+        "index": 7,
+        "title": "Endgame {7}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 1
+      },
+      {
+        "index": 8,
+        "title": "1 Cluster {8}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 1
+      },
+      {
+        "index": 9,
+        "title": "Ultra Endgame {9}",
+        "before_version": "3_29",
+        "after_version": "3_30",
+        "removed_nodes": 0,
+        "added_nodes": 0,
+        "changed_nodes": 1
+      }
+    ],
+    "detail": "Full node deltas are available with --full and in the cached result."
+  },
+  "applied_supports": [
+    {
+      "id": "SupportVoidManipulation",
+      "level": 22,
+      "name": "Void Manipulation",
+      "quality": 20
+    },
+    {
+      "id": "SupportViciousProjectiles",
+      "level": 22,
+      "name": "Vicious Projectiles",
+      "quality": 10
+    },
+    {
+      "id": "SupportMirageArcher",
+      "level": 23,
+      "name": "Mirage Archer",
+      "quality": 30
+    },
+    {
+      "id": "SupportEfficacy",
+      "level": 23,
+      "name": "Efficacy",
+      "quality": 20
+    },
+    {
+      "id": "SupportEmpower",
+      "level": 5,
+      "name": "Empower",
+      "quality": 0
+    }
+  ],
+  "allocated_points": {
+    "ascendancy_total": 8,
+    "bloodline_subset": 0,
+    "passive": 122
+  },
+  "engine_warnings": [],
+  "interpretation": "CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.",
+  "warnings": [
+    {
+      "code": "wrong_or_unknown_tree",
+      "detail": "Tree 3_29; target is standard 3_30. Do not present as a validated standard 3.30 build."
+    },
+    {
+      "code": "custom_modifiers",
+      "detail": "Custom modifiers require explicit justification; they may represent unsupported effects or synthetic bonuses."
+    },
+    {
+      "code": "conditional_config",
+      "detail": "Recent/on-kill conditions are configured; inspect boss uptime."
+    },
+    {
+      "code": "ailment_or_stack_assumptions",
+      "detail": "Configured ailments/stacks need magnitude, application and uptime evidence."
+    },
+    {
+      "code": "migration_requires_review",
+      "detail": "Explicit tree migration is not proof of acquisition, item/gem legality or gameplay. Inspect all node deltas and original provenance."
+    },
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": false,
+  "saved_xml": "<project>\\poe-db\\references\\toxic-rain-migrated-330.xml"
+}

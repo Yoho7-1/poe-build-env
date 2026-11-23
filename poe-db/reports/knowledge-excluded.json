@@ -1,0 +1,647 @@
+[
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Currency/CurrencyImprintOrb",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Currency/CurrencyImprint",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Currency/CurrencyIncursionCorrupt1",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Currency/CurrencyIncursionCorrupt2",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Currency/CurrencyIncursionCorruptGem",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Weapons/TwoHandWeapons/TwoHandSwords/TwoHandSwordDev",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Rings/RingVictor1",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Armours/BodyArmours/BodyStrTemp",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Armours/Boots/BootsStrTemp",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Quivers/Quiver1",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Quivers/Quiver2",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Quivers/Quiver3",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Quivers/Quiver4",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Quivers/Quiver5",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemDiscorectangleSlam",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemDamageInfusion",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemIcefire",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemIgnite",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemFireWeapon",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemRiptide",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemBackstab",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemNewShockNova",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SupportGemItemQuantity",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemNewPunishment",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemSummonSkeletonsChannelled",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SupportGemCastLinkedCursesOnCurse",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SupportGemSplit",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemVortexMine",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemInfernalSwarm",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemWandTeleport",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemVaalHeavyStrike",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemVaalFireTrap",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemVaalSweep",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemComboStrike",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemLightningCircle",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemLightningChannel",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemTouchOfGod",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemStaticTether",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemNewBladeVortex",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemRighteousLightning",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemShadowBlades",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemSlashTotem",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SupportGemVaalSoulHarvesting",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SupportGemTemporaryForTutorial",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemInfernalSweep",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemSpectralSpinningWeapon",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemCaptureMonster",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemVaalFleshOffering",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemRendingSteel",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SupportGemHandcastRapidFire",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemBoneArmour",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemQuickBlock",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemReplicate",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemBlitz",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemSliceAndDice",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemSerpentStrike",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemProjectilePortal",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemBloodWhirl",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemCoilingAssault",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemElementalProjectiles",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Gems/SkillGemBladeTrap",
+    "reason": "unreleased"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/DivinationCards/DivinationCardBirthOfTheThree",
+    "reason": "legacy"
+  },
+  {
+    "category": "base_items",
+    "id": "Metadata/Items/Classic/MysteryLeaguestone",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "Icefire",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "Riptide",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "DiscorectangleSlam",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "VaalSweep",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "WandTeleport",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "DamageInfusion",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "Ignite",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "FireWeapon",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "Backstab",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SupportCastLinkedCursesOnCurse",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "NewShockNova",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SupportItemQuantity",
+    "reason": "legacy"
+  },
+  {
+    "category": "gems",
+    "id": "NewPunishment",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "VaalHeavyStrike",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "VaalFireTrap",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SupportSplitProjectiles",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "VortexOld",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "InfernalSwarm",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "ComboStrike",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "LightningCircle",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "LightningChannel",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "DoryanisTouch",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "StaticTether",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "NewNewBladeVortex",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "RighteousLightning",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "ShadowBlades",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "AncestorTotemSlash",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "ElementalProjectiles",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SupportVaalSoulHarvesting",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SummonSkeletonsChannelled",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SupportLesserReducedManaCost",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "InfernalSweep",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SpectralSpinningWeapon",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "CaptureMonster",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "VaalFleshOffering",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "RendingSteel",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "HandcastRapidFireSupport",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "BoneArmour",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "QuickBlock",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "Replicate",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "Blitz",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SliceAndDice",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "SerpentStrike",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "CoilingAssault",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "ProjectilePortal",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "BloodWhirl",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "BladeTrap",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "BladeTrapAltX",
+    "reason": "unreleased"
+  },
+  {
+    "category": "gems",
+    "id": "BladeTrapAltY",
+    "reason": "unreleased"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Amplification Rod",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Asenath's Chant",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Death's Opus",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Deidbellow",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Doomfletch's Prism",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Frostferno",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Geofri's Legacy",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Iron Heart",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Kaom's Way",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Malachai's Awakening",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "The Dancing Duo",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "The Tactician",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Thirst for Horrors",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Timetwist",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Wall of Brambles",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Whakatutuki o Matua",
+    "reason": "unique_not_in_current_catalogue"
+  },
+  {
+    "category": "foulborn_replacements",
+    "id": "Windshriek",
+    "reason": "unique_not_in_current_catalogue"
+  }
+]

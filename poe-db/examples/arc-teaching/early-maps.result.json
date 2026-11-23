@@ -1,0 +1,1180 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "source_fingerprint": "69f485b75803afa2b940ae2f6b2508b4365c2b7171864a8a36cb3af4460b8842",
+    "timeless_types": [
+      "GloriousVanity"
+    ]
+  },
+  "calculation_contract_sha256": "a8fc982b15068cab83b0ceafae63ad91ec4bf6b33c8b37cd755cb148e4853de8",
+  "input_sha256": "09ddf82ee3cab513f02ca06ab3e4d1ad95ac1b9164acdf21ddbda290597332f5",
+  "adapter_sha256": "2fa1a26fdc2ac6dd74cde079d058ba52b5a7ecffaa5c50e28c1ed1968f43a94f",
+  "scenario": "imported",
+  "scenario_definition": {
+    "label": "Imported configuration, unchanged",
+    "config": {},
+    "note": "No uptime or enemy assumptions are corrected automatically."
+  },
+  "changes": {
+    "selection": {
+      "character_level": 70
+    },
+    "sets": [
+      {
+        "type": "tree",
+        "action": "copy",
+        "from": 2,
+        "title": "Early maps",
+        "activate": true
+      },
+      {
+        "type": "skill",
+        "action": "copy",
+        "from": 1,
+        "title": "Early maps",
+        "activate": true
+      },
+      {
+        "type": "item",
+        "action": "copy",
+        "from": 1,
+        "title": "Early maps",
+        "activate": true
+      }
+    ],
+    "tree": {
+      "allocate": [
+        "Heart of Thunder",
+        "Breath of Lightning",
+        "Storm Weaver",
+        "Nimbleness",
+        "Melding",
+        "Blood Siphon",
+        "Mastermind of Discord",
+        "Heart of Destruction",
+        "Roiling Tempest",
+        "Wandslinger",
+        "Discipline and Training",
+        "Coordination",
+        "Precision",
+        "Elemental Focus",
+        "Divine Fervour",
+        "Tolerance",
+        "Fire Walker",
+        "Contemplative Meditation"
+      ],
+      "quest_points": 23,
+      "ascendancy_points": 6
+    },
+    "skills": {
+      "groups": [
+        {
+          "group": 1,
+          "replace_gems": [
+            {
+              "gem": 1,
+              "name": "Arc",
+              "level": 20
+            },
+            {
+              "gem": 2,
+              "name": "Added Lightning Damage",
+              "level": 20
+            },
+            {
+              "gem": 3,
+              "name": "Lightning Penetration",
+              "level": 20
+            }
+          ],
+          "add_gems": [
+            {
+              "name": "Inspiration",
+              "level": 20
+            }
+          ]
+        },
+        {
+          "group": 2,
+          "replace_gems": [
+            {
+              "gem": 1,
+              "name": "Clarity",
+              "level": 20
+            },
+            {
+              "gem": 2,
+              "name": "Herald of Thunder",
+              "level": 20
+            }
+          ]
+        },
+        {
+          "group": 3,
+          "replace_gems": [
+            {
+              "gem": 1,
+              "name": "Flame Dash",
+              "level": 20
+            }
+          ]
+        }
+      ]
+    },
+    "replace_items": [
+      {
+        "slot": "Weapon 1",
+        "text": "Rarity: RARE\nTeaching Spark\nImbued Wand\nAdds 12 to 110 Lightning Damage to Spells\n30% increased Spell Damage\n+40 to maximum Mana"
+      },
+      {
+        "slot": "Body Armour",
+        "text": "Rarity: RARE\nTeaching Robe\nSavant's Robe\n+80 to maximum Life\n+35% to Lightning Resistance\n+30% to Cold Resistance"
+      },
+      {
+        "slot": "Helmet",
+        "text": "Rarity: RARE\nTeaching Circlet\nMagistrate Crown\n+60 to maximum Life\n+35% to Fire Resistance\n+40% to Cold Resistance"
+      },
+      {
+        "slot": "Gloves",
+        "text": "Rarity: RARE\nTeaching Wraps\nSilk Gloves\n+55 to maximum Life\n+30% to Cold Resistance\n+20% to Lightning Resistance"
+      },
+      {
+        "slot": "Boots",
+        "text": "Rarity: RARE\nTeaching Shoes\nVelvet Slippers\n25% increased Movement Speed\n+60 to maximum Life\n+35% to Fire Resistance"
+      },
+      {
+        "slot": "Ring 1",
+        "text": "Rarity: RARE\nTeaching Loop\nSapphire Ring\n+50 to maximum Life\n+30% to Cold Resistance\n+30% to Lightning Resistance"
+      },
+      {
+        "slot": "Ring 2",
+        "text": "Rarity: RARE\nTeaching Band\nRuby Ring\n+50 to maximum Life\n+30% to Fire Resistance\n+20% to Chaos Resistance"
+      },
+      {
+        "slot": "Amulet",
+        "text": "Rarity: RARE\nTeaching Pendant\nLapis Amulet\n+40 to maximum Life\n+25% to Fire Resistance\n+30 to Strength"
+      },
+      {
+        "slot": "Belt",
+        "text": "Rarity: RARE\nTeaching Sash\nLeather Belt\n+70 to maximum Life\n+30% to Lightning Resistance"
+      }
+    ],
+    "config": {
+      "resistancePenalty": -60
+    }
+  },
+  "calculation_id": "313a6371d7c7e58a383ce8c16fbf6db10b97f72065852e7ba76ffd73969e5115",
+  "computed_at": "2026-11-23T21:16:56.427Z",
+  "output": {
+    "FullDPS": 72639.6825,
+    "CombinedDPS": 72639.6825,
+    "TotalDPS": 72639.6825,
+    "AverageDamage": 23306.85,
+    "Speed": 3.1166666666667,
+    "HitChance": 100,
+    "CritChance": 16.5,
+    "Life": 2779,
+    "LifeUnreserved": 2779,
+    "EnergyShield": 400,
+    "Mana": 1196,
+    "ManaUnreserved": 661,
+    "ManaCost": 27,
+    "ManaPerSecondCost": 84.15,
+    "ManaRegen": 102.5,
+    "ManaRegenRecovery": 102.5,
+    "ManaLeechGainRate": 0,
+    "LifeRegen": 22.2,
+    "LifeRegenRecovery": 22.2,
+    "LifeLeechGainRate": 0,
+    "Armour": 189,
+    "Evasion": 17,
+    "EffectiveMovementSpeedMod": 1.22,
+    "FireResist": 75,
+    "ColdResist": 75,
+    "LightningResist": 75,
+    "ChaosResist": -14,
+    "BlockChance": 0,
+    "SpellBlockChance": 0,
+    "SpellSuppressionChance": 0,
+    "PhysicalMaximumHitTaken": 3216,
+    "FireMaximumHitTaken": 11354,
+    "ColdMaximumHitTaken": 11354,
+    "LightningMaximumHitTaken": 11354,
+    "ChaosMaximumHitTaken": 2438,
+    "TotalEHP": 6052.4257473722
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "None",
+    "bloodsoakedBannerStages": 1,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionSacrificeMinion": true,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "maniaDebuffsCount": 15,
+    "pantheonMajorGod": "None",
+    "pantheonMinorGod": "None",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": -60,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemArc",
+          "level": 20,
+          "name": "Arc",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportAddedLightningDamage",
+          "level": 20,
+          "name": "Added Lightning Damage",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportLightningPenetration",
+          "level": 20,
+          "name": "Lightning Penetration",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportInspiration",
+          "level": 20,
+          "name": "Inspiration",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": true,
+      "index": 1,
+      "label": "Main"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemClarity",
+          "level": 20,
+          "name": "Clarity",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemHeraldOfThunder",
+          "level": 20,
+          "name": "Herald of Thunder",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": false,
+      "index": 2,
+      "label": "Auras"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFlameDash",
+          "level": 20,
+          "name": "Flame Dash",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": false,
+      "index": 3,
+      "label": "Movement"
+    }
+  ],
+  "level": 70,
+  "unparsed_item_modifiers": [],
+  "tree_version": "3_30",
+  "selection": {
+    "character_level": 70,
+    "item_set": 2,
+    "main_socket_group": 1,
+    "skill_set": 2,
+    "tree_spec": 3
+  },
+  "equipped_items": [
+    {
+      "active": false,
+      "base": "Savant's Robe",
+      "id": 6,
+      "name": "Teaching Robe, Savant's Robe",
+      "rarity": "RARE",
+      "slot": "Body Armour"
+    },
+    {
+      "active": false,
+      "base": "Magistrate Crown",
+      "id": 7,
+      "name": "Teaching Circlet, Magistrate Crown",
+      "rarity": "RARE",
+      "slot": "Helmet"
+    },
+    {
+      "active": false,
+      "base": "Silk Gloves",
+      "id": 8,
+      "name": "Teaching Wraps, Silk Gloves",
+      "rarity": "RARE",
+      "slot": "Gloves"
+    },
+    {
+      "active": false,
+      "base": "Velvet Slippers",
+      "id": 9,
+      "name": "Teaching Shoes, Velvet Slippers",
+      "rarity": "RARE",
+      "slot": "Boots"
+    },
+    {
+      "active": false,
+      "base": "Sapphire Ring",
+      "id": 10,
+      "name": "Teaching Loop, Sapphire Ring",
+      "rarity": "RARE",
+      "slot": "Ring 1"
+    },
+    {
+      "active": false,
+      "base": "Ruby Ring",
+      "id": 11,
+      "name": "Teaching Band, Ruby Ring",
+      "rarity": "RARE",
+      "slot": "Ring 2"
+    },
+    {
+      "active": false,
+      "base": "Lapis Amulet",
+      "id": 12,
+      "name": "Teaching Pendant, Lapis Amulet",
+      "rarity": "RARE",
+      "slot": "Amulet"
+    },
+    {
+      "active": false,
+      "base": "Leather Belt",
+      "id": 13,
+      "name": "Teaching Sash, Leather Belt",
+      "rarity": "RARE",
+      "slot": "Belt"
+    },
+    {
+      "active": false,
+      "base": "Imbued Wand",
+      "id": 5,
+      "name": "Teaching Spark, Imbued Wand",
+      "rarity": "RARE",
+      "slot": "Weapon 1"
+    }
+  ],
+  "applied_supports": [
+    {
+      "id": "SupportAddedLightningDamage",
+      "level": 20,
+      "name": "Added Lightning Damage",
+      "quality": 0
+    },
+    {
+      "id": "SupportLightningPenetration",
+      "level": 20,
+      "name": "Lightning Penetration",
+      "quality": 0
+    },
+    {
+      "id": "SupportInspiration",
+      "level": 20,
+      "name": "Inspiration",
+      "quality": 0
+    }
+  ],
+  "allocated_points": {
+    "ascendancy_total": 6,
+    "bloodline_subset": 0,
+    "passive": 92
+  },
+  "budget": {
+    "ascendancy_available": 6,
+    "ascendancy_used": 6,
+    "bloodline_subset": 0,
+    "disconnected_nodes": [],
+    "extra_points": 1,
+    "note": "Bloodline points are a subset of ascendancy_used and share its budget.",
+    "passive_available": 93,
+    "passive_used": 92,
+    "quest_points_assumed": 23
+  },
+  "engine_warnings": [
+    "You have eligible items missing an anoint: Amulet"
+  ],
+  "class": "Witch",
+  "ascendancy": "Elementalist",
+  "edit_report": {
+    "sets": [
+      {
+        "action": "copy",
+        "active": true,
+        "from": 2,
+        "id": 3,
+        "title": "Early maps",
+        "type": "tree"
+      },
+      {
+        "action": "copy",
+        "active": true,
+        "from": 1,
+        "id": 2,
+        "title": "Early maps",
+        "type": "skill"
+      },
+      {
+        "action": "copy",
+        "active": true,
+        "from": 1,
+        "id": 2,
+        "title": "Early maps",
+        "type": "item"
+      }
+    ],
+    "skills": {
+      "added": [],
+      "main_socket_group": 1,
+      "modified": [
+        {
+          "added_gems": [],
+          "enabled": true,
+          "gems": [
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemArc",
+              "level": 20,
+              "name": "Arc",
+              "quality": 0,
+              "support": false
+            },
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemSupportAddedLightningDamage",
+              "level": 20,
+              "name": "Added Lightning Damage",
+              "quality": 0,
+              "support": true
+            },
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemSupportLightningPenetration",
+              "level": 20,
+              "name": "Lightning Penetration",
+              "quality": 0,
+              "support": true
+            },
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemSupportInspiration",
+              "level": 20,
+              "name": "Inspiration",
+              "quality": 0,
+              "support": true
+            }
+          ],
+          "group": 1,
+          "include_in_full_dps": true,
+          "removed_gems": [],
+          "replaced_gems": [
+            {
+              "after_name": "Arc",
+              "before": {
+                "enabled": true,
+                "id": "Metadata/Items/Gems/SkillGemArc",
+                "level": 6,
+                "name": "Arc",
+                "quality": 0,
+                "support": false
+              },
+              "gem": 1
+            },
+            {
+              "after_name": "Added Lightning Damage",
+              "before": {
+                "enabled": true,
+                "id": "Metadata/Items/Gems/SkillGemSupportAddedLightningDamage",
+                "level": 8,
+                "name": "Added Lightning Damage",
+                "quality": 0,
+                "support": true
+              },
+              "gem": 2
+            },
+            {
+              "after_name": "Lightning Penetration",
+              "before": {
+                "enabled": true,
+                "id": "Metadata/Items/Gems/SkillGemSupportArcaneSurge",
+                "level": 10,
+                "name": "Arcane Surge",
+                "quality": 0,
+                "support": true
+              },
+              "gem": 3
+            }
+          ]
+        },
+        {
+          "added_gems": [],
+          "enabled": true,
+          "gems": [
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemClarity",
+              "level": 20,
+              "name": "Clarity",
+              "quality": 0,
+              "support": false
+            },
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemHeraldOfThunder",
+              "level": 20,
+              "name": "Herald of Thunder",
+              "quality": 0,
+              "support": false
+            }
+          ],
+          "group": 2,
+          "include_in_full_dps": false,
+          "removed_gems": [],
+          "replaced_gems": [
+            {
+              "after_name": "Clarity",
+              "before": {
+                "enabled": true,
+                "id": "Metadata/Items/Gems/SkillGemClarity",
+                "level": 7,
+                "name": "Clarity",
+                "quality": 0,
+                "support": false
+              },
+              "gem": 1
+            },
+            {
+              "after_name": "Herald of Thunder",
+              "before": {
+                "enabled": true,
+                "id": "Metadata/Items/Gems/SkillGemHeraldOfThunder",
+                "level": 5,
+                "name": "Herald of Thunder",
+                "quality": 0,
+                "support": false
+              },
+              "gem": 2
+            }
+          ]
+        },
+        {
+          "added_gems": [],
+          "enabled": true,
+          "gems": [
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemFlameDash",
+              "level": 20,
+              "name": "Flame Dash",
+              "quality": 0,
+              "support": false
+            }
+          ],
+          "group": 3,
+          "include_in_full_dps": false,
+          "removed_gems": [],
+          "replaced_gems": [
+            {
+              "after_name": "Flame Dash",
+              "before": {
+                "enabled": true,
+                "id": "Metadata/Items/Gems/SkillGemFlameDash",
+                "level": 7,
+                "name": "Flame Dash",
+                "quality": 0,
+                "support": false
+              },
+              "gem": 1
+            }
+          ]
+        }
+      ],
+      "removed": [],
+      "skill_set": 2
+    },
+    "tree": {
+      "allocated": [
+        {
+          "node": {
+            "id": 56716,
+            "name": "Heart of Thunder",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 4367,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 29781,
+              "name": "Mana",
+              "type": "Normal"
+            },
+            {
+              "id": 32431,
+              "name": "Lightning Damage",
+              "type": "Normal"
+            },
+            {
+              "id": 36121,
+              "name": "Lightning Damage",
+              "type": "Normal"
+            },
+            {
+              "id": 44184,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 55647,
+              "name": "Lightning Damage",
+              "type": "Normal"
+            },
+            {
+              "id": 56716,
+              "name": "Heart of Thunder",
+              "type": "Notable"
+            },
+            {
+              "id": 57362,
+              "name": "Lightning Damage",
+              "type": "Normal"
+            }
+          ],
+          "points": 8,
+          "requested": "Heart of Thunder"
+        },
+        {
+          "node": {
+            "id": 11645,
+            "name": "Breath of Lightning",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 11645,
+              "name": "Breath of Lightning",
+              "type": "Notable"
+            },
+            {
+              "id": 46469,
+              "name": "Lightning Damage and Shock Chance",
+              "type": "Normal"
+            },
+            {
+              "id": 49588,
+              "name": "Lightning Damage and Shock Chance",
+              "type": "Normal"
+            },
+            {
+              "id": 61264,
+              "name": "Lightning Damage and Shock Chance",
+              "type": "Normal"
+            }
+          ],
+          "points": 4,
+          "requested": "Breath of Lightning"
+        },
+        {
+          "node": {
+            "id": 32455,
+            "name": "Storm Weaver",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 32455,
+              "name": "Storm Weaver",
+              "type": "Notable"
+            },
+            {
+              "id": 40366,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 42760,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 58763,
+              "name": "Cold and Lightning Damage",
+              "type": "Normal"
+            },
+            {
+              "id": 63963,
+              "name": "Cold Damage",
+              "type": "Normal"
+            }
+          ],
+          "points": 5,
+          "requested": "Storm Weaver"
+        },
+        {
+          "node": {
+            "id": 9788,
+            "name": "Nimbleness",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 5875,
+              "name": "Cast Speed and Spell Critical Strike Chance",
+              "type": "Normal"
+            },
+            {
+              "id": 8948,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 9788,
+              "name": "Nimbleness",
+              "type": "Notable"
+            },
+            {
+              "id": 12189,
+              "name": "Cast Speed and Spell Critical Strike Chance",
+              "type": "Normal"
+            },
+            {
+              "id": 27659,
+              "name": "Dexterity",
+              "type": "Normal"
+            },
+            {
+              "id": 37671,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 38176,
+              "name": "Intelligence",
+              "type": "Normal"
+            }
+          ],
+          "points": 7,
+          "requested": "Nimbleness"
+        },
+        {
+          "node": {
+            "id": 18865,
+            "name": "Melding",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 18865,
+              "name": "Melding",
+              "type": "Notable"
+            },
+            {
+              "id": 55247,
+              "name": "Life and Energy Shield",
+              "type": "Normal"
+            },
+            {
+              "id": 61320,
+              "name": "Life and Energy Shield",
+              "type": "Normal"
+            },
+            {
+              "id": 63799,
+              "name": "Life and Energy Shield",
+              "type": "Normal"
+            }
+          ],
+          "points": 4,
+          "requested": "Melding"
+        },
+        {
+          "node": {
+            "id": 25058,
+            "name": "Blood Siphon",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 20546,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 21301,
+              "name": "Strength",
+              "type": "Normal"
+            },
+            {
+              "id": 21835,
+              "name": "Life",
+              "type": "Normal"
+            },
+            {
+              "id": 25058,
+              "name": "Blood Siphon",
+              "type": "Notable"
+            },
+            {
+              "id": 35894,
+              "name": "Trickery",
+              "type": "Notable"
+            }
+          ],
+          "points": 5,
+          "requested": "Blood Siphon"
+        },
+        {
+          "node": {
+            "ascendancy": "Elementalist",
+            "id": 61259,
+            "name": "Mastermind of Discord",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "ascendancy": "Elementalist",
+              "id": 37114,
+              "name": "Elemental Damage, Attack and Cast Speed",
+              "type": "Normal"
+            },
+            {
+              "ascendancy": "Elementalist",
+              "id": 61259,
+              "name": "Mastermind of Discord",
+              "type": "Notable"
+            }
+          ],
+          "points": 2,
+          "requested": "Mastermind of Discord"
+        },
+        {
+          "node": {
+            "ascendancy": "Elementalist",
+            "id": 57197,
+            "name": "Heart of Destruction",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "ascendancy": "Elementalist",
+              "id": 19595,
+              "name": "Elemental Damage, Attack and Cast Speed",
+              "type": "Normal"
+            },
+            {
+              "ascendancy": "Elementalist",
+              "id": 57197,
+              "name": "Heart of Destruction",
+              "type": "Notable"
+            }
+          ],
+          "points": 2,
+          "requested": "Heart of Destruction"
+        },
+        {
+          "node": {
+            "id": 40351,
+            "name": "Roiling Tempest",
+            "type": "Keystone"
+          },
+          "path": [
+            {
+              "id": 40351,
+              "name": "Roiling Tempest",
+              "type": "Keystone"
+            }
+          ],
+          "points": 1,
+          "requested": "Roiling Tempest"
+        },
+        {
+          "node": {
+            "id": 22972,
+            "name": "Wandslinger",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 22972,
+              "name": "Wandslinger",
+              "type": "Notable"
+            },
+            {
+              "id": 50472,
+              "name": "Wand Damage",
+              "type": "Normal"
+            },
+            {
+              "id": 63067,
+              "name": "Wand Damage and Attack Speed",
+              "type": "Normal"
+            }
+          ],
+          "points": 3,
+          "requested": "Wandslinger"
+        },
+        {
+          "node": {
+            "id": 41472,
+            "name": "Discipline and Training",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 1203,
+              "name": "Life",
+              "type": "Normal"
+            },
+            {
+              "id": 41472,
+              "name": "Discipline and Training",
+              "type": "Notable"
+            }
+          ],
+          "points": 2,
+          "requested": "Discipline and Training"
+        },
+        {
+          "node": {
+            "id": 5823,
+            "name": "Coordination",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 5823,
+              "name": "Coordination",
+              "type": "Notable"
+            },
+            {
+              "id": 9877,
+              "name": "Life",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Coordination"
+        },
+        {
+          "node": {
+            "id": 6237,
+            "name": "Precision",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 6237,
+              "name": "Precision",
+              "type": "Notable"
+            },
+            {
+              "id": 44529,
+              "name": "Attack and Cast Speed, Accuracy",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Precision"
+        },
+        {
+          "node": {
+            "id": 42686,
+            "name": "Elemental Focus",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 21575,
+              "name": "Elemental Damage",
+              "type": "Normal"
+            },
+            {
+              "id": 42686,
+              "name": "Elemental Focus",
+              "type": "Notable"
+            }
+          ],
+          "points": 2,
+          "requested": "Elemental Focus"
+        },
+        {
+          "node": {
+            "id": 30693,
+            "name": "Divine Fervour",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 30693,
+              "name": "Divine Fervour",
+              "type": "Notable"
+            },
+            {
+              "id": 58453,
+              "name": "Elemental Damage",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Divine Fervour"
+        },
+        {
+          "node": {
+            "id": 10511,
+            "name": "Tolerance",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 10511,
+              "name": "Tolerance",
+              "type": "Notable"
+            },
+            {
+              "id": 57044,
+              "name": "Bleed Avoidance",
+              "type": "Normal"
+            },
+            {
+              "id": 57746,
+              "name": "Chaos Resistance and Avoidance",
+              "type": "Normal"
+            }
+          ],
+          "points": 3,
+          "requested": "Tolerance"
+        },
+        {
+          "node": {
+            "id": 34661,
+            "name": "Fire Walker",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 34661,
+              "name": "Fire Walker",
+              "type": "Notable"
+            }
+          ],
+          "points": 1,
+          "requested": "Fire Walker"
+        },
+        {
+          "node": {
+            "id": 20261,
+            "name": "Contemplative Meditation",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 20261,
+              "name": "Contemplative Meditation",
+              "type": "Notable"
+            },
+            {
+              "id": 26070,
+              "name": "Cost Efficiency",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Contemplative Meditation"
+        }
+      ],
+      "deallocated": [],
+      "masteries": [],
+      "tree_spec": 3
+    }
+  },
+  "tree_specs": [
+    {
+      "index": 1,
+      "title": "Default",
+      "version": "3_30"
+    },
+    {
+      "index": 2,
+      "title": "Campaign Act 3",
+      "version": "3_30"
+    },
+    {
+      "index": 3,
+      "title": "Early maps",
+      "version": "3_30"
+    }
+  ],
+  "item_sets": [
+    {
+      "id": 1,
+      "title": "Default"
+    },
+    {
+      "id": 2,
+      "title": "Early maps"
+    }
+  ],
+  "skill_sets": [
+    {
+      "id": 1,
+      "title": "Default"
+    },
+    {
+      "id": 2,
+      "title": "Early maps"
+    }
+  ],
+  "interpretation": "CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.",
+  "warnings": [
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": false,
+  "saved_xml": "<project>\\poe-db\\examples\\arc-teaching\\early-maps.xml"
+}

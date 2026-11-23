@@ -1,0 +1,27 @@
+{
+  "name": "poe-knowledge-db",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "fetch": "node scripts/fetch.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test",
+    "search": "node scripts/search.mjs",
+    "query": "node scripts/query.mjs",
+    "fetch:knowledge": "node scripts/fetch-knowledge.mjs",
+    "build:knowledge": "node scripts/build-knowledge.mjs",
+    "agent": "node scripts/agent.mjs",
+    "doctor": "node scripts/agent.mjs doctor --deep",
+    "setup:pob": "node scripts/setup-pob.mjs",
+    "mechanics:build": "node scripts/agent.mjs mechanic build",
+    "examples:seed": "node scripts/seed-examples.mjs",
+    "report:environment": "node scripts/report-environment.mjs"
+  },
+  "dependencies": {
+    "fast-xml-parser": "5.12.1"
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "at": "2026-11-23T19:56:47.556Z",
+  "game": "poe1",
+  "patch": "3.30",
+  "league": "Covens of Umbra",
+  "api_league_id": "Covens",
+  "platform": "pc",
+  "categories": [
+    {
+      "category": "Currency",
+      "snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+      "records": 65,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "UniqueWeapon",
+      "snapshot_id": "d731bda08c72e7a32a98da8be433718466ffafef7591212f698de34cf5b7d107",
+      "records": 647,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "UniqueArmour",
+      "snapshot_id": "1ecf323708acbc3f90c4ab868543be7b35b432a113eddbfb280c78ce891633e8",
+      "records": 952,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "UniqueAccessory",
+      "snapshot_id": "7c0a5bee6d22eefa840b3881ad4cfd07699588795e61e8a9546a3f6e5dcd3828",
+      "records": 370,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "UniqueFlask",
+      "snapshot_id": "ed18ff384730fee6ffae9ab43b20d2b61cc47c0b3cf7dbfee3d84cece13cec58",
+      "records": 39,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "UniqueJewel",
+      "snapshot_id": "cf6ce0dedde3bfe44016f12c0e52658e7166e85d46cb9d49431452e5806d920f",
+      "records": 169,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "UniqueTincture",
+      "snapshot_id": "6e752cb883cef5a9492646d8cf1eded93ccec08d78d2c64531227ce02a13f115",
+      "records": 5,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "SkillGem",
+      "snapshot_id": "ae2d8ed492cc3e693c9cc69b34d9702022341d5ec63797977e58cb547e65fe86",
+      "records": 7354,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "ClusterJewel",
+      "snapshot_id": "d4a6c89ec84ebf17a7ac03118c6abecabfd2f3d75edf635ac0fb2a8342af71ae",
+      "records": 590,
+      "already_imported": true,
+      "cache_hit": true
+    },
+    {
+      "category": "BaseType",
+      "snapshot_id": "2f6d712c6ef0c3cbee6b89476d66254dd0d5612e42b245da3cb98a28d57770a8",
+      "records": 18570,
+      "already_imported": true,
+      "cache_hit": true
+    }
+  ],
+  "total_observations": 28761,
+  "sources": [
+    {
+      "url": "https://poe.ninja/poe1/api/economy/leagues",
+      "sha256": "55665f2723594590186000f10a4c1bae1b5c4eea06f064542cce3485a1328c0a",
+      "bytes": 155,
+      "obtained_at": "2026-11-23T19:26:44.947Z",
+      "checked_at": "2026-11-23T19:26:44.947Z",
+      "etag": "W/8ea08007da6fb6bc583689347ccff0f8",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:26:45 GMT",
+      "cache_control": "no-cache",
+      "content_type": "application/json",
+      "file": "cache/research/56e0a26a52872b3fefe06fe4db00c6198808de3979e4701365cb3d2899a00e53.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/currency/overview?league=Covens&type=Currency",
+      "sha256": "f6c8de0aeb1b15dbe8cfc13d272882c95cf24a7e24007c892160518b656bf4c7",
+      "bytes": 113616,
+      "obtained_at": "2026-11-23T19:27:15.835Z",
+      "checked_at": "2026-11-23T19:27:15.835Z",
+      "etag": "W/bebdaa7ba3cc5a766fc8c8c0fe3d3914",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:15 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/3ad2a37b09a24d4397da8e6ebbe784b5305597780cde708c67657036b06c86b9.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=UniqueWeapon",
+      "sha256": "5c38f947933a1f53f82c983c98f96577ea43b45cdcde4fe8a75ee1287e0f73a8",
+      "bytes": 800806,
+      "obtained_at": "2026-11-23T19:27:17.083Z",
+      "checked_at": "2026-11-23T19:27:17.083Z",
+      "etag": "W/105f630e0aaae6af2ecf25b5234705ae",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:17 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/7b981da5cb66737459e15ceaab987370232440d008283c5daf7d63ef7ff937c1.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=UniqueArmour",
+      "sha256": "02b4d4de6d70950d58cdbf16d92ce7ac82fb10b78cb7c20acbb3a32f1d009030",
+      "bytes": 1122290,
+      "obtained_at": "2026-11-23T19:27:18.428Z",
+      "checked_at": "2026-11-23T19:27:18.428Z",
+      "etag": "W/369d06d41deec6bc65cf9bce54313e6c",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:18 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/359a567e8a98fae83d2f13b42c23bc528fc3b4196aac12364962e38ccac0077f.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=UniqueAccessory",
+      "sha256": "d10ca2925cf61fde069fd20ed8573ee81e0f79d3588b722fcf870b56145056e2",
+      "bytes": 504107,
+      "obtained_at": "2026-11-23T19:27:19.893Z",
+      "checked_at": "2026-11-23T19:27:19.893Z",
+      "etag": "W/5a42cba734f2ad14b6e5926ffe143cc4",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:19 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/81e2ba2f98d94cd3870f3be0091cdfe4498bfb1e88d4546b60a3e44fdf0965b5.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=UniqueFlask",
+      "sha256": "4c2f5bd616d7c1a29a70c8943cdd8dbcd661fd804a44a94b04126622421cd41f",
+      "bytes": 37821,
+      "obtained_at": "2026-11-23T19:27:21.162Z",
+      "checked_at": "2026-11-23T19:27:21.162Z",
+      "etag": "W/b7200b2a97426f1e806d9e1da464279a",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:21 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/1dec189b353e991f09790c8470892aea29a51ede7f3f6bc398ffcaf3b0381989.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=UniqueJewel",
+      "sha256": "0bff177ee2472ded1a0d8217eb496fba24c581a8f649d28352bea7f783bafb95",
+      "bytes": 228491,
+      "obtained_at": "2026-11-23T19:27:22.382Z",
+      "checked_at": "2026-11-23T19:27:22.382Z",
+      "etag": "W/423ffc6083bd6e3ac21df55a50f9f135",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:22 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/1f5e49d6da08865f91983859a86e054d1089ba039756495db3b93f96cc3c8efb.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=UniqueTincture",
+      "sha256": "119553f58d2e26fabbf2161d4384bbe3debf15222a51b07f7d27a8614eb30733",
+      "bytes": 4933,
+      "obtained_at": "2026-11-23T19:27:24.114Z",
+      "checked_at": "2026-11-23T19:27:24.114Z",
+      "etag": "W/69c346fac807079a8d89498ec564420f",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:24 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/f6c84304ad78ec3bc4dcf8017b54acf4d05793b041eed3f4dcc6349d3ad263a1.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=SkillGem",
+      "sha256": "2296e9e1fd5a253ba71ecb72f4abee668aa6143db77dbf4d0f89cdc989f4b2f2",
+      "bytes": 4030944,
+      "obtained_at": "2026-11-23T19:27:25.331Z",
+      "checked_at": "2026-11-23T19:27:25.331Z",
+      "etag": "W/55e9c9acbfccdd60f09197ddc6ca62e7",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:25 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/aee917fab2bd98f4ea3720077d47dad52c892ab3b38e5d2df41557ae98d4415f.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=ClusterJewel",
+      "sha256": "3acdad5c70dc3c5bd8c817b00a2b3a7ca321d3479528f3bab12315190975cdbc",
+      "bytes": 405717,
+      "obtained_at": "2026-11-23T19:27:26.996Z",
+      "checked_at": "2026-11-23T19:27:26.996Z",
+      "etag": "W/bac061286391185739f39a65297a2f78",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:27 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/b461c6079a7afe7b390c2dc5030ab7fb970fa9423b49cb31d424c1e24224d981.body"
+    },
+    {
+      "url": "https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=Covens&type=BaseType",
+      "sha256": "821c912f5ecec2484153ec79bf3801408c34ff36c17ba43e4aedc076810008a8",
+      "bytes": 8660363,
+      "obtained_at": "2026-11-23T19:27:28.264Z",
+      "checked_at": "2026-11-23T19:27:28.264Z",
+      "etag": "W/7c3869820e92d90dc23e402f1bdfabb5",
+      "last_modified": null,
+      "http_date": "Mon, 23 Nov 2026 19:27:28 GMT",
+      "cache_control": "public, max-age=1800, stale-while-revalidate=300, stale-if-error=86400",
+      "content_type": "application/json",
+      "file": "cache/research/ab9843d6f322618069a2ba69569b69c81fcdd25b216fe36f643c619f2a976e59.body"
+    }
+  ],
+  "excluded": [],
+  "documentation": "https://poe.ninja/docs/api",
+  "limitations": [
+    "Estimates and dated observations, not guaranteed offers or acquisition proof.",
+    "Exact item variants, corruption, links and gem levels/quality must match.",
+    "No live rare-item appraisal or build/profile API scraping."
+  ]
+}

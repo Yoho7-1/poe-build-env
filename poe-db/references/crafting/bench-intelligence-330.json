@@ -1,0 +1,58 @@
+{
+  "id": "bench-intelligence-330",
+  "title": "Верстак: +(15-20) to Intelligence",
+  "game": "poe1",
+  "patch": "3.30",
+  "base_id": "Metadata/Items/Amulets/Amulet3",
+  "item_level": 86,
+  "bench_craft_id": "20",
+  "target_mod_ids": [
+    "HelenaMasterIntelligence1"
+  ],
+  "tool_version": "RePoE 3.30.0.4 recipe definition",
+  "observed_at": "2026-11-23T19:50:45.704Z",
+  "source_url": "https://raw.githubusercontent.com/repoe-fork/repoe-fork.github.io/536caa88b673e232aa410cb47e20dc2d9ecd064e/data/crafting_bench_options.json",
+  "preconditions": [
+    "Предмет нужного класса: Amber Amulet; реальный экземпляр проверяется отдельно.",
+    "Свободный suffix; группа Intelligence не конфликтует с существующими модами.",
+    "Редкий изменяемый предмет, не corrupted/mirrored; соответствующий рецепт открыт и доступен.",
+    "Лимит crafted modifiers допускает добавление; метамоды/особые ограничения проверены отдельно."
+  ],
+  "steps": [
+    {
+      "action": "bench_add_explicit_mod",
+      "recipe_id": "20",
+      "mod_id": "HelenaMasterIntelligence1",
+      "result_source_text": "+(15-20) to Intelligence",
+      "cost": {
+        "Metadata/Items/Currency/CurrencyAddModToMagic": 1
+      }
+    }
+  ],
+  "source_evidence": {
+    "recipe_id": "20",
+    "source_version": "3.30.0.4",
+    "sha256": "d664372c28784a65f9c10c1b8d36608d084ac698a6caaafbaf4be40be8b6f76a",
+    "mod_generation_type": "suffix",
+    "mod_required_level": 15,
+    "mod_groups": [
+      "Intelligence"
+    ]
+  },
+  "costs": [
+    {
+      "currency_id": "Metadata/Items/Currency/CurrencyAddModToMagic",
+      "name": "Orb of Augmentation",
+      "amount": 1,
+      "unit_estimate_chaos": 1,
+      "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+      "price_observed_at": "2026-11-23T19:27:15.835Z"
+    }
+  ],
+  "estimated_one_application_chaos": 1,
+  "caveats": [
+    "Это условный рецепт одного применения, не проверка конкретного предмета.",
+    "Диапазон roll сохранён; стоимость получения максимального roll не рассчитана.",
+    "Рыночная стоимость валюты и расход NPC — разные величины; цена датирована."
+  ]
+}

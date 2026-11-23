@@ -1,0 +1,101 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "boss": "Elder",
+  "name": "The Elder",
+  "tier": "pinnacle",
+  "skill_coverage": "generic_only",
+  "baseline": {
+    "input_sha256": "fdf026aa37a91aeafc0c45a9a2e8cc07739c056fe647f52851c3b4c7fca506f4",
+    "scenario": "sustained",
+    "calculation_contract_sha256": "a8fc982b15068cab83b0ceafae63ad91ec4bf6b33c8b37cd755cb148e4853de8",
+    "engine_commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac"
+  },
+  "kills_first": {
+    "skill": "Generic pinnacle",
+    "damage_type": "Physical",
+    "damage_fraction_of_max_hit": 1.6290988789545966,
+    "verdict": "one_shot"
+  },
+  "skills": [
+    {
+      "skill": "Generic pinnacle",
+      "kind": "hit",
+      "damage_type": "Average",
+      "penetration": {
+        "LightningPen": 3,
+        "ColdPen": 3,
+        "FirePen": 3
+      },
+      "flags": [],
+      "conversion": {},
+      "calculation_id": "fbde4a8364be1b04c86e793606bfbfa2d89eed57ff87bff60c0c468c0a93eeae",
+      "source": "engine_configured_hit",
+      "engine_hits_to_die": 0.61383628269495,
+      "damage_fraction_of_max_hit": 1.6290988789545966,
+      "hits_to_die": 0,
+      "margin_multiplier": 0.61383628269495,
+      "dominant_type": "Physical",
+      "taken_after_mitigation": {
+        "Physical": 2229.1227,
+        "Lightning": 636.8922,
+        "Cold": 636.8922,
+        "Fire": 636.8922,
+        "Chaos": 1036.7616
+      },
+      "total_taken": 5176.5609,
+      "verdict": "one_shot",
+      "preset_check": {
+        "expected_raw_damage": 9860,
+        "engine_raw_damage": 9860,
+        "status": "matches"
+      },
+      "cross_check": {
+        "method": "max over separate typed hits",
+        "damage_fraction_of_max_hit": 0.6968283582089553,
+        "rows": [
+          {
+            "type": "Physical",
+            "damage": 2241,
+            "max_hit": 3216,
+            "ratio": 0.6968283582089553
+          },
+          {
+            "type": "Lightning",
+            "damage": 2241,
+            "max_hit": 11354,
+            "ratio": 0.19737537431742117
+          },
+          {
+            "type": "Cold",
+            "damage": 2241,
+            "max_hit": 11354,
+            "ratio": 0.19737537431742117
+          },
+          {
+            "type": "Fire",
+            "damage": 2241,
+            "max_hit": 11354,
+            "ratio": 0.19737537431742117
+          },
+          {
+            "type": "Chaos",
+            "damage": 896,
+            "max_hit": 2438,
+            "ratio": 0.3675143560295324
+          }
+        ]
+      },
+      "method": "PoB NumberOfDamagingHits for the configured preset hit; fraction = 1 / hits",
+      "caveats": [
+        "PoB generic expected boss hit; each type is a separate hypothetical hit, not one combined hit. Not a real boss skill."
+      ]
+    }
+  ],
+  "missing": [],
+  "disclaimer": "Numeric experiment from PoB configured boss hits; not a game test. Avoidance (block, suppression, evasion) and recovery between hits are not included; flags list layers that do not apply.",
+  "timing": {
+    "engine_runs": 1,
+    "batch_elapsed_ms": 310
+  }
+}

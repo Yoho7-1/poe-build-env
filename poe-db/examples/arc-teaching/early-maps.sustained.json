@@ -1,0 +1,347 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "source_fingerprint": "69f485b75803afa2b940ae2f6b2508b4365c2b7171864a8a36cb3af4460b8842",
+    "timeless_types": [
+      "GloriousVanity"
+    ]
+  },
+  "calculation_contract_sha256": "a8fc982b15068cab83b0ceafae63ad91ec4bf6b33c8b37cd755cb148e4853de8",
+  "input_sha256": "fdf026aa37a91aeafc0c45a9a2e8cc07739c056fe647f52851c3b4c7fca506f4",
+  "adapter_sha256": "2fa1a26fdc2ac6dd74cde079d058ba52b5a7ecffaa5c50e28c1ed1968f43a94f",
+  "scenario": "sustained",
+  "scenario_definition": {
+    "label": "Sustained boss audit",
+    "config": {
+      "conditionKilledRecently": false,
+      "multiplierKilledRecently": 0,
+      "buffOnslaught": false
+    },
+    "note": "Only the listed toggles are overridden. Flasks, charges, ailments and skill counts still require individual evidence."
+  },
+  "changes": {},
+  "calculation_id": "dc58b7db75440c8ada4883f41f72a5b34e7fe08c72841c2f2101d257a2aafda2",
+  "computed_at": "2026-11-23T21:17:02.873Z",
+  "output": {
+    "FullDPS": 72639.6825,
+    "CombinedDPS": 72639.6825,
+    "TotalDPS": 72639.6825,
+    "AverageDamage": 23306.85,
+    "Speed": 3.1166666666667,
+    "HitChance": 100,
+    "CritChance": 16.5,
+    "Life": 2779,
+    "LifeUnreserved": 2779,
+    "EnergyShield": 400,
+    "Mana": 1196,
+    "ManaUnreserved": 661,
+    "ManaCost": 27,
+    "ManaPerSecondCost": 84.15,
+    "ManaRegen": 102.5,
+    "ManaRegenRecovery": 102.5,
+    "ManaLeechGainRate": 0,
+    "LifeRegen": 22.2,
+    "LifeRegenRecovery": 22.2,
+    "LifeLeechGainRate": 0,
+    "Armour": 189,
+    "Evasion": 17,
+    "EffectiveMovementSpeedMod": 1.22,
+    "FireResist": 75,
+    "ColdResist": 75,
+    "LightningResist": 75,
+    "ChaosResist": -14,
+    "BlockChance": 0,
+    "SpellBlockChance": 0,
+    "SpellSuppressionChance": 0,
+    "PhysicalMaximumHitTaken": 3216,
+    "FireMaximumHitTaken": 11354,
+    "ColdMaximumHitTaken": 11354,
+    "LightningMaximumHitTaken": 11354,
+    "ChaosMaximumHitTaken": 2438,
+    "TotalEHP": 6052.4257473722
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "None",
+    "bloodsoakedBannerStages": 1,
+    "buffOnslaught": false,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionKilledRecently": false,
+    "conditionSacrificeMinion": true,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "maniaDebuffsCount": 15,
+    "multiplierKilledRecently": 0,
+    "pantheonMajorGod": "None",
+    "pantheonMinorGod": "None",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": -60,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemArc",
+          "level": 20,
+          "name": "Arc",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportAddedLightningDamage",
+          "level": 20,
+          "name": "Added Lightning Damage",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportLightningPenetration",
+          "level": 20,
+          "name": "Lightning Penetration",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportInspiration",
+          "level": 20,
+          "name": "Inspiration",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": true,
+      "index": 1,
+      "label": "Main"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemClarity",
+          "level": 20,
+          "name": "Clarity",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemHeraldOfThunder",
+          "level": 20,
+          "name": "Herald of Thunder",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": false,
+      "index": 2,
+      "label": "Auras"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFlameDash",
+          "level": 20,
+          "name": "Flame Dash",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": false,
+      "index": 3,
+      "label": "Movement"
+    }
+  ],
+  "level": 70,
+  "unparsed_item_modifiers": [],
+  "tree_version": "3_30",
+  "selection": {
+    "character_level": 70,
+    "item_set": 2,
+    "main_socket_group": 1,
+    "skill_set": 2,
+    "tree_spec": 3
+  },
+  "equipped_items": [
+    {
+      "active": false,
+      "base": "Leather Belt",
+      "id": 13,
+      "name": "Teaching Sash, Leather Belt",
+      "rarity": "RARE",
+      "slot": "Belt"
+    },
+    {
+      "active": false,
+      "base": "Imbued Wand",
+      "id": 5,
+      "name": "Teaching Spark, Imbued Wand",
+      "rarity": "RARE",
+      "slot": "Weapon 1"
+    },
+    {
+      "active": false,
+      "base": "Lapis Amulet",
+      "id": 12,
+      "name": "Teaching Pendant, Lapis Amulet",
+      "rarity": "RARE",
+      "slot": "Amulet"
+    },
+    {
+      "active": false,
+      "base": "Magistrate Crown",
+      "id": 7,
+      "name": "Teaching Circlet, Magistrate Crown",
+      "rarity": "RARE",
+      "slot": "Helmet"
+    },
+    {
+      "active": false,
+      "base": "Savant's Robe",
+      "id": 6,
+      "name": "Teaching Robe, Savant's Robe",
+      "rarity": "RARE",
+      "slot": "Body Armour"
+    },
+    {
+      "active": false,
+      "base": "Silk Gloves",
+      "id": 8,
+      "name": "Teaching Wraps, Silk Gloves",
+      "rarity": "RARE",
+      "slot": "Gloves"
+    },
+    {
+      "active": false,
+      "base": "Velvet Slippers",
+      "id": 9,
+      "name": "Teaching Shoes, Velvet Slippers",
+      "rarity": "RARE",
+      "slot": "Boots"
+    },
+    {
+      "active": false,
+      "base": "Sapphire Ring",
+      "id": 10,
+      "name": "Teaching Loop, Sapphire Ring",
+      "rarity": "RARE",
+      "slot": "Ring 1"
+    },
+    {
+      "active": false,
+      "base": "Ruby Ring",
+      "id": 11,
+      "name": "Teaching Band, Ruby Ring",
+      "rarity": "RARE",
+      "slot": "Ring 2"
+    }
+  ],
+  "applied_supports": [
+    {
+      "id": "SupportAddedLightningDamage",
+      "level": 20,
+      "name": "Added Lightning Damage",
+      "quality": 0
+    },
+    {
+      "id": "SupportLightningPenetration",
+      "level": 20,
+      "name": "Lightning Penetration",
+      "quality": 0
+    },
+    {
+      "id": "SupportInspiration",
+      "level": 20,
+      "name": "Inspiration",
+      "quality": 0
+    }
+  ],
+  "allocated_points": {
+    "ascendancy_total": 6,
+    "bloodline_subset": 0,
+    "passive": 92
+  },
+  "budget": {
+    "ascendancy_available": 8,
+    "ascendancy_used": 6,
+    "bloodline_subset": 0,
+    "disconnected_nodes": [],
+    "extra_points": 1,
+    "note": "Bloodline points are a subset of ascendancy_used and share its budget.",
+    "passive_available": 93,
+    "passive_used": 92,
+    "quest_points_assumed": 23
+  },
+  "engine_warnings": [
+    "You have eligible items missing an anoint: Amulet"
+  ],
+  "class": "Witch",
+  "ascendancy": "Elementalist",
+  "edit_report": [],
+  "tree_specs": [
+    {
+      "index": 1,
+      "title": "Default",
+      "version": "3_30"
+    },
+    {
+      "index": 2,
+      "title": "Campaign Act 3",
+      "version": "3_30"
+    },
+    {
+      "index": 3,
+      "title": "Early maps",
+      "version": "3_30"
+    }
+  ],
+  "item_sets": [
+    {
+      "id": 1,
+      "title": "Default"
+    },
+    {
+      "id": 2,
+      "title": "Early maps"
+    }
+  ],
+  "skill_sets": [
+    {
+      "id": 1,
+      "title": "Default"
+    },
+    {
+      "id": 2,
+      "title": "Early maps"
+    }
+  ],
+  "interpretation": "CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.",
+  "warnings": [
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": false
+}

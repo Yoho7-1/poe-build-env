@@ -1,0 +1,45 @@
+{
+  "at": "2026-11-23T20:04:24.298Z",
+  "software_tests": {
+    "total": 28,
+    "passed": 28,
+    "failed": 0,
+    "report": "reports/tests-enriched.tap"
+  },
+  "deep_diagnostics": {
+    "ready": true,
+    "report": "reports/doctor-enriched.json"
+  },
+  "skills": {
+    "validated": [
+      "poe-build-design",
+      "poe-build-audit",
+      "poe-upgrade"
+    ],
+    "validator": "skill-creator/scripts/quick_validate.py",
+    "passed": true
+  },
+  "restoration": {
+    "directory": "<project>\\backups\\2026-11-23T20-03-12.315Z-enriched-environment",
+    "doctor_ready": true,
+    "tests": {
+      "total": 28,
+      "passed": 28,
+      "failed": 0
+    },
+    "manifest_files_verified": 12,
+    "main_revision": 1,
+    "network_required": false
+  },
+  "independent_llm_evaluation": {
+    "run": false,
+    "cases": 9,
+    "file": "evaluations/cases.json"
+  },
+  "limits": [
+    "Software checks and source hashes do not establish gameplay viability or independent LLM reasoning quality.",
+    "Author archives are historical; derived builds require review and are not asserted to be current author uploads.",
+    "Market observations are dated; source currency conversions disagree. Conditional bench plans do not simulate full crafting.",
+    "Context benchmark counts characters, not model tokens."
+  ]
+}

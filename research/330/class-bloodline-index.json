@@ -1,0 +1,780 @@
+{
+  "checked": "2026-11-23",
+  "tag": "3.30.0",
+  "source": "https://raw.githubusercontent.com/grindinggear/skilltree-export/550fb34ae7fca9ec4d760a2ac845bb2ba1032ec3/data.json",
+  "coreClassCount": 7,
+  "coreAscendancyCount": 21,
+  "ascendancyPoints": 8,
+  "bloodlinesInExport": 13,
+  "warning": "Exported content is not an availability guarantee. Historical alternate ascendancies are excluded from the bloodline count.",
+  "classes": [
+    {
+      "name": "Scion",
+      "ascendancies": [
+        {
+          "id": "Ascendant",
+          "name": "Ascendant",
+          "nodeIds": [
+            193,
+            607,
+            772,
+            2521,
+            4194,
+            6778,
+            7618,
+            8281,
+            8656,
+            9327,
+            10099,
+            12597,
+            15435,
+            17445,
+            22551,
+            24755,
+            24798,
+            30690,
+            30919,
+            31598,
+            33875,
+            34567,
+            34774,
+            35754,
+            38689,
+            39598,
+            41534,
+            41996,
+            42144,
+            42546,
+            42671,
+            43122,
+            43195,
+            43336,
+            43962,
+            45403,
+            49532,
+            51782,
+            53992,
+            54877,
+            56722,
+            57052,
+            57429,
+            58029,
+            58827,
+            61072,
+            61437,
+            62162,
+            63357
+          ]
+        },
+        {
+          "id": "Reliquarian",
+          "name": "Reliquarian",
+          "nodeIds": [
+            2460,
+            2768,
+            8081,
+            8967,
+            9258,
+            10108,
+            12003,
+            15544,
+            16633,
+            16994,
+            17386,
+            18147,
+            20160,
+            22441,
+            22628,
+            25795,
+            26055,
+            27054,
+            33467,
+            35448,
+            35936,
+            35989,
+            36072,
+            36489,
+            37303,
+            40276,
+            43857,
+            47058,
+            48040,
+            48410,
+            52094,
+            54569,
+            54928,
+            56940,
+            59067,
+            60582
+          ]
+        },
+        {
+          "id": "Luminary",
+          "name": "Luminary",
+          "nodeIds": [
+            1564,
+            1977,
+            15726,
+            15900,
+            19993,
+            25944,
+            27123,
+            30675,
+            31517,
+            32095,
+            32669,
+            35877,
+            43645,
+            46479,
+            52633,
+            56292,
+            61133,
+            63954
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Marauder",
+      "ascendancies": [
+        {
+          "id": "Juggernaut",
+          "name": "Juggernaut",
+          "nodeIds": [
+            1734,
+            5819,
+            16093,
+            17765,
+            17988,
+            23972,
+            32115,
+            44297,
+            49153,
+            51998,
+            53816,
+            56789,
+            62349,
+            62595,
+            63417
+          ]
+        },
+        {
+          "id": "Berserker",
+          "name": "Berserker",
+          "nodeIds": [
+            5865,
+            8592,
+            9271,
+            24528,
+            29294,
+            29630,
+            32251,
+            38999,
+            42861,
+            48904,
+            50024,
+            57560,
+            59920,
+            63583,
+            63673
+          ]
+        },
+        {
+          "id": "Chieftain",
+          "name": "Chieftain",
+          "nodeIds": [
+            982,
+            1731,
+            5643,
+            6028,
+            9971,
+            10238,
+            14996,
+            24704,
+            31667,
+            32249,
+            42659,
+            47486,
+            48480,
+            50692,
+            53095,
+            61355
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ranger",
+      "ascendancies": [
+        {
+          "id": "Raider",
+          "name": "Warden",
+          "nodeIds": [
+            2060,
+            4849,
+            5926,
+            11597,
+            12146,
+            15550,
+            16848,
+            19488,
+            24214,
+            24432,
+            27536,
+            29662,
+            31364,
+            33645,
+            36958,
+            40104,
+            53421,
+            55509,
+            58427,
+            58650,
+            61761,
+            63940
+          ]
+        },
+        {
+          "id": "Deadeye",
+          "name": "Deadeye",
+          "nodeIds": [
+            1729,
+            2872,
+            5082,
+            5443,
+            22852,
+            23169,
+            24848,
+            26067,
+            28995,
+            44482,
+            45313,
+            53086,
+            55985,
+            56134,
+            56856,
+            59837,
+            61627,
+            62136,
+            64028
+          ]
+        },
+        {
+          "id": "Pathfinder",
+          "name": "Pathfinder",
+          "nodeIds": [
+            1697,
+            6038,
+            14156,
+            20480,
+            32640,
+            32662,
+            36242,
+            40631,
+            40813,
+            51101,
+            59800,
+            61805,
+            63293,
+            64111,
+            65296
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Witch",
+      "ascendancies": [
+        {
+          "id": "Occultist",
+          "name": "Occultist",
+          "nodeIds": [
+            5502,
+            6728,
+            17018,
+            18378,
+            25309,
+            27096,
+            29161,
+            31316,
+            31344,
+            31984,
+            32417,
+            37127,
+            37492,
+            43242,
+            47630,
+            48124,
+            50935,
+            62504
+          ]
+        },
+        {
+          "id": "Elementalist",
+          "name": "Elementalist",
+          "nodeIds": [
+            258,
+            4917,
+            6052,
+            12475,
+            12738,
+            16023,
+            19595,
+            27038,
+            37114,
+            40810,
+            47873,
+            53123,
+            54279,
+            56461,
+            57197,
+            58998,
+            61259
+          ]
+        },
+        {
+          "id": "Necromancer",
+          "name": "Necromancer",
+          "nodeIds": [
+            3554,
+            5415,
+            11490,
+            14603,
+            18309,
+            18574,
+            23509,
+            23572,
+            26298,
+            36017,
+            39818,
+            48719,
+            54159,
+            55646,
+            60547,
+            60791,
+            65153
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Duelist",
+      "ascendancies": [
+        {
+          "id": "Slayer",
+          "name": "Slayer",
+          "nodeIds": [
+            3184,
+            10143,
+            15286,
+            16306,
+            17315,
+            20954,
+            33795,
+            34215,
+            34484,
+            38180,
+            42293,
+            45696,
+            50845,
+            61393,
+            62817
+          ]
+        },
+        {
+          "id": "Gladiator",
+          "name": "Gladiator",
+          "nodeIds": [
+            758,
+            1675,
+            2598,
+            3651,
+            8419,
+            14726,
+            15616,
+            24538,
+            27864,
+            32730,
+            33179,
+            37623,
+            48760,
+            52575,
+            63490
+          ]
+        },
+        {
+          "id": "Champion",
+          "name": "Champion",
+          "nodeIds": [
+            6982,
+            11412,
+            13374,
+            24984,
+            25111,
+            27604,
+            31700,
+            33940,
+            35185,
+            35750,
+            41433,
+            43725,
+            56967,
+            60508,
+            61478
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Templar",
+      "ascendancies": [
+        {
+          "id": "Inquisitor",
+          "name": "Inquisitor",
+          "nodeIds": [
+            662,
+            3154,
+            10635,
+            13851,
+            19417,
+            27055,
+            32816,
+            35739,
+            37486,
+            39790,
+            40059,
+            43193,
+            48214,
+            53884,
+            57222,
+            60769,
+            61871
+          ]
+        },
+        {
+          "id": "Hierophant",
+          "name": "Hierophant",
+          "nodeIds": [
+            922,
+            1105,
+            11046,
+            14870,
+            22637,
+            25651,
+            26714,
+            29026,
+            29994,
+            30940,
+            33167,
+            34434,
+            38387,
+            40510,
+            44797,
+            51492,
+            60462
+          ]
+        },
+        {
+          "id": "Guardian",
+          "name": "Guardian",
+          "nodeIds": [
+            409,
+            3458,
+            4494,
+            5929,
+            16745,
+            19641,
+            20050,
+            32364,
+            32992,
+            37419,
+            39728,
+            40010,
+            42264,
+            46952,
+            55146,
+            61372,
+            64768
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow",
+      "ascendancies": [
+        {
+          "id": "Assassin",
+          "name": "Assassin",
+          "nodeIds": [
+            1945,
+            4242,
+            6064,
+            9014,
+            12850,
+            18335,
+            19083,
+            19598,
+            21192,
+            21264,
+            23024,
+            28782,
+            29844,
+            33954,
+            43215,
+            46676,
+            47531,
+            48239,
+            51402,
+            55686,
+            58229
+          ]
+        },
+        {
+          "id": "Trickster",
+          "name": "Trickster",
+          "nodeIds": [
+            2336,
+            13219,
+            19587,
+            23225,
+            28884,
+            29825,
+            32947,
+            35598,
+            37191,
+            41891,
+            48999,
+            55236,
+            55867,
+            58454,
+            63908
+          ]
+        },
+        {
+          "id": "Saboteur",
+          "name": "Saboteur",
+          "nodeIds": [
+            869,
+            1953,
+            5087,
+            14103,
+            16212,
+            16940,
+            18635,
+            25167,
+            26446,
+            28535,
+            38918,
+            39834,
+            41081,
+            47366,
+            47778,
+            51462,
+            57175,
+            62067,
+            63135,
+            64785,
+            64842,
+            65085
+          ]
+        }
+      ]
+    }
+  ],
+  "bloodlines": [
+    {
+      "id": "Trialmaster",
+      "name": "Chaos Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        7403,
+        17297,
+        27737,
+        30271,
+        49785,
+        57290,
+        60118,
+        61092
+      ]
+    },
+    {
+      "id": "Oshabi",
+      "name": "Oshabi Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        12542,
+        18519,
+        32216,
+        36393,
+        41389,
+        47543,
+        63834
+      ]
+    },
+    {
+      "id": "KingInTheMists",
+      "name": "Nameless Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        9920,
+        12354,
+        43902,
+        44903,
+        46649,
+        48836,
+        52553
+      ]
+    },
+    {
+      "id": "Catarina",
+      "name": "Catarina Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        9086,
+        14190,
+        17309,
+        17570,
+        38886,
+        44848,
+        59826
+      ]
+    },
+    {
+      "id": "Aul",
+      "name": "Aul Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        542,
+        9437,
+        10696,
+        16350,
+        21785,
+        41464,
+        43376,
+        52349
+      ]
+    },
+    {
+      "id": "Lycia",
+      "name": "Lycia Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        3872,
+        8638,
+        27869,
+        31958,
+        32740,
+        36020,
+        47767
+      ]
+    },
+    {
+      "id": "Olroth",
+      "name": "Olroth Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        8138,
+        10916,
+        13988,
+        25187,
+        32265,
+        37815,
+        40953,
+        48816,
+        58438,
+        63020
+      ]
+    },
+    {
+      "id": "Farrul",
+      "name": "Farrul Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        7442,
+        10861,
+        15739,
+        27121,
+        31878,
+        34952,
+        35011,
+        37670,
+        41387,
+        48251
+      ]
+    },
+    {
+      "id": "Delirious",
+      "name": "Delirious Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        9939,
+        30061,
+        33670,
+        34442,
+        39486,
+        46704,
+        52408
+      ]
+    },
+    {
+      "id": "Breachlord",
+      "name": "Breachlord Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        6344,
+        35069,
+        48406,
+        48711,
+        52855,
+        53398,
+        63630
+      ]
+    },
+    {
+      "id": "Necromantic",
+      "name": "Saresh Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        5452,
+        8066,
+        8133,
+        12860,
+        38740,
+        43660,
+        60686
+      ]
+    },
+    {
+      "id": "Brinerot",
+      "name": "Velka Bloodline",
+      "availability": "Present in export; acquisition for a new Covens character is not confirmed",
+      "nodeIds": [
+        7600,
+        13362,
+        17080,
+        19078,
+        34977,
+        39381,
+        51685
+      ]
+    },
+    {
+      "id": "Abyssal",
+      "name": "Abyssal Bloodline",
+      "availability": "Verify encounter access before requiring in a build",
+      "nodeIds": [
+        2643,
+        14588,
+        16287,
+        19208,
+        25703,
+        28609,
+        35214,
+        35380,
+        57472,
+        58999,
+        64963
+      ]
+    }
+  ]
+}

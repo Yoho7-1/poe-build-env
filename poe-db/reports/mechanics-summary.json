@@ -1,0 +1,10 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "snapshot_id": "2b819c03eafd82d7",
+  "cards": 40,
+  "sources": 17,
+  "relations": 86,
+  "scope": "Curated engine explanations, not comprehensive in-game mechanical proof.",
+  "integrity": "ok"
+}

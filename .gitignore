@@ -1,0 +1,25 @@
+# --- Installed / downloaded (restored by `node poe-db/scripts/setup.mjs`) ---
+poe-db/node_modules/
+poe-db/vendor/pob/
+poe-db/cache/
+poe-db/data/
+
+# --- Release packaging output ---
+dist/
+
+# --- Local, personal or bulky material (not published) ---
+backups/
+builds/
+research/*
+!research/330/
+KNOWLEDGE.md
+poe-db/docs/HANDOFF.local.md
+poe-db/references/repairs/
+poe-db/reports/pob-text-repair.json
+poe-db/experiments/craft-lab/research/
+build-atlas/
+exile-atlas.tar.gz
+
+# --- Transient ---
+*.tmp
+*.write-lock

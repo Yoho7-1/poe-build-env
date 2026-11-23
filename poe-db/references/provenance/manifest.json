@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {
+      "original": "research/price-builds.cjs",
+      "file": "references/provenance/price-builds-7e15bb88c549e0f5.cjs",
+      "sha256": "7e15bb88c549e0f51a9b9339afa721a8166ebba58bfd9e70e1170ecdba26fc2d",
+      "scope": "Existing local research evidence; original retrieval time unknown. Stored as data, never executed."
+    },
+    {
+      "original": "research/verified-builds.json",
+      "file": "references/provenance/verified-builds-837638a9796ed961.json",
+      "sha256": "837638a9796ed961655482f929cce5b51566012090bfb099bbd33e7efc528631",
+      "scope": "Existing local research evidence; original retrieval time unknown. Stored as data, never executed."
+    }
+  ]
+}

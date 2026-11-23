@@ -1,0 +1,246 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "snapshot_id": "dee8dc5b9a88dc07",
+  "fetched_at": "2026-11-23T18:26:04.646Z",
+  "repoe_export_version": "3.30.0.4",
+  "pob_export_version": "2.68.0",
+  "source_files": 49,
+  "categories": [
+    {
+      "category": "anointments",
+      "records": 472,
+      "russian_names": 0
+    },
+    {
+      "category": "ascendancies",
+      "records": 21,
+      "russian_names": 0
+    },
+    {
+      "category": "atlas_nodes",
+      "records": 1117,
+      "russian_names": 0
+    },
+    {
+      "category": "base_items",
+      "records": 5607,
+      "russian_names": 5187
+    },
+    {
+      "category": "beastcraft_mods",
+      "records": 12,
+      "russian_names": 0
+    },
+    {
+      "category": "bench_crafts",
+      "records": 782,
+      "russian_names": 0
+    },
+    {
+      "category": "bloodlines",
+      "records": 13,
+      "russian_names": 0
+    },
+    {
+      "category": "boss_profiles",
+      "records": 22,
+      "russian_names": 0
+    },
+    {
+      "category": "boss_skills",
+      "records": 10,
+      "russian_names": 0
+    },
+    {
+      "category": "buffs",
+      "records": 2871,
+      "russian_names": 0
+    },
+    {
+      "category": "character_defaults",
+      "records": 7,
+      "russian_names": 0
+    },
+    {
+      "category": "classes",
+      "records": 7,
+      "russian_names": 0
+    },
+    {
+      "category": "cluster_jewels",
+      "records": 3,
+      "russian_names": 0
+    },
+    {
+      "category": "cluster_notables",
+      "records": 309,
+      "russian_names": 0
+    },
+    {
+      "category": "cost_types",
+      "records": 13,
+      "russian_names": 0
+    },
+    {
+      "category": "essences",
+      "records": 107,
+      "russian_names": 0
+    },
+    {
+      "category": "fossils",
+      "records": 445,
+      "russian_names": 0
+    },
+    {
+      "category": "foulborn_mods",
+      "records": 365,
+      "russian_names": 0
+    },
+    {
+      "category": "foulborn_replacements",
+      "records": 251,
+      "russian_names": 0
+    },
+    {
+      "category": "gem_tags",
+      "records": 54,
+      "russian_names": 0
+    },
+    {
+      "category": "gems",
+      "records": 1024,
+      "russian_names": 1024
+    },
+    {
+      "category": "granted_skills",
+      "records": 406,
+      "russian_names": 0
+    },
+    {
+      "category": "item_classes",
+      "records": 105,
+      "russian_names": 0
+    },
+    {
+      "category": "mercenary_builds",
+      "records": 66,
+      "russian_names": 0
+    },
+    {
+      "category": "mercenary_classes",
+      "records": 13,
+      "russian_names": 0
+    },
+    {
+      "category": "mercenary_skills",
+      "records": 277,
+      "russian_names": 0
+    },
+    {
+      "category": "mercenary_supports",
+      "records": 266,
+      "russian_names": 0
+    },
+    {
+      "category": "mods",
+      "records": 41336,
+      "russian_names": 15495
+    },
+    {
+      "category": "monster_level_defaults",
+      "records": 100,
+      "russian_names": 0
+    },
+    {
+      "category": "pantheon",
+      "records": 12,
+      "russian_names": 0
+    },
+    {
+      "category": "passive_nodes",
+      "records": 3462,
+      "russian_names": 0
+    },
+    {
+      "category": "skill_types",
+      "records": 135,
+      "russian_names": 0
+    },
+    {
+      "category": "stat_definitions",
+      "records": 23651,
+      "russian_names": 0
+    },
+    {
+      "category": "stat_translations",
+      "records": 10960,
+      "russian_names": 0
+    },
+    {
+      "category": "stat_value_handlers",
+      "records": 83,
+      "russian_names": 0
+    },
+    {
+      "category": "tags",
+      "records": 1444,
+      "russian_names": 0
+    },
+    {
+      "category": "tattoo_nodes",
+      "records": 173,
+      "russian_names": 0
+    },
+    {
+      "category": "vestigial_mods",
+      "records": 497,
+      "russian_names": 0
+    },
+    {
+      "category": "viscera",
+      "records": 441,
+      "russian_names": 0
+    },
+    {
+      "category": "world_areas",
+      "records": 1931,
+      "russian_names": 0
+    }
+  ],
+  "tree_nodes": [
+    {
+      "tree": "atlas",
+      "nodes": 1117
+    },
+    {
+      "tree": "passive",
+      "nodes": 3462
+    }
+  ],
+  "tree_edges": [
+    {
+      "tree": "atlas",
+      "edges": 1051
+    },
+    {
+      "tree": "passive",
+      "edges": 3454
+    }
+  ],
+  "mastery_options": 1837,
+  "gem_levels": 35616,
+  "gem_stat_values": 252757,
+  "mod_stat_ranges": 62538,
+  "mod_weights": 76118,
+  "excluded_records": 129,
+  "issues": [],
+  "integrity": "ok",
+  "limitations": [
+    "Source-defined structures, not independent in-game acquisition verification.",
+    "Raw source units and quality coefficients are preserved.",
+    "Reference catalogs contain internal definitions; availability and crafting eligibility require context.",
+    "Velka Bloodline is unconfirmed; historical Affliction ascendancies are not current choices.",
+    "No complete combat or crafting simulation, live prices, all quest/encounter rules, or tested-build corpus."
+  ]
+}

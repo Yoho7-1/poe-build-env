@@ -1,0 +1,12 @@
+{
+  "directory": "<project>\\backups\\2026-11-23T20-03-12.315Z-enriched-environment",
+  "doctor_ready": true,
+  "tests": {
+    "total": 28,
+    "passed": 28,
+    "failed": 0
+  },
+  "manifest_files_verified": 12,
+  "main_revision": 1,
+  "network_required": false
+}

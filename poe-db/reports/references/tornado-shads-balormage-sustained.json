@@ -1,0 +1,585 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "source_fingerprint": "69f485b75803afa2b940ae2f6b2508b4365c2b7171864a8a36cb3af4460b8842",
+    "timeless_types": [
+      "GloriousVanity"
+    ]
+  },
+  "calculation_contract_sha256": "f7ae11fe09398b4f4db55fe9c3f6f33f50e0d08ac16795efce0d26c166d9a115",
+  "input_sha256": "878261ab4623bf1e7d6ac7ace99d6c834c2f635fb039a421d522684b37105aea",
+  "adapter_sha256": "e707250326a4a6423a7ec3502c4d5d956233b1773ff74e9cf6fc02778605607a",
+  "scenario": "sustained",
+  "scenario_definition": {
+    "label": "Sustained boss audit",
+    "config": {
+      "conditionKilledRecently": false,
+      "multiplierKilledRecently": 0,
+      "buffOnslaught": false
+    },
+    "note": "Only the listed toggles are overridden. Flasks, charges, ailments and skill counts still require individual evidence."
+  },
+  "changes": {},
+  "calculation_id": "9da5623e98c096fa6acb6e220f219e9b684b1b5425d7e2ba46d41abd31a1655e",
+  "computed_at": "2026-11-23T19:57:07.515Z",
+  "output": {
+    "FullDPS": 92140276.555172,
+    "CombinedDPS": 30716338.428452,
+    "TotalDPS": 30711969.06336,
+    "AverageDamage": 2559330.75528,
+    "Speed": 1.7585333333333,
+    "HitChance": 100,
+    "CritChance": 100,
+    "Life": 9415,
+    "LifeUnreserved": 5436,
+    "EnergyShield": 2158,
+    "Mana": 0,
+    "ManaCost": 0,
+    "ManaPerSecondCost": 0,
+    "ManaRegen": 0,
+    "ManaRegenRecovery": 0,
+    "ManaLeechGainRate": 0,
+    "LifeRegen": 2835.8,
+    "LifeRegenRecovery": 2835.8,
+    "LifeLeechGainRate": 1883,
+    "Armour": 3106,
+    "Evasion": 325,
+    "EffectiveMovementSpeedMod": 1.5151,
+    "FireResist": 80,
+    "ColdResist": 83,
+    "LightningResist": 78,
+    "ChaosResist": 54,
+    "BlockChance": 78,
+    "SpellBlockChance": 76,
+    "SpellSuppressionChance": 0,
+    "PhysicalMaximumHitTaken": 20184,
+    "FireMaximumHitTaken": 85272,
+    "ColdMaximumHitTaken": 97240,
+    "LightningMaximumHitTaken": 80076,
+    "ChaosMaximumHitTaken": 28881,
+    "TotalEHP": 244943.16934291
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "DisableEHPGainOnBlock": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "Eramir",
+    "bloodsoakedBannerStages": 1,
+    "brandAttachedToEnemy": true,
+    "buffElusive": true,
+    "buffOnslaught": false,
+    "buffTailwind": true,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionCritRecently": true,
+    "conditionEnemyChilled": true,
+    "conditionEnemyDebilitated": true,
+    "conditionEnemyIgnited": true,
+    "conditionEnemyOnConsecratedGround": true,
+    "conditionEnemyShocked": true,
+    "conditionEnemyUnnerved": true,
+    "conditionHitSpellRecently": true,
+    "conditionKilledRecently": false,
+    "conditionLowLife": true,
+    "conditionOnConsecratedGround": true,
+    "conditionSacrificeMinion": true,
+    "conditionShatteredEnemyRecently": true,
+    "conditionShockEffect": 15,
+    "conditionStationary": 1,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "frostShieldStages": 4,
+    "intensifyIntensity": 4,
+    "maniaDebuffsCount": 15,
+    "multiplierKilledRecently": 0,
+    "pantheonMajorGod": "TheBrineKing",
+    "pantheonMinorGod": "Tukohama",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": -60,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10,
+    "useEnduranceCharges": true
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [],
+      "index": 1
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportIntensify",
+          "level": 21,
+          "name": "Intensify",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemTornadoAltY",
+          "level": 21,
+          "name": "Tornado of Elemental Turbulence",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportIncreasedCriticalDamage",
+          "level": 21,
+          "name": "Increased Critical Damage",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEmpower",
+          "level": 4,
+          "name": "Empower",
+          "quality": 0
+        }
+      ],
+      "index": 2,
+      "slot": "Helmet"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemPetrifiedBlood",
+          "level": 21,
+          "name": "Petrified Blood",
+          "quality": 23
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEnlighten",
+          "level": 3,
+          "name": "Enlighten",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemTempestShield",
+          "level": 20,
+          "name": "Tempest Shield",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemVitality",
+          "level": 20,
+          "name": "Vitality",
+          "quality": 0
+        }
+      ],
+      "index": 3,
+      "slot": "Boots"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemRighteousFire",
+          "level": 20,
+          "name": "Righteous Fire",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportFasterAttacks",
+          "level": 17,
+          "name": "Faster Attacks",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemShieldCharge",
+          "level": 20,
+          "name": "Shield Charge",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemPunishment",
+          "level": 20,
+          "name": "Punishment",
+          "quality": 20
+        }
+      ],
+      "index": 4,
+      "slot": "Gloves"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEternalBlessing",
+          "level": 20,
+          "name": "Eternal Blessing",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFrostblink",
+          "level": 20,
+          "name": "Frostblink",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemZealotry",
+          "level": 20,
+          "name": "Zealotry",
+          "quality": 0
+        }
+      ],
+      "index": 5,
+      "slot": "Weapon 2"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFrostShield",
+          "level": 20,
+          "name": "Frost Shield",
+          "quality": 0
+        }
+      ],
+      "index": 6,
+      "slot": "Weapon 1"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": false,
+          "id": "Metadata/Items/Gems/SkillGemQuickGuard",
+          "level": 20,
+          "name": "Steelskin",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportCastWhenDamageTaken",
+          "level": 21,
+          "name": "Cast when Damage Taken",
+          "quality": 20
+        }
+      ],
+      "index": 7,
+      "slot": "Weapon 1"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "level": 1,
+          "name": "",
+          "quality": 0
+        }
+      ],
+      "index": 8
+    }
+  ],
+  "level": 95,
+  "unparsed_item_modifiers": [
+    {
+      "line": "Consecrated Ground created by this Flask has Tripled Radius",
+      "slot": "Flask 1",
+      "unparsed": "Consecrated Ground created by this Flask has Tripled Radius"
+    },
+    {
+      "line": "Used when you Hit a Rare or Unique Enemy, if not already in effect",
+      "slot": "Flask 1",
+      "unparsed": "Used when you Hit a Rare or Unique Enemy, if not already in effect"
+    },
+    {
+      "line": "(20-30)% increased Damage with Hits against Rare monsters",
+      "slot": "Belt",
+      "unparsed": "   against Rare monsters When you Kill a Rare monster, you gain its Modifiers  "
+    },
+    {
+      "line": "When you Kill a Rare monster, you gain its Modifiers for 60 seconds",
+      "slot": "Belt",
+      "unparsed": "When you Kill a Rare monster, you gain its Modifiers for 60 seconds"
+    },
+    {
+      "line": "Gain 3 Charges when you are Hit by an Enemy",
+      "slot": "Flask 5",
+      "unparsed": " Charges when you are Hit by an Enemy 40% reduced   "
+    },
+    {
+      "line": "20% chance to Unnerve Enemies for 4 seconds on Hit",
+      "slot": "Gloves",
+      "unparsed": " to Unnerve Enemies   +119 to  "
+    },
+    {
+      "line": "Sacrifice 4% of your Life when you Use or Trigger a Spell Skill",
+      "slot": "Weapon 2",
+      "unparsed": "Sacrifice 4% of your Life when you Use or Trigger a Spell Skill"
+    },
+    {
+      "line": "Sacrifice 10% of your Life when you Use or Trigger a Spell Skill",
+      "slot": "Weapon 2",
+      "unparsed": "Sacrifice 10% of your Life when you Use or Trigger a Spell Skill"
+    }
+  ],
+  "tree_version": "3_30",
+  "selection": {
+    "character_level": 95,
+    "item_set": 4,
+    "main_socket_group": 2,
+    "skill_set": 2,
+    "tree_spec": 9
+  },
+  "equipped_items": [
+    {
+      "active": true,
+      "base": "Sulphur Flask",
+      "id": 14,
+      "item_level": 85,
+      "name": "Bottled Faith, Sulphur Flask",
+      "rarity": "UNIQUE",
+      "slot": "Flask 1"
+    },
+    {
+      "active": true,
+      "base": "Bismuth Flask",
+      "id": 34,
+      "name": "Oriath's End, Bismuth Flask",
+      "rarity": "UNIQUE",
+      "slot": "Flask 2"
+    },
+    {
+      "active": true,
+      "base": "Sapphire Flask",
+      "id": 36,
+      "name": "Taste of Hate, Sapphire Flask",
+      "rarity": "UNIQUE",
+      "slot": "Flask 3"
+    },
+    {
+      "active": false,
+      "base": "Two-Toned Boots (Armour/Energy Shield)",
+      "id": 5,
+      "item_level": 86,
+      "name": "SEE NOTES FOR HOW TO CRAFT, Two-Toned Boots",
+      "rarity": "RARE",
+      "slot": "Boots"
+    },
+    {
+      "active": false,
+      "base": "Prismatic Ring",
+      "id": 41,
+      "name": "The Taming, Prismatic Ring",
+      "rarity": "UNIQUE",
+      "slot": "Ring 1"
+    },
+    {
+      "active": false,
+      "base": "Amethyst Ring",
+      "id": 45,
+      "name": "New Item, Amethyst Ring",
+      "rarity": "RARE",
+      "slot": "Ring 2"
+    },
+    {
+      "base": "Cobalt Jewel",
+      "id": 22,
+      "item_level": 25,
+      "name": "Rapture Glisten, Cobalt Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 26196"
+    },
+    {
+      "base": "Crimson Jewel",
+      "id": 17,
+      "item_level": 83,
+      "name": "Foulborn The Red Nightmare, Crimson Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 26725"
+    },
+    {
+      "base": "Cobalt Jewel",
+      "id": 22,
+      "item_level": 25,
+      "name": "Rapture Glisten, Cobalt Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 33631"
+    },
+    {
+      "base": "Timeless Jewel",
+      "id": 95,
+      "name": "Glorious Vanity, Timeless Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 36634"
+    },
+    {
+      "base": "Cobalt Jewel",
+      "id": 22,
+      "item_level": 25,
+      "name": "Rapture Glisten, Cobalt Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 41263"
+    },
+    {
+      "active": false,
+      "base": "Leather Belt",
+      "id": 35,
+      "name": "Optional HH or Mageblood, Leather Belt",
+      "rarity": "UNIQUE",
+      "slot": "Belt"
+    },
+    {
+      "base": "Cobalt Jewel",
+      "id": 22,
+      "item_level": 25,
+      "name": "Rapture Glisten, Cobalt Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 46519"
+    },
+    {
+      "active": true,
+      "base": "Gold Flask",
+      "id": 97,
+      "name": "Flagellant's Gold Flask of the Petrel",
+      "rarity": "MAGIC",
+      "slot": "Flask 5"
+    },
+    {
+      "active": false,
+      "base": "Vaal Gauntlets",
+      "id": 74,
+      "item_level": 86,
+      "name": "Behemoth Claw, Vaal Gauntlets",
+      "rarity": "RARE",
+      "slot": "Gloves"
+    },
+    {
+      "active": false,
+      "base": "Glorious Plate",
+      "id": 3,
+      "item_level": 80,
+      "name": "Kaom's Heart, Glorious Plate",
+      "rarity": "UNIQUE",
+      "slot": "Body Armour"
+    },
+    {
+      "active": false,
+      "base": "Titanium Spirit Shield",
+      "id": 79,
+      "name": "Nerfed Rathpith Globe Volatile Orbd, Titanium Spirit Shield",
+      "rarity": "UNIQUE",
+      "slot": "Weapon 2"
+    },
+    {
+      "active": false,
+      "base": "Blizzard Crown",
+      "id": 80,
+      "name": "New Item, Blizzard Crown",
+      "rarity": "RARE",
+      "slot": "Helmet"
+    },
+    {
+      "active": false,
+      "base": "Onyx Amulet",
+      "id": 53,
+      "name": "Replica Dragonfang's Flight, Onyx Amulet",
+      "rarity": "UNIQUE",
+      "slot": "Amulet"
+    },
+    {
+      "active": false,
+      "base": "Prophecy Wand",
+      "id": 78,
+      "name": "Grace of the Goddess, Prophecy Wand",
+      "rarity": "UNIQUE",
+      "slot": "Weapon 1"
+    },
+    {
+      "active": true,
+      "base": "Amethyst Flask",
+      "id": 37,
+      "name": "Atziri's Promise, Amethyst Flask",
+      "rarity": "UNIQUE",
+      "slot": "Flask 4"
+    }
+  ],
+  "applied_supports": [
+    {
+      "id": "SupportConcentratedEffect",
+      "level": 18,
+      "name": "Concentrated Effect",
+      "quality": 0
+    },
+    {
+      "id": "SupportHypothermia",
+      "level": 18,
+      "name": "Hypothermia",
+      "quality": 0
+    },
+    {
+      "id": "SupportIntensify",
+      "level": 23,
+      "name": "Intensify",
+      "quality": 20
+    },
+    {
+      "id": "SupportIncreasedCriticalDamage",
+      "level": 21,
+      "name": "Increased Critical Damage",
+      "quality": 20
+    },
+    {
+      "id": "SupportEmpower",
+      "level": 4,
+      "name": "Empower",
+      "quality": 0
+    }
+  ],
+  "allocated_points": {
+    "ascendancy_total": 8,
+    "bloodline_subset": 0,
+    "passive": 118
+  },
+  "engine_warnings": [],
+  "interpretation": "CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.",
+  "warnings": [
+    {
+      "code": "conditional_config",
+      "detail": "Recent/on-kill conditions are configured; inspect boss uptime."
+    },
+    {
+      "code": "ailment_or_stack_assumptions",
+      "detail": "Configured ailments/stacks need magnitude, application and uptime evidence."
+    },
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": true
+}

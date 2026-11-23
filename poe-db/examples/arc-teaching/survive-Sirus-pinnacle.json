@@ -1,0 +1,77 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "boss": "Sirus",
+  "name": "Sirus, Awakener of Worlds",
+  "tier": "pinnacle",
+  "skill_coverage": "pob_boss_skill_presets",
+  "baseline": {
+    "input_sha256": "fdf026aa37a91aeafc0c45a9a2e8cc07739c056fe647f52851c3b4c7fca506f4",
+    "scenario": "sustained",
+    "calculation_contract_sha256": "a8fc982b15068cab83b0ceafae63ad91ec4bf6b33c8b37cd755cb148e4853de8",
+    "engine_commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac"
+  },
+  "kills_first": {
+    "skill": "Sirus Meteor",
+    "damage_type": "Chaos",
+    "damage_fraction_of_max_hit": 10.338691842223456,
+    "verdict": "one_shot"
+  },
+  "skills": [
+    {
+      "skill": "Sirus Meteor",
+      "kind": "hit",
+      "damage_type": "Spell",
+      "penetration": {},
+      "flags": [],
+      "conversion": {
+        "Physical->Chaos": 25,
+        "Physical->Fire": 25,
+        "Physical->Lightning": 25
+      },
+      "calculation_id": "9c3ef018fe41af7a737344371a2cedf4e453445d16564f4d50f561a03194eec9",
+      "source": "engine_configured_hit",
+      "engine_hits_to_die": 0.096724035812343,
+      "damage_fraction_of_max_hit": 10.338691842223456,
+      "hits_to_die": 0,
+      "margin_multiplier": 0.096724035812343,
+      "dominant_type": "Chaos",
+      "taken_after_mitigation": {
+        "Physical": 7932.47875,
+        "Lightning": 7932.47875,
+        "Fire": 7932.47875,
+        "Chaos": 9043.025775
+      },
+      "total_taken": 32840.462025,
+      "verdict": "one_shot",
+      "preset_check": {
+        "expected_raw_damage": 31261,
+        "engine_raw_damage": 31261,
+        "status": "matches"
+      },
+      "cross_check": {
+        "method": "sum of damage/max-hit fractions per source type (linear approximation for mixed hits; conversion handled by the engine max hit of the source type)",
+        "damage_fraction_of_max_hit": 9.720460199004975,
+        "rows": [
+          {
+            "type": "Physical",
+            "damage": 31261,
+            "max_hit": 3216,
+            "ratio": 9.720460199004975
+          }
+        ]
+      },
+      "method": "PoB NumberOfDamagingHits for the configured preset hit; fraction = 1 / hits",
+      "caveats": [
+        "Damage depends on the wall phase; earlier meteors deal less.",
+        "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+      ]
+    }
+  ],
+  "missing": [],
+  "disclaimer": "Numeric experiment from PoB configured boss hits; not a game test. Avoidance (block, suppression, evasion) and recovery between hits are not included; flags list layers that do not apply.",
+  "timing": {
+    "engine_runs": 1,
+    "batch_elapsed_ms": 299
+  }
+}

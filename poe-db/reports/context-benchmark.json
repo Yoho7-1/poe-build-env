@@ -1,0 +1,31 @@
+{
+  "metric": "Compact JSON string length in JavaScript characters, not model tokens.",
+  "bootstrap_characters": 2385,
+  "agents_file_characters": 3702,
+  "cases": [
+    {
+      "command": "knowledge gem Fireball --level 20",
+      "full_characters": 5849,
+      "brief_characters": 2442,
+      "reduction_percent": 58.25
+    },
+    {
+      "command": "item Mageblood",
+      "full_characters": 3431,
+      "brief_characters": 1329,
+      "reduction_percent": 61.26
+    },
+    {
+      "command": "item Watcher's Eye",
+      "full_characters": 45582,
+      "brief_characters": 1837,
+      "reduction_percent": 95.97
+    },
+    {
+      "command": "search Suppress Spell --limit 5",
+      "full_characters": 4220,
+      "brief_characters": 1845,
+      "reduction_percent": 56.28
+    }
+  ]
+}

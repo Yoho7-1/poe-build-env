@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "model_id": "ordinary-affixes-v0",
+  "contract": "610e2fdbaac5469a6c5d9b7c6014caa273736eb87fc438f1363a5b1370664f62",
+  "initial": {
+    "base": "Metadata/Items/Amulets/Amulet3",
+    "item_level": 86,
+    "rarity": "magic",
+    "mods": [
+      "IncreasedLife5"
+    ],
+    "seed": 42,
+    "budget": {
+      "Orb of Augmentation": 1,
+      "Regal Orb": 1,
+      "Exalted Orb": 3,
+      "Orb of Annulment": 1,
+      "Divine Orb": 1
+    },
+    "target": {
+      "rarity": "rare",
+      "stats": [
+        {
+          "id": "base_maximum_life",
+          "min": 70
+        },
+        {
+          "id": "base_fire_damage_resistance_%",
+          "min": 30
+        }
+      ]
+    }
+  },
+  "revision": 1,
+  "item": {
+    "base_id": "Metadata/Items/Amulets/Amulet3",
+    "item_level": 86,
+    "rarity": "magic",
+    "mods": [
+      {
+        "id": "IncreasedLife5",
+        "stats": [
+          {
+            "id": "base_maximum_life",
+            "value": 76
+          }
+        ]
+      },
+      {
+        "id": "LifeRegeneration7",
+        "stats": [
+          {
+            "id": "base_life_regeneration_rate_per_minute",
+            "value": 3165
+          }
+        ]
+      }
+    ]
+  },
+  "rng_state": 1199730185,
+  "spent": {
+    "Orb of Augmentation": 1
+  },
+  "history": [
+    {
+      "revision": 1,
+      "action": "Orb of Augmentation",
+      "before_sha256": "74380efd2b81c9b5c7d4f810c8c962d0261874258a6bb16bbfd48c93703cf91c",
+      "after_sha256": "5de51281f8bf82556abf320b70cd0e2e9610683b3fc4ed4f08aea4f26e4e0694",
+      "effect": {
+        "added_mod": "LifeRegeneration7",
+        "weight_units": 100000,
+        "total_weight_units": 12605000
+      }
+    }
+  ]
+}

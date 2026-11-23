@@ -1,0 +1,232 @@
+{
+  "at": "2026-11-23T20:02:22.191Z",
+  "game": "poe1",
+  "target_patch": "3.30",
+  "results": [
+    {
+      "id": "toxic-rain-pathofevening",
+      "original_id": "toxic-rain-pathofevening-archive-a153b5b6",
+      "derived_id": "toxic-rain-pathofevening-330-6e09fbdc",
+      "status": "locally_migrated_reference_requires_review",
+      "trees": 9,
+      "node_deltas": [
+        {
+          "index": 1,
+          "title": "Act 1 {1}",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 2,
+          "title": "Act 3 {2}",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 3,
+          "title": "Act 5 {3}",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 4,
+          "title": "Act 7 {4}",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 5,
+          "title": "Act 10 {5}",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 6,
+          "title": "Early Maps {6}",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 7,
+          "title": "Endgame {7}",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 8,
+          "title": "1 Cluster {8}",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 9,
+          "title": "Ultra Endgame {9}",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        }
+      ],
+      "engine_warnings": [],
+      "unparsed_modifier_count": 6
+    },
+    {
+      "id": "poison-srs-balormage",
+      "original_id": "poison-srs-balormage-archive-1bf0378f",
+      "derived_id": "poison-srs-balormage-330-5744fd01",
+      "status": "locally_migrated_reference_requires_review",
+      "trees": 8,
+      "node_deltas": [
+        {
+          "index": 1,
+          "title": "^2^3^4^5^6^7^8^9^1End Game Min Max (Overkill)",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 2,
+          "title": "^4End-Game Gear WAND",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 3,
+          "title": "^4End-Game Gear POISON",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 4,
+          "title": "^6Early End Game",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 5,
+          "title": "^2LvLing Tree 70 points",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 6,
+          "title": "^2LvLing Tree 50 points",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 7,
+          "title": "^2LvLing Tree 30 points",
+          "removed": 0,
+          "added": 0,
+          "changed": 1
+        },
+        {
+          "index": 8,
+          "title": "^2LvLing Tree 12 points",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        }
+      ],
+      "engine_warnings": [
+        "You do not meet the Dexterity requirement of Haste"
+      ],
+      "unparsed_modifier_count": 9
+    },
+    {
+      "id": "tornado-shads-balormage",
+      "original_id": "tornado-shads-balormage-archive-6b210776",
+      "derived_id": "tornado-shads-balormage-330-878261ab",
+      "status": "locally_migrated_reference_requires_review",
+      "trees": 10,
+      "node_deltas": [
+        {
+          "index": 1,
+          "title": "act 1",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 2,
+          "title": "act 2",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 3,
+          "title": "act 3",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 4,
+          "title": "act 4",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 5,
+          "title": "Act 5",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 6,
+          "title": "End of Act 10",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 7,
+          "title": "Early Maps",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 8,
+          "title": "Early Endgame",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 9,
+          "title": "Endgame",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        },
+        {
+          "index": 10,
+          "title": "Final Endgame",
+          "removed": 0,
+          "added": 0,
+          "changed": 0
+        }
+      ],
+      "engine_warnings": [],
+      "unparsed_modifier_count": 8
+    }
+  ],
+  "scope": "Real author archives plus explicitly generated 3.30 references; not independently played builds or current author upload assertions."
+}

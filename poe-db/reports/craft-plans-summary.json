@@ -1,0 +1,144 @@
+{
+  "at": "2026-11-23T19:50:45.729Z",
+  "game": "poe1",
+  "patch": "3.30",
+  "plans": [
+    {
+      "id": "bench-life-330",
+      "recipe_id": "14",
+      "mod_id": "HelenaMasterIncreasedLife1",
+      "base": "Amber Amulet",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyRerollMagic",
+          "name": "Orb of Alteration",
+          "amount": 1,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 1
+    },
+    {
+      "id": "bench-fire-resistance-330",
+      "recipe_id": "15",
+      "mod_id": "HelenaMasterFireResist1",
+      "base": "Amber Amulet",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyUpgradeToMagic",
+          "name": "Orb of Transmutation",
+          "amount": 1,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 1
+    },
+    {
+      "id": "bench-cold-resistance-330",
+      "recipe_id": "16",
+      "mod_id": "HelenaMasterColdResist1_",
+      "base": "Amber Amulet",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyUpgradeToMagic",
+          "name": "Orb of Transmutation",
+          "amount": 1,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 1
+    },
+    {
+      "id": "bench-lightning-resistance-330",
+      "recipe_id": "17",
+      "mod_id": "HelenaMasterLightningResist1",
+      "base": "Amber Amulet",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyUpgradeToMagic",
+          "name": "Orb of Transmutation",
+          "amount": 1,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 1
+    },
+    {
+      "id": "bench-strength-330",
+      "recipe_id": "18",
+      "mod_id": "HelenaMasterStrength1",
+      "base": "Amber Amulet",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyAddModToMagic",
+          "name": "Orb of Augmentation",
+          "amount": 1,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 1
+    },
+    {
+      "id": "bench-dexterity-330",
+      "recipe_id": "19",
+      "mod_id": "HelenaMasterDexterity1",
+      "base": "Amber Amulet",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyAddModToMagic",
+          "name": "Orb of Augmentation",
+          "amount": 1,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 1
+    },
+    {
+      "id": "bench-intelligence-330",
+      "recipe_id": "20",
+      "mod_id": "HelenaMasterIntelligence1",
+      "base": "Amber Amulet",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyAddModToMagic",
+          "name": "Orb of Augmentation",
+          "amount": 1,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 1
+    },
+    {
+      "id": "bench-movement-speed-330",
+      "recipe_id": "49",
+      "mod_id": "EinharMasterMovementVelocity1",
+      "base": "Rawhide Boots",
+      "costs": [
+        {
+          "currency_id": "Metadata/Items/Currency/CurrencyAddModToMagic",
+          "name": "Orb of Augmentation",
+          "amount": 3,
+          "unit_estimate_chaos": 1,
+          "price_snapshot_id": "5a8a0a9d06ca323f45ba2949968723eeab2efc36afc11230513920b7601b3f82",
+          "price_observed_at": "2026-11-23T19:27:15.835Z"
+        }
+      ],
+      "estimated_one_application_chaos": 3
+    }
+  ],
+  "scope": "Eight conditional bench recipes; source action and item-class checked, no full crafting simulator or actual-item eligibility proof."
+}

@@ -1,0 +1,55 @@
+{
+  "model": {
+    "id": "craft-lab-expanded-v1",
+    "game": "poe1",
+    "patch": "3.30",
+    "status": "experimental",
+    "complete": false,
+    "game_validated": false,
+    "assumptions": [
+      "Affix counts: magic 1/2 equally, rare equipment 4/5/6 at 8:3:1, rare jewels 3/4 at 65:35; reference implementation, not a new 3.30 experiment.",
+      "Integer stat ranges are sampled independently and uniformly. Weighted choices have 32-bit PRNG resolution.",
+      "Counted metamods select protected non-fractured affixes uniformly for each action; interaction requires independent game validation.",
+      "Unveil offers are weighted without replacement by group, and available sides of a Veiled Exalted Orb are equiprobable.",
+      "Harvest/Beast resource costs and recipe unlocks must be explicitly supplied; ownership of the starting item is a scenario assumption."
+    ]
+  },
+  "contract": "3a221cf1767a235cf19ec858170950e61d88e5944880375a114c9a3bb207965b",
+  "seed": 42,
+  "episodes": 20,
+  "max_steps": 22,
+  "outcomes": {
+    "success": 18,
+    "step_limit": 0,
+    "policy_stopped": 0,
+    "no_rule": 0,
+    "action_rejected": 0,
+    "budget_exhausted": 2
+  },
+  "success_rate": 0.9,
+  "wilson_95": [
+    0.6989663547715128,
+    0.9721335187862319
+  ],
+  "steps": {
+    "mean": 6.8,
+    "p50": 4,
+    "p95": 21
+  },
+  "total_spent": {
+    "Orb of Alchemy": 20,
+    "Chaos Orb": 116
+  },
+  "mean_spent_all_attempts": {
+    "Orb of Alchemy": 1,
+    "Chaos Orb": 5.8
+  },
+  "rejections": [
+    {
+      "reason": "Budget exhausted: Chaos Orb",
+      "count": 2
+    }
+  ],
+  "acquisition_cost_included": false,
+  "interpretation": "Conditional Monte Carlo under the declared model. Failed and censored episodes are included in spending. No market currency conversion or eventual-success cost is inferred."
+}

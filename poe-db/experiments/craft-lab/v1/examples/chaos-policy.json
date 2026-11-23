@@ -1,0 +1,12 @@
+{
+  "start": {
+    "item": { "base": "Amber Amulet", "item_level": 86, "rarity": "normal" },
+    "budget": { "Orb of Alchemy": 1, "Chaos Orb": 20 },
+    "target": { "rarity": "rare", "stats": [{ "id": "base_maximum_life", "min": 70 }] },
+    "start_cost": null
+  },
+  "policy": [
+    { "when": { "rarity": "normal" }, "action": "Orb of Alchemy" },
+    { "action": "Chaos Orb" }
+  ]
+}

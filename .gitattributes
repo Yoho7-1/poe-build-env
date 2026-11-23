@@ -1,0 +1,3 @@
+# Store every file byte-for-byte: doctor --deep verifies SHA-256 of XML, JSON and scripts,
+# so line-ending conversion (core.autocrlf) on checkout would break the checks.
+* -text

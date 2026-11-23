@@ -1,0 +1,58 @@
+{
+  "model": {
+    "id": "ordinary-affixes-v0",
+    "game": "poe1",
+    "patch": "3.30",
+    "status": "experimental",
+    "game_validated": false,
+    "acquisition_verified": false,
+    "assumptions": [
+      "Single added modifier is sampled proportionally to eligible spawn weight times the first matching generation multiplier.",
+      "Annulment samples existing explicit modifiers uniformly.",
+      "Each numeric stat is sampled uniformly and independently over its source integer range; server correlations are unverified.",
+      "Initial explicit modifiers and base ownership are scenario assumptions, not a demonstrated acquisition process."
+    ],
+    "unsupported": [
+      "Transmutation/Alteration/Alchemy/Chaos and other random-affix-count operations",
+      "Essences, Fossils, Harvest, Bestiary, bench crafts and metamods",
+      "Fractured, influenced, synthesised, corrupted, mirrored or otherwise special items",
+      "Catalysts, quality effects, sockets, implicit rolling, PoB export and trade acquisition"
+    ]
+  },
+  "contract": "610e2fdbaac5469a6c5d9b7c6014caa273736eb87fc438f1363a5b1370664f62",
+  "batch_seed": 42,
+  "episodes": 1000,
+  "outcomes": {
+    "success": 95,
+    "plan_exhausted": 905,
+    "action_rejected": 0
+  },
+  "success_rate": 0.095,
+  "success_rate_wilson_95": [
+    0.07834523457904741,
+    0.11475443979425223
+  ],
+  "steps_per_episode": {
+    "mean": 4.78,
+    "p50": 5,
+    "p95": 5
+  },
+  "currency_spent_total": {
+    "Orb of Augmentation": 1000,
+    "Regal Orb": 1000,
+    "Exalted Orb": 2780,
+    "Orb of Annulment": 0,
+    "Orb of Scouring": 0,
+    "Divine Orb": 0
+  },
+  "currency_spent_mean_per_episode": {
+    "Orb of Augmentation": 1,
+    "Regal Orb": 1,
+    "Exalted Orb": 2.78,
+    "Orb of Annulment": 0,
+    "Orb of Scouring": 0,
+    "Divine Orb": 0
+  },
+  "rejected_actions": [],
+  "interpretation": "Conditional simulation from the assumed starting item. Includes failures in spending. No market conversion, expected cost to eventual success, or independent game validation."
+}

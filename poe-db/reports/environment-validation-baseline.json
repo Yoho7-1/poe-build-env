@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-23T19:22:57.373Z",
+  "software_tests": {
+    "passed": 21,
+    "failed": 0,
+    "report": "reports/tests.tap"
+  },
+  "skills": {
+    "validated": [
+      "poe-build-design",
+      "poe-build-audit",
+      "poe-upgrade"
+    ],
+    "validator": "skill-creator/scripts/quick_validate.py",
+    "passed": true
+  },
+  "restoration": {
+    "directory": "<project>\\backups\\2026-11-23T19-19-48.552Z-environment-baseline",
+    "doctor_ready": true,
+    "tests_passed": 21,
+    "tests_failed": 0,
+    "persistence_smoke": {
+      "passed": true,
+      "input_xml_saved": true,
+      "result_saved": true,
+      "revision": 2,
+      "isolated_build_removed": true
+    }
+  },
+  "independent_llm_evaluation": {
+    "run": false,
+    "cases": 9,
+    "file": "evaluations/cases.json"
+  },
+  "limits": [
+    "Synthetic controls do not establish gameplay viability.",
+    "Context benchmark counts characters, not tokens."
+  ]
+}

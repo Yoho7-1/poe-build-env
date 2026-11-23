@@ -1,0 +1,8 @@
+{
+  "item": { "base": "Amber Amulet", "item_level": 86, "rarity": "normal" },
+  "seed": 42,
+  "budget": { "Orb of Alchemy": 1, "Chaos Orb": 20, "Exalted Orb": 1 },
+  "target": { "rarity": "rare", "stats": [{ "id": "base_maximum_life", "min": 70 }] },
+  "start_cost": null,
+  "unlocked_recipes": null
+}

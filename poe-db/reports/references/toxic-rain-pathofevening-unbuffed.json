@@ -1,0 +1,676 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "source_fingerprint": "69f485b75803afa2b940ae2f6b2508b4365c2b7171864a8a36cb3af4460b8842",
+    "timeless_types": [
+      "GloriousVanity"
+    ]
+  },
+  "calculation_contract_sha256": "f7ae11fe09398b4f4db55fe9c3f6f33f50e0d08ac16795efce0d26c166d9a115",
+  "input_sha256": "6e09fbdcbdc8cf5b2953eef6889ef3049ba1907a93c511d0d62e161ee9256209",
+  "adapter_sha256": "e707250326a4a6423a7ec3502c4d5d956233b1773ff74e9cf6fc02778605607a",
+  "scenario": "unbuffed",
+  "scenario_definition": {
+    "label": "Reduced temporary buffs audit",
+    "config": {
+      "conditionKilledRecently": false,
+      "multiplierKilledRecently": 0,
+      "buffOnslaught": false,
+      "usePowerCharges": false,
+      "useFrenzyCharges": false,
+      "useEnduranceCharges": false
+    },
+    "note": "A partial stress scenario, not a guarantee that all temporary buffs are removed."
+  },
+  "changes": {},
+  "calculation_id": "796bbb42c45cccf9b740fc3ec1500f8ed62cda400e1959d0c801da928a154a5b",
+  "computed_at": "2026-11-23T19:56:50.332Z",
+  "output": {
+    "FullDPS": 17837608.582735,
+    "CombinedDPS": 14766771.780026,
+    "TotalDPS": 2617.2641385677,
+    "AverageDamage": 103.0354048,
+    "Speed": 5.08032,
+    "HitChance": 64,
+    "CritChance": 3.2,
+    "Life": 5977,
+    "LifeUnreserved": 5977,
+    "EnergyShield": 0,
+    "Mana": 713,
+    "ManaUnreserved": 44,
+    "ManaCost": 2,
+    "ManaPerSecondCost": 10.16064,
+    "ManaRegen": 15,
+    "ManaRegenRecovery": 15,
+    "ManaLeechGainRate": 32.514048,
+    "LifeRegen": 119.5,
+    "LifeRegenRecovery": 3269.2,
+    "LifeLeechGainRate": 0,
+    "Armour": 1690,
+    "Evasion": 6100,
+    "EffectiveMovementSpeedMod": 3.768,
+    "FireResist": 75,
+    "ColdResist": 75,
+    "LightningResist": 85,
+    "ChaosResist": 75,
+    "BlockChance": 0,
+    "SpellBlockChance": 0,
+    "SpellSuppressionChance": 100,
+    "PhysicalMaximumHitTaken": 49500,
+    "FireMaximumHitTaken": 92967,
+    "ColdMaximumHitTaken": 92967,
+    "LightningMaximumHitTaken": 144616,
+    "ChaosMaximumHitTaken": 67680,
+    "TotalEHP": 114336.47037489
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "None",
+    "bloodSandStance": "SAND",
+    "bloodsoakedBannerStages": 1,
+    "buffAlchemistsGenius": true,
+    "buffLifetap": true,
+    "buffOnslaught": false,
+    "buffTailwind": true,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionHitRecently": true,
+    "conditionKilledRecently": false,
+    "conditionSacrificeMinion": true,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "maniaDebuffsCount": 15,
+    "multiplierEnsnaredStackCount": 3,
+    "multiplierGaleForce": 10,
+    "multiplierKilledRecently": 0,
+    "multiplierWitheredStackCount": 15,
+    "pantheonMajorGod": "Lunaris",
+    "pantheonMinorGod": "Ryslatha",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": -60,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10,
+    "toxicRainPodOverlap": 5,
+    "useEnduranceCharges": false,
+    "useFrenzyCharges": false,
+    "usePowerCharges": false
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemToxicRain",
+          "level": 21,
+          "name": "Toxic Rain",
+          "quality": 23
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportVoidManipulation",
+          "level": 21,
+          "name": "Void Manipulation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportViciousProjectiles",
+          "level": 21,
+          "name": "Vicious Projectiles",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportMirageArcher",
+          "level": 20,
+          "name": "Mirage Archer",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEfficacy",
+          "level": 20,
+          "name": "Efficacy",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportEmpower",
+          "level": 4,
+          "name": "Empower",
+          "quality": 0
+        }
+      ],
+      "index": 1,
+      "slot": "Body Armour"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemVaalCausticArrow",
+          "level": 20,
+          "name": "Vaal Caustic Arrow",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportLifetap",
+          "level": 20,
+          "name": "Lifetap",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportViciousProjectiles",
+          "level": 21,
+          "name": "Vicious Projectiles",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportVoidManipulation",
+          "level": 21,
+          "name": "Void Manipulation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportManaforgedArrows",
+          "level": 20,
+          "name": "Manaforged Arrows",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportArrowNova",
+          "level": 21,
+          "name": "Arrow Nova",
+          "quality": 20
+        }
+      ],
+      "index": 2,
+      "slot": "Weapon 1"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemToxicRainAltY",
+          "level": 20,
+          "name": "Toxic Rain of Withering",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFrenzy",
+          "level": 20,
+          "name": "Frenzy",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportCullingStrike",
+          "level": 20,
+          "name": "Culling Strike",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportManaforgedArrows",
+          "level": 20,
+          "name": "Manaforged Arrows",
+          "quality": 20
+        }
+      ],
+      "index": 3,
+      "slot": "Gloves"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemVaalHaste",
+          "level": 20,
+          "name": "Vaal Haste",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemMalevolence",
+          "level": 20,
+          "name": "Malevolence",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemPetrifiedBlood",
+          "level": 20,
+          "name": "Petrified Blood",
+          "quality": 0
+        }
+      ],
+      "index": 4,
+      "slot": "Helmet"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemWitheringStep",
+          "level": 21,
+          "name": "Withering Step",
+          "quality": 23
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemAutomation",
+          "level": 20,
+          "name": "Automation",
+          "quality": 20
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemImmortalCall",
+          "level": 20,
+          "name": "Immortal Call",
+          "quality": 20
+        }
+      ],
+      "index": 5,
+      "slot": "Boots"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFlameDash",
+          "level": 12,
+          "name": "Flame Dash",
+          "quality": 20
+        }
+      ],
+      "index": 6,
+      "slot": "Boots"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemBlinkArrow",
+          "level": 20,
+          "name": "Blink Arrow",
+          "quality": 20
+        }
+      ],
+      "index": 7,
+      "slot": "Helmet"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "level": 1,
+          "name": "Despair",
+          "quality": 0
+        }
+      ],
+      "index": 8,
+      "slot": "Ring 1"
+    }
+  ],
+  "level": 99,
+  "unparsed_item_modifiers": [
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 2",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 3",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 4",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "Used when Charges reach full",
+      "slot": "Flask 5",
+      "unparsed": "Used when Charges reach full"
+    },
+    {
+      "line": "5% chance to Blind Enemies on Hit with Attacks",
+      "slot": "Weapon 2 Swap",
+      "unparsed": " to Blind Enemies  with Attacks "
+    },
+    {
+      "line": "Your Empowering Towers have 25% increased Range",
+      "slot": "Ring 2",
+      "unparsed": "Your Empowering Towers have 25% increased Range"
+    }
+  ],
+  "tree_version": "3_30",
+  "selection": {
+    "character_level": 99,
+    "item_set": 4,
+    "main_socket_group": 1,
+    "skill_set": 1,
+    "tree_spec": 9
+  },
+  "equipped_items": [
+    {
+      "base": "Crimson Jewel",
+      "id": 49,
+      "item_level": 84,
+      "name": "Forbidden Flame, Crimson Jewel",
+      "rarity": "RELIC",
+      "slot": "Jewel 18436"
+    },
+    {
+      "base": "Cobalt Jewel",
+      "id": 50,
+      "item_level": 84,
+      "name": "Forbidden Flesh, Cobalt Jewel",
+      "rarity": "RELIC",
+      "slot": "Jewel 22748"
+    },
+    {
+      "base": "Prismatic Jewel",
+      "id": 116,
+      "item_level": 80,
+      "name": "The Light of Meaning, Prismatic Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 31683"
+    },
+    {
+      "base": "Large Cluster Jewel",
+      "id": 123,
+      "item_level": 83,
+      "name": "Foe Shine, Large Cluster Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 32763"
+    },
+    {
+      "base": "Medium Cluster Jewel",
+      "id": 121,
+      "item_level": 83,
+      "name": "Kraken Cut, Medium Cluster Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 33753"
+    },
+    {
+      "active": true,
+      "base": "Divine Life Flask",
+      "id": 36,
+      "item_level": 83,
+      "name": "Saturated Divine Life Flask of Sealing",
+      "rarity": "MAGIC",
+      "slot": "Flask 1"
+    },
+    {
+      "active": true,
+      "base": "Amethyst Flask",
+      "id": 23,
+      "item_level": 84,
+      "name": "Progenesis, Amethyst Flask",
+      "rarity": "RELIC",
+      "slot": "Flask 2"
+    },
+    {
+      "active": true,
+      "base": "Topaz Flask",
+      "id": 111,
+      "item_level": 84,
+      "name": "Alchemist's Topaz Flask of the Kakapo",
+      "rarity": "MAGIC",
+      "slot": "Flask 3"
+    },
+    {
+      "active": true,
+      "base": "Silver Flask",
+      "id": 112,
+      "item_level": 83,
+      "name": "Bottomless Silver Flask of Craft",
+      "rarity": "MAGIC",
+      "slot": "Flask 4"
+    },
+    {
+      "base": "Viridian Jewel",
+      "id": 118,
+      "item_level": 80,
+      "name": "Unnatural Instinct, Viridian Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 48768"
+    },
+    {
+      "base": "Viridian Jewel",
+      "id": 2,
+      "name": "New Item, Viridian Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 60735"
+    },
+    {
+      "base": "Viridian Jewel",
+      "id": 120,
+      "item_level": 84,
+      "name": "Ancestral Vision, Viridian Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 61834"
+    },
+    {
+      "active": false,
+      "base": "Vanguard Belt",
+      "id": 110,
+      "item_level": 87,
+      "name": "The Tides of Time, Vanguard Belt",
+      "rarity": "UNIQUE",
+      "slot": "Belt"
+    },
+    {
+      "base": "Prismatic Jewel",
+      "id": 117,
+      "item_level": 85,
+      "name": "Watcher's Eye, Prismatic Jewel",
+      "rarity": "UNIQUE",
+      "slot": "Jewel 33989"
+    },
+    {
+      "active": false,
+      "base": "Assassin Bow",
+      "id": 57,
+      "item_level": 67,
+      "name": "Chin Sol, Assassin Bow",
+      "rarity": "UNIQUE",
+      "slot": "Weapon 1 Swap"
+    },
+    {
+      "active": false,
+      "base": "Crude Bow",
+      "id": 101,
+      "item_level": 85,
+      "name": "Widowhail, Crude Bow",
+      "rarity": "UNIQUE",
+      "slot": "Weapon 1"
+    },
+    {
+      "active": false,
+      "base": "Broadhead Arrow Quiver",
+      "id": 102,
+      "item_level": 86,
+      "name": "Golem Impaler, Broadhead Arrow Quiver",
+      "rarity": "RARE",
+      "slot": "Weapon 2"
+    },
+    {
+      "active": true,
+      "base": "Quicksilver Flask",
+      "id": 113,
+      "item_level": 84,
+      "name": "Perpetual Quicksilver Flask of Craft",
+      "rarity": "MAGIC",
+      "slot": "Flask 5"
+    },
+    {
+      "active": false,
+      "base": "Ornate Quiver",
+      "id": 55,
+      "item_level": 85,
+      "name": "Maloney's Mechanism, Ornate Quiver",
+      "rarity": "UNIQUE",
+      "slot": "Weapon 2 Swap"
+    },
+    {
+      "active": false,
+      "base": "Agate Amulet",
+      "id": 107,
+      "item_level": 85,
+      "name": "Empyrean Collar, Agate Amulet",
+      "rarity": "RARE",
+      "slot": "Amulet"
+    },
+    {
+      "active": false,
+      "base": "Grizzly Pelt",
+      "id": 103,
+      "item_level": 85,
+      "name": "Rune Guardian, Grizzly Pelt",
+      "rarity": "RARE",
+      "slot": "Helmet"
+    },
+    {
+      "active": false,
+      "base": "Desert Brigandine",
+      "id": 104,
+      "item_level": 83,
+      "name": "Lightning Coil, Desert Brigandine",
+      "rarity": "UNIQUE",
+      "slot": "Body Armour"
+    },
+    {
+      "active": false,
+      "base": "Slink Gloves",
+      "id": 105,
+      "item_level": 85,
+      "name": "Pandemonium Nails, Slink Gloves",
+      "rarity": "RARE",
+      "slot": "Gloves"
+    },
+    {
+      "active": false,
+      "base": "Slink Boots",
+      "id": 106,
+      "item_level": 86,
+      "name": "Sol Spark, Slink Boots",
+      "rarity": "RARE",
+      "slot": "Boots"
+    },
+    {
+      "active": false,
+      "base": "Two-Stone Ring (Cold/Lightning)",
+      "id": 124,
+      "name": "Curse Ring, Two-Stone Ring",
+      "rarity": "RARE",
+      "slot": "Ring 1"
+    },
+    {
+      "active": false,
+      "base": "Two-Stone Ring",
+      "id": 109,
+      "item_level": 86,
+      "name": "Chimeric Grip, Two-Stone Ring",
+      "rarity": "RARE",
+      "slot": "Ring 2"
+    },
+    {
+      "base": "Medium Cluster Jewel",
+      "id": 114,
+      "item_level": 83,
+      "name": "Entropy Ornament, Medium Cluster Jewel",
+      "rarity": "RARE",
+      "slot": "Jewel 6910"
+    }
+  ],
+  "applied_supports": [
+    {
+      "id": "SupportVoidManipulation",
+      "level": 22,
+      "name": "Void Manipulation",
+      "quality": 20
+    },
+    {
+      "id": "SupportViciousProjectiles",
+      "level": 22,
+      "name": "Vicious Projectiles",
+      "quality": 10
+    },
+    {
+      "id": "SupportMirageArcher",
+      "level": 23,
+      "name": "Mirage Archer",
+      "quality": 30
+    },
+    {
+      "id": "SupportEfficacy",
+      "level": 23,
+      "name": "Efficacy",
+      "quality": 20
+    },
+    {
+      "id": "SupportEmpower",
+      "level": 5,
+      "name": "Empower",
+      "quality": 0
+    }
+  ],
+  "allocated_points": {
+    "ascendancy_total": 8,
+    "bloodline_subset": 0,
+    "passive": 122
+  },
+  "engine_warnings": [],
+  "interpretation": "CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.",
+  "warnings": [
+    {
+      "code": "conditional_config",
+      "detail": "Recent/on-kill conditions are configured; inspect boss uptime."
+    },
+    {
+      "code": "ailment_or_stack_assumptions",
+      "detail": "Configured ailments/stacks need magnitude, application and uptime evidence."
+    },
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": true
+}

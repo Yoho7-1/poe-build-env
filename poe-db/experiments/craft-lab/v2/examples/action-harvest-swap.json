@@ -1,0 +1,1 @@
+{ "type": "harvest", "method": "swap", "kind": "resistance", "from": "fire", "to": "cold", "cost": { "Wild Crystallised Lifeforce": 300, "Vivid Crystallised Lifeforce": 300 } }

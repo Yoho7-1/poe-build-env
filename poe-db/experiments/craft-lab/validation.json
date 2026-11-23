@@ -1,0 +1,130 @@
+{
+  "at": "2026-11-23T20:19:14.336Z",
+  "stage": "initial_isolated_prototype",
+  "validation_scope": "software_only",
+  "game_validated": false,
+  "contract": "610e2fdbaac5469a6c5d9b7c6014caa273736eb87fc438f1363a5b1370664f62",
+  "tests": {
+    "command": "node --test",
+    "cwd": "poe-db",
+    "passed": 41,
+    "failed": 0,
+    "new_simulator_tests": 13,
+    "existing_tests": 28
+  },
+  "environment": {
+    "command": "node poe-db/scripts/agent.mjs doctor --deep",
+    "exit_code": 0,
+    "ready": true,
+    "verified_pob_files": 364,
+    "verified_source_cache_files": 126,
+    "build_revision": 1
+  },
+  "original_file_checks": {
+    "checked": 14,
+    "all_unchanged": true,
+    "files": [
+      {
+        "file": "AGENTS.md",
+        "sha256": "b2a46d8a683ae79e5f90fcdbc6ce64c8c84f6afa042d2158c0a5dc463bfe0874",
+        "after_sha256": "b2a46d8a683ae79e5f90fcdbc6ce64c8c84f6afa042d2158c0a5dc463bfe0874",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/scripts/agent.mjs",
+        "sha256": "bf1ff4f7254d99b9aa1f7f3d797980f47527d5a248798ae0807674144c210cc9",
+        "after_sha256": "bf1ff4f7254d99b9aa1f7f3d797980f47527d5a248798ae0807674144c210cc9",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/scripts/environment.mjs",
+        "sha256": "ee96564412e34a265afbc3535b7c25268b64481151d5bfffae3eea9fc8f5dfe8",
+        "after_sha256": "ee96564412e34a265afbc3535b7c25268b64481151d5bfffae3eea9fc8f5dfe8",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/docs/HANDOFF.md",
+        "sha256": "a8bfc8a1f0bf3df7f86037453e59f9b53fdb7ace99aa5db3a14795b331d7950c",
+        "after_sha256": "a8bfc8a1f0bf3df7f86037453e59f9b53fdb7ace99aa5db3a14795b331d7950c",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/docs/BUILDING.md",
+        "sha256": "3a20a8cc2f7fd75d417df1c265fe91e6743747033867fffd6dd8aa5164a992c3",
+        "after_sha256": "3a20a8cc2f7fd75d417df1c265fe91e6743747033867fffd6dd8aa5164a992c3",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/docs/ENVIRONMENT.md",
+        "sha256": "4c4fa8f60bc265091f6f635511c8017ed52afa4fd289fe91043d2d284a9ba598",
+        "after_sha256": "4c4fa8f60bc265091f6f635511c8017ed52afa4fd289fe91043d2d284a9ba598",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/environment.lock.json",
+        "sha256": "1aa049176bcbd5026f3055e1e7574270f88e0d102fdeb400e1d7c5de3b73954b",
+        "after_sha256": "1aa049176bcbd5026f3055e1e7574270f88e0d102fdeb400e1d7c5de3b73954b",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/package.json",
+        "sha256": "9a981ea391cad025fd863950adcdd101262b51ff255cb36f537c54a637d0bf6c",
+        "after_sha256": "9a981ea391cad025fd863950adcdd101262b51ff255cb36f537c54a637d0bf6c",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/package-lock.json",
+        "sha256": "5f3beb8227873c40b14a4af4f714161ff859b73f889fa81abc47d72cb5c813d1",
+        "after_sha256": "5f3beb8227873c40b14a4af4f714161ff859b73f889fa81abc47d72cb5c813d1",
+        "unchanged": true
+      },
+      {
+        "file": "builds/main/build.json",
+        "sha256": "d824568620f284503f0a066bd716111a767aec6d1fab3a6789f0622e3b064e6a",
+        "after_sha256": "d824568620f284503f0a066bd716111a767aec6d1fab3a6789f0622e3b064e6a",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/data/knowledge-3.30.sqlite",
+        "sha256": "f02bf770666038a8394a1d5cb3e0e3821d6d66f5c170b79127ea5ce264694c85",
+        "after_sha256": "f02bf770666038a8394a1d5cb3e0e3821d6d66f5c170b79127ea5ce264694c85",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/data/mechanics-3.30.sqlite",
+        "sha256": "49bc79dffef6a2d1d4facf65aa5fcecb8e2abe013a75d871c8ada55435d667ed",
+        "after_sha256": "49bc79dffef6a2d1d4facf65aa5fcecb8e2abe013a75d871c8ada55435d667ed",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/data/poe-3.30.sqlite",
+        "sha256": "dbe37171c951f63a030a4263f501bce71e631b2150e44a7bd8bc7e9882018142",
+        "after_sha256": "dbe37171c951f63a030a4263f501bce71e631b2150e44a7bd8bc7e9882018142",
+        "unchanged": true
+      },
+      {
+        "file": "poe-db/data/workbench-3.30.sqlite",
+        "sha256": "c8a705d17e5f43ff858069b111d5d21a0a7081aa631bc41025937e43406f18ce",
+        "after_sha256": "c8a705d17e5f43ff858069b111d5d21a0a7081aa631bc41025937e43406f18ce",
+        "unchanged": true
+      }
+    ]
+  },
+  "demonstration": {
+    "replay_verified": true,
+    "revision": 2,
+    "file": "runs/demo-seed42-2.json"
+  },
+  "batch": {
+    "file": "runs/amulet-batch1000-seed42.json",
+    "episodes": 1000,
+    "outcomes": {
+      "success": 95,
+      "plan_exhausted": 905,
+      "action_rejected": 0
+    },
+    "success_rate": 0.095,
+    "interpretation": "Conditional example under experimental assumptions; excludes acquiring the initial magic item; not a crafting recommendation."
+  },
+  "next": "Validate affix-count distributions and independent 3.30 controls before extending the model to normal-to-magic/rare rerolls."
+}

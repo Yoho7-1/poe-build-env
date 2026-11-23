@@ -1,0 +1,138 @@
+[
+  {
+    "id": "pob.calc-tools",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/CalcTools.lua",
+    "file": "vendor/pob/src/Modules/CalcTools.lua",
+    "sha256": "8f590b40b4ab9ec04bfde3e41cd2e4af55b2b6ed592b1ec1285430893ca5f9a6"
+  },
+  {
+    "id": "pob.mod-db",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Classes/ModDB.lua",
+    "file": "vendor/pob/src/Classes/ModDB.lua",
+    "sha256": "9af92139c94a41f434b8c26ded7827e47d30dc129025ce80653be2c82b0f4abd"
+  },
+  {
+    "id": "pob.calc-offence",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/CalcOffence.lua",
+    "file": "vendor/pob/src/Modules/CalcOffence.lua",
+    "sha256": "436bae3fb46603fb6218ff15df1bd8986ce619b4a8f4739ca627f6aa3afcd393"
+  },
+  {
+    "id": "pob.calc-defence",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/CalcDefence.lua",
+    "file": "vendor/pob/src/Modules/CalcDefence.lua",
+    "sha256": "45fcb24297c46417c9286a832bd4ffe5073742e8a6d1c68e2a39292a58e5d0ba"
+  },
+  {
+    "id": "pob.calc-setup",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/CalcSetup.lua",
+    "file": "vendor/pob/src/Modules/CalcSetup.lua",
+    "sha256": "a28e80fb92d35b36f4791d9b06af7726ad00bf12c2a924bcc6aa6ff3bdc9535a"
+  },
+  {
+    "id": "pob.calc-perform",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/CalcPerform.lua",
+    "file": "vendor/pob/src/Modules/CalcPerform.lua",
+    "sha256": "8950f3b9c5ebbf8755f3f95a90ff47397269dfea6cfb0f4161025c8f634c9c4b"
+  },
+  {
+    "id": "pob.active-skill",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/CalcActiveSkill.lua",
+    "file": "vendor/pob/src/Modules/CalcActiveSkill.lua",
+    "sha256": "b052dd30c4e604eee9b64457b11aa9567e27432c3efd7580ab5fc6a15cdfc637"
+  },
+  {
+    "id": "pob.config",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Modules/ConfigOptions.lua",
+    "file": "vendor/pob/src/Modules/ConfigOptions.lua",
+    "sha256": "65775f10e817d2cbefdcd0b41e18e215b77fca38a98f0eb7d6e43fe290bb5f00"
+  },
+  {
+    "id": "pob.items-tab",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Classes/ItemsTab.lua",
+    "file": "vendor/pob/src/Classes/ItemsTab.lua",
+    "sha256": "b30537d1fb5617603c01fc3ea1b8737623405e1180a9be8c366c72d600a1539f"
+  },
+  {
+    "id": "pob.passive-spec",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Classes/PassiveSpec.lua",
+    "file": "vendor/pob/src/Classes/PassiveSpec.lua",
+    "sha256": "9c7d836e7adb5b36256956907a8570a32bc27355b471e6a7f7fb9827299f4587"
+  },
+  {
+    "id": "pob.socket-tests",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/spec/System/TestGemSocketQuality_spec.lua",
+    "file": "vendor/pob/spec/System/TestGemSocketQuality_spec.lua",
+    "sha256": "01ea3976ec7a914cd70c9fb66f4129fad8572e6b78ebed3afb5d31782129fa6a"
+  },
+  {
+    "id": "pob.item",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Classes/Item.lua",
+    "file": "vendor/pob/src/Classes/Item.lua",
+    "sha256": "a4100a9860236a90a5801ec17310b6d2979dfc85a0d874c76cdf5194228d48c7"
+  },
+  {
+    "id": "pob.tree-tab",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Classes/TreeTab.lua",
+    "file": "vendor/pob/src/Classes/TreeTab.lua",
+    "sha256": "92bcaf60674c947294c768798f808768ad1656e5aec87d44bb599b6dc4b15a10"
+  },
+  {
+    "id": "pob.skills-tab",
+    "kind": "engine_implementation",
+    "version": "2.68.1",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/a41fec6c20f822a658ae5df1273e8c69d5969bac/src/Classes/SkillsTab.lua",
+    "file": "vendor/pob/src/Classes/SkillsTab.lua",
+    "sha256": "06382b5f978f95510c0eee4e7f68b8c5842e0f2d516f1e7d27bfb0c04255fec5"
+  },
+  {
+    "id": "ggg.tree",
+    "kind": "official_data",
+    "version": "3.30.0",
+    "file": "../research/330/ggg-passive-tree.json",
+    "url": "https://github.com/grindinggear/skilltree-export/blob/550fb34ae7fca9ec4d760a2ac845bb2ba1032ec3/data.json",
+    "sha256": "1ba8e3bda13bf672e23033b07dc8a913cb3768d306b344103fe85cbe25e4ce44"
+  },
+  {
+    "id": "project.catalog-rules",
+    "kind": "local_methodology",
+    "version": "1",
+    "file": "scripts/model.mjs",
+    "url": "local:poe-db/scripts/model.mjs",
+    "sha256": "9a5ac235abb40d382e891d0864877259e0f4848127ce81ea9c5e9032765a2c5e"
+  },
+  {
+    "id": "project.reference-rules",
+    "kind": "local_methodology",
+    "version": "2",
+    "file": "scripts/reference-store.mjs",
+    "url": "local:poe-db/scripts/reference-store.mjs",
+    "sha256": "9b76b2fc2ba9e247423911437841f0e6af6ffb953a2af98c48af19c2a20c906c"
+  }
+]

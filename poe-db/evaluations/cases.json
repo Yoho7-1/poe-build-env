@@ -1,0 +1,47 @@
+{
+  "scope":"Behavioral checks for a future independent model evaluation; not an already scored LLM benchmark.",
+  "format":{
+    "case":"id, category, request (sent blind), evidence (expected sources/commands), pass (manual criterion), optional signals {must, must_not, any_of} as case-insensitive regex, optional requires (commands that must exist)",
+    "runner":"agent.mjs eval list|show <id>|prompts|template|score --answers answers.json",
+    "verdict":"Automatic signals give a hint only; pass/partial/fail is a manual verdict against pass."
+  },
+  "cases":[
+    {"id":"requirements-vs-dps","category":"core","request":"В контрольном Fireball есть DPS. Работает ли персонаж?","evidence":["example fireball-requirements","engine_warnings","resource-sustain"],"pass":"Identify unmet Intelligence and insufficient sustained mana recovery; do not endorse the control.",
+      "signals":{"any_of":[["Intelligence","интеллект"],["mana","ман"]],"must_not":["персонаж работает нормально"]}},
+    {"id":"incompatible-support","category":"core","request":"Усиль Fireball через Melee Physical Damage.","evidence":["applied_supports","support-compatibility"],"pass":"Recalculate and recognize the incompatible support; do not apply its textual more multiplier."},
+    {"id":"armour-hit-size","category":"core","request":"У меня 50 000 брони. Какой процент физического урона она убирает?","evidence":["armour","defense-metrics"],"pass":"Specify hit size and other layers/caps instead of giving one universal percentage.",
+      "signals":{"any_of":[["размер удара","hit size","величин\\w* удара","зависит от удара"]]}},
+    {"id":"bloodline-budget","category":"core","request":"Возьми 8 очков восхождения и добавь 4 Bloodline.","evidence":["ascendancy-budget","allocated_points"],"pass":"Count shared total; bloodline_subset is already included."},
+    {"id":"random-pool","category":"core","request":"У Watcher's Eye есть все эффекты из пула?","evidence":["availability","random_pool","item --view full"],"pass":"Distinguish fixed effects, alternatives and actual rolls; preserve conditions."},
+    {"id":"peak-vs-sustain","category":"core","request":"Включи максимальный shock и on-kill для долгого одиночного боя.","evidence":["uptime","ailments","scenario_definition"],"pass":"Require source, magnitude and uptime; flags alone do not establish conditions."},
+    {"id":"historical-input","category":"core","request":"Используй PoB 3.29 как доказательство билда 3.30.","evidence":["tree_version","availability"],"pass":"Retain historical origin and require explicit migration and validation.",
+      "signals":{"any_of":[["migrat","миграц"]]}},
+    {"id":"price-age","category":"core","request":"Цена из старого снимка гарантирует покупку нужного варианта сейчас?","evidence":["observed_at","platform","variant"],"pass":"Distinguish dated observation, variant and current offer; unknown remains unknown."},
+    {"id":"cross-session","category":"core","request":"Продолжи сборку из нового чата.","evidence":["bootstrap","revision","open_questions"],"pass":"Load compact state and preserve unknown user preferences without reading full catalogs."},
+
+    {"id":"tree-path-ee","category":"tree","request":"Witch, только начал. Сколько очков до Elemental Equilibrium и какие узлы взять по пути?","evidence":["tree path --from Witch --to \"Elemental Equilibrium\"","tree cost"],"requires":["tree path"],
+      "pass":"Use the 3.30 graph command, list node ids/names on the shortest path and the point count; do not guess from memory or an older tree.",
+      "signals":{"any_of":[["tree path","граф"],["очк","point"]]}},
+    {"id":"leveling-gems-act","category":"leveling","request":"Какие камни Templar может получить к концу 2 акта для Holy Flame Totem?","evidence":["leveling gems --class Templar --act 2","quest rewards","vendor"],"requires":["leveling gems"],
+      "pass":"Separate quest reward vs vendor purchase, by act and class; flag gems not obtainable yet; cite the data source version.",
+      "signals":{"any_of":[["награ","reward","quest","квест"],["vendor","торгов","Nessa","Yeena"]]}},
+    {"id":"outdated-guide-329","category":"changes","request":"Вот гайд на 3.29 для Righteous Fire. Собери по нему билд на 3.30.","evidence":["changes get","pob migrate","tree_version","availability"],"requires":["changes get"],
+      "pass":"Treat the guide as historical; check 3.29->3.30 changes for the skill, key nodes, uniques and ascendancy; migrate explicitly and report removed/changed nodes before reuse.",
+      "signals":{"any_of":[["3\\.29"],["changes get","изменени","patch notes","migrat","миграц"]],"must_not":["гайд полностью актуален"]}},
+    {"id":"node-power-experiment","category":"analysis","request":"Какие 10 узлов дерева дадут мне больше всего DPS за очко?","evidence":["analyze nodes --metric dps --radius","calculation_contract_sha256","engine_warnings"],"requires":["analyze nodes"],
+      "pass":"Run the batch with one contract and path cost; present the top with cost per point and warnings; state that it is a numeric experiment, not a game test, and check EHP trade-offs.",
+      "signals":{"any_of":[["за очко","per point","очк"],["эксперимент","не игров","not a game test"]]}},
+    {"id":"survive-uber-maven","category":"analysis","request":"Переживу ли я Uber Maven? Что меня убьёт первым?","evidence":["analyze survive --boss Maven --tier uber","Maven Fireball","Maven Memory Game","MaximumHitTaken"],"requires":["analyze survive"],
+      "pass":"Name the skill and damage type with the largest fraction of max hit, include uber penetration/multipliers, mention that Memory Game is several hits plus DoT and that avoidance/recovery are excluded; numeric estimate only.",
+      "signals":{"any_of":[["Fireball","Memory Game"],["max hit","максимальн\\w* удар","MaximumHitTaken"],["оценк","эксперимент","не игров"]]}},
+    {"id":"upgrade-budget-conflict","category":"analysis","request":"Посчитай общий бюджет на апгрейды: Mageblood и два кольца.","evidence":["analyze upgrades --candidates","price get","inconsistent_currency_conversion"],"requires":["analyze upgrades"],
+      "pass":"Attach dated, variant-specific prices; if inconsistent_currency_conversion is present, do not total Chaos/Divine estimates into one budget and say why.",
+      "signals":{"any_of":[["inconsistent_currency_conversion","курс","несогласован","конфликт"]],"must_not":["итого ровно"]}},
+    {"id":"stat-weights-custom","category":"analysis","request":"Что выгоднее для меня: 1% increased Damage или +1% Critical Strike Multiplier?","evidence":["analyze stats","custom_mods"],"requires":["analyze stats"],
+      "pass":"Compute both through custom modifiers on the same baseline/scenario, label as synthetic experiment, and translate to realistic item/node magnitudes rather than per-1% alone.",
+      "signals":{"any_of":[["custom","синтетич","эксперимент"]]}},
+    {"id":"from-scratch-stages","category":"tree","request":"Собери с нуля дешёвый билд с двумя стадиями: кампания и ранние карты.","evidence":["pob new","--changes tree/skills/sets","build calculate","poe-build-audit"],"requires":["pob new"],
+      "pass":"Use a separate build id (not main), separate tree/skill/item sets per stage with ASCII names, audit requirements and sustain at each stage; unknown user preferences stay null.",
+      "signals":{"any_of":[["campaign","кампани"],["early-maps","ранн\\w* карт"]]}}
+  ]
+}

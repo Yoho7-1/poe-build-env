@@ -1,0 +1,148 @@
+{
+  "selection": {
+    "character_level": 70
+  },
+  "sets": [
+    {
+      "type": "tree",
+      "action": "copy",
+      "from": 2,
+      "title": "Early maps",
+      "activate": true
+    },
+    {
+      "type": "skill",
+      "action": "copy",
+      "from": 1,
+      "title": "Early maps",
+      "activate": true
+    },
+    {
+      "type": "item",
+      "action": "copy",
+      "from": 1,
+      "title": "Early maps",
+      "activate": true
+    }
+  ],
+  "tree": {
+    "allocate": [
+      "Heart of Thunder",
+      "Breath of Lightning",
+      "Storm Weaver",
+      "Nimbleness",
+      "Melding",
+      "Blood Siphon",
+      "Mastermind of Discord",
+      "Heart of Destruction",
+      "Roiling Tempest",
+      "Wandslinger",
+      "Discipline and Training",
+      "Coordination",
+      "Precision",
+      "Elemental Focus",
+      "Divine Fervour",
+      "Tolerance",
+      "Fire Walker",
+      "Contemplative Meditation"
+    ],
+    "quest_points": 23,
+    "ascendancy_points": 6
+  },
+  "skills": {
+    "groups": [
+      {
+        "group": 1,
+        "replace_gems": [
+          {
+            "gem": 1,
+            "name": "Arc",
+            "level": 20
+          },
+          {
+            "gem": 2,
+            "name": "Added Lightning Damage",
+            "level": 20
+          },
+          {
+            "gem": 3,
+            "name": "Lightning Penetration",
+            "level": 20
+          }
+        ],
+        "add_gems": [
+          {
+            "name": "Inspiration",
+            "level": 20
+          }
+        ]
+      },
+      {
+        "group": 2,
+        "replace_gems": [
+          {
+            "gem": 1,
+            "name": "Clarity",
+            "level": 20
+          },
+          {
+            "gem": 2,
+            "name": "Herald of Thunder",
+            "level": 20
+          }
+        ]
+      },
+      {
+        "group": 3,
+        "replace_gems": [
+          {
+            "gem": 1,
+            "name": "Flame Dash",
+            "level": 20
+          }
+        ]
+      }
+    ]
+  },
+  "replace_items": [
+    {
+      "slot": "Weapon 1",
+      "text": "Rarity: RARE\nTeaching Spark\nImbued Wand\nAdds 12 to 110 Lightning Damage to Spells\n30% increased Spell Damage\n+40 to maximum Mana"
+    },
+    {
+      "slot": "Body Armour",
+      "text": "Rarity: RARE\nTeaching Robe\nSavant's Robe\n+80 to maximum Life\n+35% to Lightning Resistance\n+30% to Cold Resistance"
+    },
+    {
+      "slot": "Helmet",
+      "text": "Rarity: RARE\nTeaching Circlet\nMagistrate Crown\n+60 to maximum Life\n+35% to Fire Resistance\n+40% to Cold Resistance"
+    },
+    {
+      "slot": "Gloves",
+      "text": "Rarity: RARE\nTeaching Wraps\nSilk Gloves\n+55 to maximum Life\n+30% to Cold Resistance\n+20% to Lightning Resistance"
+    },
+    {
+      "slot": "Boots",
+      "text": "Rarity: RARE\nTeaching Shoes\nVelvet Slippers\n25% increased Movement Speed\n+60 to maximum Life\n+35% to Fire Resistance"
+    },
+    {
+      "slot": "Ring 1",
+      "text": "Rarity: RARE\nTeaching Loop\nSapphire Ring\n+50 to maximum Life\n+30% to Cold Resistance\n+30% to Lightning Resistance"
+    },
+    {
+      "slot": "Ring 2",
+      "text": "Rarity: RARE\nTeaching Band\nRuby Ring\n+50 to maximum Life\n+30% to Fire Resistance\n+20% to Chaos Resistance"
+    },
+    {
+      "slot": "Amulet",
+      "text": "Rarity: RARE\nTeaching Pendant\nLapis Amulet\n+40 to maximum Life\n+25% to Fire Resistance\n+30 to Strength"
+    },
+    {
+      "slot": "Belt",
+      "text": "Rarity: RARE\nTeaching Sash\nLeather Belt\n+70 to maximum Life\n+30% to Lightning Resistance"
+    }
+  ],
+  "config": {
+    "resistancePenalty": -60
+  }
+}

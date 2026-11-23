@@ -1,0 +1,1654 @@
+[
+  {
+    "id": "increased-more",
+    "title": "Increased, reduced, more и less",
+    "aliases": [
+      "урон",
+      "множители",
+      "damage",
+      "increased",
+      "more",
+      "less"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Применимые increased/reduced складываются в своей группе; независимые more/less дают множители.",
+    "rules": [
+      "В простой группе: base × (1 + сумма increased/reduced / 100) × произведение (1 + more/less / 100).",
+      "Пример: base=100, increased=100% и 50%, more=20%, less=30% дают 100×2.5×1.2×0.7=210.",
+      "Проверять область действия: increased Spell Damage, Attack Damage и Damage over Time не взаимозаменяемы."
+    ],
+    "conditions": [
+      "Формула описывает одну совместимую группу; локальные свойства оружия и отдельные стадии расчёта требуют своего разбора."
+    ],
+    "pitfalls": [
+      "Считать 20% increased равным 20% more при уже накопленном increased.",
+      "Складывать свойства, которые не применяются к выбранному источнику урона."
+    ],
+    "sources": [
+      "pob.calc-tools",
+      "pob.mod-db"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "local-global"
+      },
+      {
+        "type": "check_with",
+        "target": "hit-dot"
+      }
+    ]
+  },
+  {
+    "id": "local-global",
+    "title": "Локальные и глобальные свойства",
+    "aliases": [
+      "local",
+      "global",
+      "оружие",
+      "база"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Локальный мод изменяет параметры предмета; глобальный применяется на уровне персонажа или выбранного умения.",
+    "rules": [
+      "Сначала проверить базовые итоговые параметры оружия/брони, затем их использование навыком.",
+      "Одинаковая формулировка вне контекста базы не гарантирует одинаковую область действия."
+    ],
+    "conditions": [
+      "Требуются класс предмета, текст, идентификатор мода и способ использования оружия."
+    ],
+    "pitfalls": [
+      "Добавлять локальный increased Physical Damage оружия ко всему физическому урону персонажа."
+    ],
+    "sources": [
+      "pob.items-tab",
+      "pob.calc-setup"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "increased-more"
+      },
+      {
+        "type": "check_with",
+        "target": "added-damage"
+      }
+    ]
+  },
+  {
+    "id": "added-damage",
+    "title": "Добавленный урон и effectiveness",
+    "aliases": [
+      "added damage",
+      "damage effectiveness",
+      "плоский урон"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Плоский добавленный урон оценивается с учётом применимости и эффективности выбранного навыка.",
+    "rules": [
+      "Различать добавление к атакам, чарам, конкретному оружию и отдельному навыку.",
+      "Сравнивать итоговый урон при фактическом уровне камня и наличии конверсии."
+    ],
+    "conditions": [
+      "Числовое damage_effectiveness в RePoE хранится в единицах источника; масштабирование применять через двигатель."
+    ],
+    "pitfalls": [
+      "Добавлять весь плоский урон к навыку без проверки effectiveness."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.active-skill"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "conversion"
+      },
+      {
+        "type": "check_with",
+        "target": "gem-quality"
+      }
+    ]
+  },
+  {
+    "id": "conversion",
+    "title": "Конверсия и gain as extra",
+    "aliases": [
+      "conversion",
+      "конверт",
+      "gain as extra",
+      "физический",
+      "chaos"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Конверсия переносит часть урона в следующий тип; gain as extra добавляет отдельную долю.",
+    "rules": [
+      "Порядок в движке: Physical → Lightning → Cold → Fire → Chaos.",
+      "Проверять источник конверсии, приоритет конверсии навыка, ограничения и доли после нормализации.",
+      "Сохранять применимые модификаторы типов, через которые прошёл урон; это не разрешает повторное произвольное умножение."
+    ],
+    "conditions": [
+      "Конверсия исходящего урона и damage taken as — разные процессы."
+    ],
+    "pitfalls": [
+      "Считать 100% converted и 100% gained as extra одинаковым результатом.",
+      "Строить обратную цепочку Chaos → Physical."
+    ],
+    "sources": [
+      "pob.calc-offence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "increased-more"
+      },
+      {
+        "type": "check_with",
+        "target": "damage-taken-as"
+      }
+    ]
+  },
+  {
+    "id": "hit-dot",
+    "title": "Попадание и постепенный урон",
+    "aliases": [
+      "hit",
+      "dot",
+      "damage over time",
+      "постепенный",
+      "spell damage"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Попадание и DoT рассчитываются отдельно и могут иметь разные применимые модификаторы.",
+    "rules": [
+      "Частота попаданий не является частотой тиков DoT.",
+      "Spell Damage применяется к DoT только при соответствующем правиле навыка/эффекта.",
+      "Проверять правило наложения и число одновременно действующих эффектов."
+    ],
+    "conditions": [
+      "Конкретный навык может иметь отдельный текст, меняющий базовые правила."
+    ],
+    "pitfalls": [
+      "Считать шанс крита, penetration или gain on hit универсальными множителями DoT."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.active-skill"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "ailments"
+      },
+      {
+        "type": "check_with",
+        "target": "resistance-penetration"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      }
+    ]
+  },
+  {
+    "id": "critical-accuracy",
+    "title": "Критические удары и accuracy",
+    "aliases": [
+      "crit",
+      "accuracy",
+      "крит",
+      "точность",
+      "атаки"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Шанс попадания, шанс крита и множитель крита влияют на разные этапы результата.",
+    "rules": [
+      "Атаки требуют проверки accuracy и evasion противника.",
+      "Чары обычно не используют проверку accuracy атак; проверять исключения.",
+      "Сравнивать средний урон и устойчивость шанса при выбранной цели."
+    ],
+    "conditions": [
+      "Lucky/unlucky, гарантированные криты и специальные правила меняют простой средний расчёт."
+    ],
+    "pitfalls": [
+      "Оценивать критический множитель при недостаточном шансе попадания."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.calc-defence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "increased-more"
+      },
+      {
+        "type": "check_with",
+        "target": "enemy-config"
+      }
+    ]
+  },
+  {
+    "id": "resistance-penetration",
+    "title": "Сопротивления, снижение и penetration",
+    "aliases": [
+      "resistance",
+      "penetration",
+      "exposure",
+      "сопротивления",
+      "пробитие"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Снижение сопротивления цели и penetration имеют различную область действия.",
+    "rules": [
+      "Для попаданий учитывать сопротивление цели, применимые снижения и penetration.",
+      "Penetration не переносить на DoT без отдельного изменения механики.",
+      "Проверять ограничения exposure, проклятий и иммунитетов выбранной цели."
+    ],
+    "conditions": [
+      "Нужна конфигурация конкретного врага; одинаковый навык даёт разные результаты против разных целей."
+    ],
+    "pitfalls": [
+      "Считать конфигурацию обычного врага эквивалентной Pinnacle/Uber."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "hit-dot"
+      },
+      {
+        "type": "check_with",
+        "target": "enemy-config"
+      }
+    ]
+  },
+  {
+    "id": "ailments",
+    "title": "Ailments: наложение, величина и поддержание",
+    "aliases": [
+      "ailment",
+      "ignite",
+      "poison",
+      "bleed",
+      "shock",
+      "поджог",
+      "яд",
+      "кровотечение",
+      "шок"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Для ailment отдельно проверяются возможность наложения, величина, длительность и число эффектов.",
+    "rules": [
+      "Для damaging ailments проверить собственные применимые моды и правила стаков.",
+      "Для shock и других non-damaging ailments обосновать величину на нужной цели.",
+      "Число в Config — допущение расчёта, а не доказательство его достижения."
+    ],
+    "conditions": [
+      "Особые навыки, уникальные предметы и keystones могут менять допустимые источники/лимиты."
+    ],
+    "pitfalls": [
+      "Включить максимальный shock без источника и расчёта.",
+      "Складывать несколько ignite без разрешающего правила."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "hit-dot"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "speed-cooldown",
+    "title": "Скорость, cooldown и триггеры",
+    "aliases": [
+      "trigger",
+      "cooldown",
+      "cast speed",
+      "attack speed",
+      "coc",
+      "триггер"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Реальная частота срабатываний определяется всей цепочкой: действия, попадания, шанс и cooldown.",
+    "rules": [
+      "Проверять cooldown срабатывающего навыка и триггера, источник trigger rate и требования ресурса.",
+      "Рост attack/cast speed не гарантирует пропорциональный рост частоты триггеров.",
+      "При сравнении сохранять одну конфигурацию скорости сервера/срабатываний, используемую движком."
+    ],
+    "conditions": [
+      "Для конкретного триггера нужны его правила; не переносить breakpoints другого навыка."
+    ],
+    "pitfalls": [
+      "Умножать максимальную частоту триггера на число атак без проверки ограничений."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.calc-perform"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "resource-sustain",
+    "title": "Расход ресурса и устойчивое применение",
+    "aliases": [
+      "mana",
+      "life cost",
+      "sustain",
+      "ресурс",
+      "мана",
+      "стоимость"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Нужно одновременно иметь ресурс для оплаты действия и устойчивый приток при длительном использовании.",
+    "rules": [
+      "Проверять стоимость одного применения и фактическую частоту срабатываний/атак.",
+      "Сравнивать расход в секунду с доступным восстановлением в том же сценарии.",
+      "Учитывать стоимость вспомогательных навыков, триггеров и восстановление после паузы."
+    ],
+    "conditions": [
+      "On-kill восстановление зависит от наличия убийств; leech зависит от возможности наносить подходящий урон."
+    ],
+    "pitfalls": [
+      "Считать большой общий запас маны доказательством sustain."
+    ],
+    "sources": [
+      "pob.calc-perform",
+      "pob.calc-offence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "reservation"
+      },
+      {
+        "type": "check_with",
+        "target": "recovery"
+      },
+      {
+        "type": "check_with",
+        "target": "speed-cooldown"
+      }
+    ]
+  },
+  {
+    "id": "reservation",
+    "title": "Reservation и свободный ресурс",
+    "aliases": [
+      "reservation",
+      "ауры",
+      "резерв",
+      "efficiency"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Reservation efficiency меняет резервирование; итог проверяется с округлениями и реальными поддержками.",
+    "rules": [
+      "Проверять фактический свободный ресурс после всех включённых резервирующих навыков.",
+      "Учитывать cost/reservation multipliers поддержек и изменения life/mana reservation.",
+      "Оставлять возможность оплатить основное и вспомогательные действия."
+    ],
+    "conditions": [
+      "Результат чувствителен к уровням, поддержкам и специальным эффектам; использовать расчёт движка."
+    ],
+    "pitfalls": [
+      "Считать 50% efficiency прямым вычитанием 50 процентных пунктов reservation."
+    ],
+    "sources": [
+      "pob.calc-perform"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "support-compatibility"
+      }
+    ]
+  },
+  {
+    "id": "armour",
+    "title": "Броня и размер физического попадания",
+    "aliases": [
+      "armour",
+      "броня",
+      "physical hit"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Эффективность armour зависит от размера физического попадания.",
+    "rules": [
+      "Базовая функция PoB: reduction = Armour / (Armour + 5 × physical damage).",
+      "Пример без других слоёв: 50 000 armour против 1 000 physical damage дают около 90.91% до применения caps; против 10 000 — 50%.",
+      "Проверять caps, overwhelm, другие reduction и taken as в конкретном сценарии."
+    ],
+    "conditions": [
+      "Это базовая функция, не полный итоговый урон и не универсальная защита от DoT."
+    ],
+    "pitfalls": [
+      "Использовать процент из одной конфигурации как защиту от любого размера удара."
+    ],
+    "sources": [
+      "pob.calc-defence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "damage-taken-as"
+      },
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      }
+    ]
+  },
+  {
+    "id": "avoidance-block-suppression",
+    "title": "Evasion, block и suppression",
+    "aliases": [
+      "evasion",
+      "block",
+      "suppression",
+      "уклонение",
+      "блок",
+      "подавление"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Разные способы избежать/смягчить попадание имеют разные области действия.",
+    "rules": [
+      "Отдельно проверять атаки и попадания заклинаний.",
+      "Для suppression учитывать шанс и величину предотвращённого урона, включая эффекты lucky/unlucky.",
+      "Проверять свойства, меняющие результат блока, запрет блока или suppression у врага."
+    ],
+    "conditions": [
+      "DoT и специальные эффекты требуют отдельной проверки; уникальные предметы/keystones могут менять правила."
+    ],
+    "pitfalls": [
+      "Принимать высокое среднее avoidance за гарантированное переживание одного удара."
+    ],
+    "sources": [
+      "pob.calc-defence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      },
+      {
+        "type": "check_with",
+        "target": "hit-dot"
+      }
+    ]
+  },
+  {
+    "id": "damage-taken-as",
+    "title": "Damage taken as",
+    "aliases": [
+      "taken as",
+      "получаемый",
+      "перенос урона"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Часть входящего урона обрабатывается как другой тип с соответствующими защитными слоями.",
+    "rules": [
+      "Различать Damage taken as и Damage from Hits taken as.",
+      "После переноса проверить сопротивления и mitigation для каждого получившегося типа.",
+      "Оценивать отдельно попадания и DoT."
+    ],
+    "conditions": [
+      "Не переносить порядок исходящей conversion на входящий урон; использовать отдельную функцию расчёта защиты."
+    ],
+    "pitfalls": [
+      "Считать перенос в элемент без проверки соответствующего сопротивления безопасным сам по себе."
+    ],
+    "sources": [
+      "pob.calc-defence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "armour"
+      },
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      }
+    ]
+  },
+  {
+    "id": "recovery",
+    "title": "Восстановление: разные источники",
+    "aliases": [
+      "recovery",
+      "leech",
+      "recoup",
+      "regeneration",
+      "recharge",
+      "восстановление",
+      "лич"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Regeneration, leech, recoup, recharge и gain on hit/kill зависят от разных условий.",
+    "rules": [
+      "Для leech проверить тип ресурса, разрешённый источник урона, лимиты, длительность и поведение при полном ресурсе.",
+      "Для recharge проверить задержку и условия прерывания/защиты.",
+      "Для recoup учесть задержанное восстановление после подходящего урона.",
+      "Сравнивать состояние в бою, после прекращения урона и при отсутствии убийств."
+    ],
+    "conditions": [
+      "Recovery rate и отдельные модификаторы конкретного источника не считать взаимозаменяемыми."
+    ],
+    "pitfalls": [
+      "Складывать пиковые источники, которые не могут работать одновременно."
+    ],
+    "sources": [
+      "pob.calc-defence",
+      "pob.calc-offence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      },
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      }
+    ]
+  },
+  {
+    "id": "defense-metrics",
+    "title": "Max hit, EHP и серия попаданий",
+    "aliases": [
+      "ehp",
+      "max hit",
+      "защита",
+      "выживаемость"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Максимальный переживаемый удар и средняя выживаемость против серии описывают разные ситуации.",
+    "rules": [
+      "Сравнивать max hit отдельно по типам урона и при одинаковых входящих параметрах.",
+      "Проверять восстановление против серии попаданий и устойчивость к DoT.",
+      "Пересчитать без временного guard и других ненадёжных усилений."
+    ],
+    "conditions": [
+      "EHP зависит от конфигурации врага, частоты попаданий, avoidance и recovery; это не универсальный рейтинг."
+    ],
+    "pitfalls": [
+      "Объявлять персонажа бессмертным по одному TotalEHP."
+    ],
+    "sources": [
+      "pob.calc-defence",
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "armour"
+      },
+      {
+        "type": "check_with",
+        "target": "avoidance-block-suppression"
+      },
+      {
+        "type": "check_with",
+        "target": "recovery"
+      },
+      {
+        "type": "check_with",
+        "target": "enemy-config"
+      }
+    ]
+  },
+  {
+    "id": "gem-quality",
+    "title": "Уровень, качество и цвет сокета",
+    "aliases": [
+      "gem",
+      "quality",
+      "socket",
+      "камень",
+      "качество",
+      "цвет"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Фактические уровень и качество камня зависят от самого камня, экипировки и поддержек.",
+    "rules": [
+      "В 3.30 цвет не является старым запретом на размещение камня; совпадение обычного цвета может добавлять качество.",
+      "В pinned PoB бонус определяется сокетом предмета и фактической позицией камня; сокеты, которые всегда совпадают, имеют отдельное правило.",
+      "Коэффициенты quality_stats из RePoE являются исходными числами; качество не применяется простым чтением коэффициента как процента."
+    ],
+    "conditions": [
+      "Нужны реальные sockets/links, slot и порядок камней; проверять особые свойства предметов."
+    ],
+    "pitfalls": [
+      "Оценивать камень только по указанным в гайде 20/20, игнорируя остальные источники уровней и качества."
+    ],
+    "sources": [
+      "pob.calc-setup",
+      "pob.active-skill",
+      "pob.socket-tests"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "support-compatibility"
+      },
+      {
+        "type": "check_with",
+        "target": "added-damage"
+      }
+    ]
+  },
+  {
+    "id": "support-compatibility",
+    "title": "Совместимость поддержек",
+    "aliases": [
+      "support",
+      "supports",
+      "поддержки",
+      "линки",
+      "совместимость"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Поддержка должна соответствовать типам навыка и его способу применения.",
+    "rules": [
+      "Проверять allowed/excluded skill types, ограничения оружия и запреты конкретной поддержки.",
+      "Проверять эффекты, добавляющие типы навыку, и secondary granted effects.",
+      "После замены поддержки проверить стоимость ресурса и фактический список применённых supports."
+    ],
+    "conditions": [
+      "Совпадение тегов в интерфейсе — ориентир; решающими являются правила поддержки и итоговый расчёт."
+    ],
+    "pitfalls": [
+      "Выбирать самую большую цифру more из текста несовместимой поддержки."
+    ],
+    "sources": [
+      "pob.calc-tools",
+      "pob.active-skill"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "gem-quality"
+      }
+    ]
+  },
+  {
+    "id": "stacking",
+    "title": "Количество целей, стаков и экземпляров",
+    "aliases": [
+      "stacks",
+      "overlap",
+      "projectiles",
+      "снаряды",
+      "стаки",
+      "перекрытие"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Умножение урона на число экземпляров требует подтверждения их одновременного воздействия на цель.",
+    "rules": [
+      "Проверять лимит активных сущностей, правило наложения и возможность попадания нескольких частей навыка.",
+      "Сохранять assumptions о размерах цели, дистанции, времени разгона и поддержании стаков."
+    ],
+    "conditions": [
+      "Отдельно проверять конкретный навык; число снарядов само по себе не доказывает single-target multiplier."
+    ],
+    "pitfalls": [
+      "Умножать DPS одного снаряда на все снаряды без правила overlap."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.active-skill",
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "uptime"
+      },
+      {
+        "type": "check_with",
+        "target": "ailments"
+      }
+    ]
+  },
+  {
+    "id": "minions-totems-traps",
+    "title": "Миньоны, тотемы, мины и ловушки",
+    "aliases": [
+      "minions",
+      "totems",
+      "traps",
+      "mines",
+      "миньоны",
+      "тотемы",
+      "ловушки",
+      "мины"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Нужно различать действующего персонажа, владельца эффекта и сущность, которая наносит урон.",
+    "rules": [
+      "Проверять применимые к сущности модификаторы, количество, продолжительность жизни и время подготовки.",
+      "Уточнять, кому засчитывается hit/kill и кто получает восстановление.",
+      "Для миньонов учитывать выживаемость, поддержание баффов и время возврата к цели."
+    ],
+    "conditions": [
+      "Правила зависят от конкретного навыка; нельзя переносить свойства персонажа на миньона автоматически."
+    ],
+    "pitfalls": [
+      "Считать урон всех сущностей постоянно действующим без времени призыва/постановки."
+    ],
+    "sources": [
+      "pob.calc-setup",
+      "pob.calc-perform",
+      "pob.calc-offence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "stacking"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      },
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      }
+    ]
+  },
+  {
+    "id": "uptime",
+    "title": "Поддержание усилений и sustained DPS",
+    "aliases": [
+      "uptime",
+      "sustained",
+      "burst",
+      "заряды",
+      "флаконы",
+      "баффы"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Каждое условное усиление должно иметь источник, длительность и способ поддержания в выбранном бою.",
+    "rules": [
+      "Для каждого включённого условия записать источник и основание ожидаемого uptime.",
+      "Сравнивать пик, длительный бой и потерю временных эффектов отдельными расчётами.",
+      "On-kill условия требуют подходящих убийств; наличие флага в Config не создаёт источник эффекта."
+    ],
+    "conditions": [
+      "Сценарии адаптера переопределяют только перечисленные флаги; оставшиеся условия проверяются отдельно."
+    ],
+    "pitfalls": [
+      "Выдавать сконфигурированный peak за постоянный DPS."
+    ],
+    "sources": [
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      },
+      {
+        "type": "check_with",
+        "target": "enemy-config"
+      }
+    ]
+  },
+  {
+    "id": "enemy-config",
+    "title": "Конфигурация противника",
+    "aliases": [
+      "enemy",
+      "boss",
+      "pinnacle",
+      "uber",
+      "босс",
+      "враг"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Результаты сравнимы при одинаковом определённом противнике и одинаковых условиях.",
+    "rules": [
+      "Сохранять boss preset, уровень, сопротивления, входящий удар и действующие дебаффы.",
+      "Для max hit и EHP учитывать параметры входящего урона и временную защиту.",
+      "Проверять смену сценария явно; импортированные defaults не являются выбранной пользователем целью."
+    ],
+    "conditions": [
+      "Pinnacle и Uber имеют отдельные настройки; менять только название отчёта недостаточно."
+    ],
+    "pitfalls": [
+      "Сравнивать DPS по обычному врагу с DPS другого билда по Uber."
+    ],
+    "sources": [
+      "pob.config",
+      "pob.calc-offence",
+      "pob.calc-defence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      },
+      {
+        "type": "check_with",
+        "target": "resistance-penetration"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "ascendancy-budget",
+    "title": "Восхождение и Bloodline",
+    "aliases": [
+      "bloodline",
+      "ascendancy",
+      "восхождение",
+      "очки"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Основное восхождение и Bloodline требуют общего планирования ограниченного бюджета очков.",
+    "rules": [
+      "Считать выбранные узлы вместе с проходными и учитывать стоимость отказа от альтернативы.",
+      "Наличие Bloodline в дереве не доказывает доступность открытия в лиге.",
+      "Не смешивать основной Warden (ID Raider) с историческим Warden of the Maji."
+    ],
+    "conditions": [
+      "Velka/Brinerot в текущем каталоге помечена unconfirmed; использовать для исследования с явной оговоркой."
+    ],
+    "pitfalls": [
+      "Добавлять Bloodline поверх полного дерева основного восхождения без проверки бюджета."
+    ],
+    "sources": [
+      "pob.passive-spec",
+      "ggg.tree"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "availability"
+      }
+    ]
+  },
+  {
+    "id": "availability",
+    "title": "Доступность, варианты и неопределённость",
+    "aliases": [
+      "доступность",
+      "legacy",
+      "foulborn",
+      "полнота",
+      "предметы"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "workflow",
+    "summary": "Рабочий каталог уникальных предметов основан на флагах источника; прочие определения являются справочными.",
+    "rules": [
+      "released_in_client/reference_only не доказывают получение в лиге.",
+      "NULL означает неизвестное; случайные варианты и пулы не складываются как одновременно гарантированные.",
+      "Проверять конфликтные поля, способ получения и версию."
+    ],
+    "conditions": [
+      "Полнота текущего каталога уникальных предметов и сочетаний Foulborn не подтверждена."
+    ],
+    "pitfalls": [
+      "Использовать исторический вариант из старого PoB как доступный в новой лиге."
+    ],
+    "sources": [
+      "project.catalog-rules"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": []
+  },
+  {
+    "id": "flask-charge-sustain",
+    "title": "Флаконы: заряды, длительность и поддержание",
+    "aliases": [
+      "flask",
+      "charges",
+      "флаконы",
+      "заряды"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Постоянное действие флакона требует баланса заряда и времени, а не только включённого флага.",
+    "rules": [
+      "Сопоставить расход заряда на использование, запас и приток в конкретном бою.",
+      "Проверять длительность эффекта и интервал повторного использования.",
+      "Отдельно проверять источники on-kill, on-crit, периодический приток и ручное/автоматическое использование."
+    ],
+    "conditions": [
+      "Строка автоматического использования может не иметь числового эффекта в PoB, но меняет реальное управление."
+    ],
+    "pitfalls": [
+      "Объявлять флаконы постоянными по скриншоту Config без источника заряда на боссе."
+    ],
+    "sources": [
+      "pob.calc-perform"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "uptime"
+      },
+      {
+        "type": "check_with",
+        "target": "recovery-rate-duration"
+      }
+    ]
+  },
+  {
+    "id": "recovery-rate-duration",
+    "title": "Количество, скорость и длительность восстановления",
+    "aliases": [
+      "recovery rate",
+      "recovery amount",
+      "Master Surgeon",
+      "восстановление"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Изменение количества восстановления и изменение его скорости не эквивалентны.",
+    "rules": [
+      "При неизменном общем количестве более низкая скорость восстановления увеличивает время его распределения.",
+      "Сравнивать итоговый ресурс в секунду, длительность и частоту повторных использований отдельно.",
+      "У Master Surgeon в переносе 3.29 → 3.30 изменяется формулировка модификатора; сверять новый узел, а не переносить старое объяснение."
+    ],
+    "conditions": [
+      "Мгновенная часть, специальные лимиты и другие модификаторы могут менять простой расчёт amount/rate."
+    ],
+    "pitfalls": [
+      "Прочитать less recovery rate как такое же уменьшение общего количества восстановленного ресурса."
+    ],
+    "sources": [
+      "pob.calc-perform",
+      "ggg.tree"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "flask-charge-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "recovery"
+      }
+    ]
+  },
+  {
+    "id": "eldritch-battery-mom",
+    "title": "Eldritch Battery, MoM и ресурсный буфер",
+    "aliases": [
+      "eldritch battery",
+      "mind over matter",
+      "EB",
+      "MoM",
+      "мана",
+      "ES"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Перенос защиты ES на Mana меняет и оплату навыков, и доступный защитный буфер.",
+    "rules": [
+      "Проверить, какой ресурс оплачивает действие и какой принимает часть входящего урона.",
+      "Считать свободную Mana/ES, регенерацию и recharge при непрерывных тратах и входящих попаданиях.",
+      "Совместный ресурс для защиты и применения навыка может истощаться в опасный момент."
+    ],
+    "conditions": [
+      "MoM относится к подходящему урону, доходящему до Life; типы bypass и другие слои проверяются отдельно."
+    ],
+    "pitfalls": [
+      "Сложить всю ES и Mana как безусловный дополнительный Life pool."
+    ],
+    "sources": [
+      "pob.calc-defence",
+      "pob.calc-offence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "reservation"
+      },
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      }
+    ]
+  },
+  {
+    "id": "damage-ramp-duration",
+    "title": "Разгон DoT и длительность",
+    "aliases": [
+      "ramp",
+      "duration",
+      "poison stacks",
+      "разгон",
+      "длительность"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Стационарный максимум может требовать времени, в течение которого цель уже переместилась или стала неуязвимой.",
+    "rules": [
+      "Для stacking DoT сверять частоту успешного наложения, длительность, лимит и окно урона.",
+      "Для эффектов с ограниченным наложением увеличение длительности может улучшать uptime без прямого роста DPS.",
+      "Проверять время до достижения расчётного максимума отдельно от длительного боя."
+    ],
+    "conditions": [
+      "Poison, ignite, ground DoT и debuffs имеют разные правила; формулу одного не переносить на другой."
+    ],
+    "pitfalls": [
+      "Оценивать короткую фазу босса только по максимальному числу накопленных эффектов."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.active-skill"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "ailments"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "minion-count-sustain",
+    "title": "Число миньонов и поддержание армии",
+    "aliases": [
+      "SRS",
+      "minion count",
+      "духи",
+      "число миньонов"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Урон одного миньона и урон поддерживаемой армии требуют разных исходных данных.",
+    "rules": [
+      "Проверить лимит, скорость призыва, длительность, смертность и время движения к цели.",
+      "Различать minion_output, выбранную атаку миньона и FullDPS группы с заданным количеством.",
+      "При потере армии оценить время восстановления и расход ресурса."
+    ],
+    "conditions": [
+      "Unleash, автопризыв и специальные ограничения требуют отдельного учёта; число из Config не подтверждает постоянную армию."
+    ],
+    "pitfalls": [
+      "Умножить DPS на максимум миньонов без возможности его поддерживать."
+    ],
+    "sources": [
+      "pob.calc-setup",
+      "pob.calc-offence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "minions-totems-traps"
+      },
+      {
+        "type": "check_with",
+        "target": "damage-ramp-duration"
+      },
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      }
+    ]
+  },
+  {
+    "id": "totem-placement-uptime",
+    "title": "Тотемы: постановка, лимит и время работы",
+    "aliases": [
+      "totem placement",
+      "тотемы",
+      "постановка"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Максимальное число тотемов не означает, что все непрерывно атакуют нужную цель.",
+    "rules": [
+      "Считать время постановки, необходимость замены и выживаемость тотемов.",
+      "Проверять дистанцию, поведение цели и число действительно действующих экземпляров.",
+      "Учитывать изменение лимита от экипировки как обязательную зависимость."
+    ],
+    "conditions": [
+      "Длительность, cooldown, специальные правила навыка и скорость атаки/применения являются отдельными ограничениями."
+    ],
+    "pitfalls": [
+      "Использовать полный суммарный DPS сразу после входа в фазу."
+    ],
+    "sources": [
+      "pob.calc-offence",
+      "pob.calc-perform"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "minions-totems-traps"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "curse-limit",
+    "title": "Проклятия: лимит, источник и приоритет",
+    "aliases": [
+      "curse",
+      "hex",
+      "mark",
+      "проклятия",
+      "метки"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Наличие нескольких проклинающих навыков не доказывает одновременное действие всех проклятий.",
+    "rules": [
+      "Проверять итоговый curse limit и фактически выбранные движком эффекты.",
+      "Учитывать источник, область действия, стоимость и способ повторного наложения.",
+      "Различать лимит на цели, эффективность проклятия и эффекты, применяющиеся к проклятому врагу."
+    ],
+    "conditions": [
+      "Специальные свойства и приоритеты могут менять выбор; проверять конкретный источник."
+    ],
+    "pitfalls": [
+      "Сложить debuffs всех гемов из инвентаря без проверки лимита и применения."
+    ],
+    "sources": [
+      "pob.calc-perform",
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resistance-penetration"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "exposure-selection",
+    "title": "Exposure и другие снижения сопротивления",
+    "aliases": [
+      "exposure",
+      "экспозиция",
+      "снижение сопротивления"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Exposure одного элемента выбирается по применимым правилам, а не суммируется из всех источников.",
+    "rules": [
+      "В pinned PoB выбирается наиболее сильная применимая exposure для элемента, затем учитываются отдельные модификаторы её величины/эффекта.",
+      "Другие источники снижения сопротивления, penetration и exposure проверяются раздельно.",
+      "Проверять возможность наложения и поддержание, а не только величину в Config."
+    ],
+    "conditions": [
+      "Elemental Equilibrium, минимальная exposure и специальные эффекты могут менять результат."
+    ],
+    "pitfalls": [
+      "Сложить несколько одинаковых exposure как независимые resistance reductions."
+    ],
+    "sources": [
+      "pob.calc-perform"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resistance-penetration"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "guard-uptime",
+    "title": "Guard skill: ёмкость, длительность и downtime",
+    "aliases": [
+      "guard",
+      "molten shell",
+      "steelskin",
+      "защитный навык"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Временный защитный ресурс оценивается вместе с промежутками, когда он отсутствует.",
+    "rules": [
+      "Сравнивать max hit с guard и без него при одинаковом входящем ударе.",
+      "Проверять долю поглощаемого урона, ёмкость, длительность, cooldown и условия срабатывания.",
+      "Серия ударов может израсходовать guard раньше окончания длительности."
+    ],
+    "conditions": [
+      "Автоматизация и другие guard skills имеют свои ограничения и совместимость."
+    ],
+    "pitfalls": [
+      "Считать максимум с полностью доступным guard постоянной защитой."
+    ],
+    "sources": [
+      "pob.calc-defence",
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      },
+      {
+        "type": "check_with",
+        "target": "uptime"
+      }
+    ]
+  },
+  {
+    "id": "recoup-delay",
+    "title": "Recoup и задержанное восстановление",
+    "aliases": [
+      "recoup",
+      "рекуп",
+      "возмещение"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Recoup возвращает ресурс во времени после подходящего входящего урона.",
+    "rules": [
+      "Проверять, какой урон создаёт восстановление, в какой ресурс и за какой срок.",
+      "Оценивать выживание до получения отложенного восстановления.",
+      "Серия попаданий и одиночный удар дают разные задачи для recovery."
+    ],
+    "conditions": [
+      "Изменения длительности и перенос recoup между ресурсами требуют отдельного расчёта."
+    ],
+    "pitfalls": [
+      "Использовать будущий recoup как немедленную способность пережить текущий lethal hit."
+    ],
+    "sources": [
+      "pob.calc-defence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "recovery"
+      },
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      }
+    ]
+  },
+  {
+    "id": "affix-weight-context",
+    "title": "Крафт: контекст весов и допустимый пул",
+    "aliases": [
+      "crafting",
+      "affix",
+      "spawn weight",
+      "моды",
+      "веса"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Вес мода превращается в вероятность только после определения допустимого пула и процесса крафта.",
+    "rules": [
+      "В функции GetModSpawnWeight PoB перебирает упорядоченные теги и использует первый подходящий вес с учётом ограничений.",
+      "Учитывать базу, уровень, влияние, mod groups, тип аффикса и действие валюты.",
+      "Не складывать все tag weights одного мода как независимые шансы."
+    ],
+    "conditions": [
+      "Полная вероятность стратегии крафта не вычисляется одним списком весов; специализированные методы имеют дополнительные правила."
+    ],
+    "pitfalls": [
+      "Разделить вес нужного мода на сумму всех чисел таблицы без контекста предмета."
+    ],
+    "sources": [
+      "pob.item"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "item-level-equipment"
+      },
+      {
+        "type": "check_with",
+        "target": "availability"
+      }
+    ]
+  },
+  {
+    "id": "item-level-equipment",
+    "title": "Item level и требования экипировки",
+    "aliases": [
+      "ilvl",
+      "required level",
+      "уровень предмета",
+      "требования"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Уровень базы для появления модов и уровень/атрибуты для использования предмета — разные ограничения.",
+    "rules": [
+      "Сохранять item level отдельно от требований надевания.",
+      "Учитывать, что новый мод/камень или изменение экипировки может повысить требования.",
+      "Проверять требования после смены атрибутных предметов и отдельных наборов."
+    ],
+    "conditions": [
+      "Наличие базы в клиенте не доказывает получение нужного ilvl/влияния/варианта в лиге."
+    ],
+    "pitfalls": [
+      "Считать предмет с низким required level базой для любого высокоуровневого аффикса."
+    ],
+    "sources": [
+      "pob.item",
+      "pob.calc-setup"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "affix-weight-context"
+      },
+      {
+        "type": "check_with",
+        "target": "availability"
+      }
+    ]
+  },
+  {
+    "id": "active-set-alignment",
+    "title": "Согласование дерева, предметов и камней",
+    "aliases": [
+      "loadout",
+      "skill set",
+      "item set",
+      "tree spec",
+      "наборы",
+      "прогрессия"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "В многостадийном PoB дерево, предметы и камни могут быть выбраны независимо.",
+    "rules": [
+      "Перед расчётом сверить активные IDs и названия всех наборов с нужной стадией.",
+      "Проверить главный навык, уровень персонажа и characterLevelAutoMode.",
+      "Смена только дерева не переводит автоматически все предметы/камни в соответствующую стадию."
+    ],
+    "conditions": [
+      "Selection адаптера задаётся явно и проверяется; соответствие названий стадии остаётся предметом аудита."
+    ],
+    "pitfalls": [
+      "Сравнить стартовую ветку с финальным оружием или принять ауру за основной урон."
+    ],
+    "sources": [
+      "pob.tree-tab",
+      "pob.items-tab",
+      "pob.skills-tab"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      },
+      {
+        "type": "check_with",
+        "target": "patch-migration"
+      }
+    ]
+  },
+  {
+    "id": "patch-migration",
+    "title": "Перенос PoB между патчами",
+    "aliases": [
+      "migration",
+      "3.29",
+      "3.30",
+      "миграция",
+      "перенос"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Обновление дерева — отдельная воспроизводимая операция с сохранением оригинала.",
+    "rules": [
+      "Использовать штатную ConvertAllToVersion и проверять количество деревьев до/после.",
+      "Разбирать удалённые, добавленные и изменённые узлы, затем заново проверять требования и конфигурацию.",
+      "Сохранять версию оригинального автора и параметры локального переноса отдельно."
+    ],
+    "conditions": [
+      "Миграция не подтверждает доступность предметов, актуальность всех советов гайда и результат в игре."
+    ],
+    "pitfalls": [
+      "Заменить строку treeVersion и назвать старый билд проверенным для нового патча."
+    ],
+    "sources": [
+      "pob.tree-tab"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "active-set-alignment"
+      },
+      {
+        "type": "check_with",
+        "target": "availability"
+      }
+    ]
+  },
+  {
+    "id": "market-quote-identity",
+    "title": "Цена: вариант, снимок и согласованность котировки",
+    "aliases": [
+      "price",
+      "economy",
+      "цены",
+      "стоимость",
+      "вариант"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "workflow",
+    "summary": "Рыночная оценка относится к датированному варианту предмета и определённой платформе.",
+    "rules": [
+      "Сопоставить links, corruption, уровень/качество камня и специальные варианты.",
+      "Проверять дату, число наблюдений и расхождение оценок Chaos/Divine между категориями.",
+      "По умолчанию читать последний снимок категории; отсутствие цены не заменять предыдущим вариантом молча."
+    ],
+    "conditions": [
+      "Цена не является текущим предложением, доказательством доступности или оценкой конкретного rare-предмета."
+    ],
+    "pitfalls": [
+      "Взять редкий 5-Flasks вариант как обычный Mageblood или сложить цены через противоречивые курсы."
+    ],
+    "sources": [
+      "project.reference-rules"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": []
+  },
+  {
+    "id": "unsupported-vs-unparsed",
+    "title": "Ошибки движка и неразобранные строки",
+    "aliases": [
+      "unsupported",
+      "unparsed",
+      "error",
+      "ошибки",
+      "неподдерживаемое"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "workflow",
+    "summary": "Fatal error, предупреждение требований и неразобранная строка означают разные проблемы.",
+    "rules": [
+      "Fatal errors и неполный импорт должны прерывать расчёт.",
+      "Неразобранные строки могут включать automation/utility-текст; проверять их влияние по смыслу.",
+      "Отсутствие unparsed не доказывает поддержку каждого сложного взаимодействия; сопоставлять с источниками и игровыми тестами."
+    ],
+    "conditions": [
+      "Сохранённые до исправления частичные результаты должны быть помечены quarantined."
+    ],
+    "pitfalls": [
+      "Принять результат, полученный после ошибки загрузки Timeless данных, или назвать каждую синюю строку потерянным DPS."
+    ],
+    "sources": [
+      "project.reference-rules",
+      "pob.item"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": []
+  }
+]

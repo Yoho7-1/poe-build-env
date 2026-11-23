@@ -1,0 +1,21 @@
+{
+  "base": "Amber Amulet",
+  "item_level": 86,
+  "rarity": "magic",
+  "mods": ["IncreasedLife5"],
+  "seed": 42,
+  "budget": {
+    "Orb of Augmentation": 1,
+    "Regal Orb": 1,
+    "Exalted Orb": 3,
+    "Orb of Annulment": 1,
+    "Divine Orb": 1
+  },
+  "target": {
+    "rarity": "rare",
+    "stats": [
+      { "id": "base_maximum_life", "min": 70 },
+      { "id": "base_fire_damage_resistance_%", "min": 30 }
+    ]
+  }
+}

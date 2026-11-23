@@ -1,0 +1,11 @@
+{
+  "kind": "synthetic_engine_control",
+  "engine": "2.68.1",
+  "game": "poe1",
+  "patch": "3.30",
+  "not_a_playable_build": true,
+  "assumptions": "Level 90 Scion, unallocated passive tree, Fireball 20/0, no equipment, Pinnacle target inherited from PoB defaults.",
+  "independent_check": "(1883+2825)/2 * (1+0.05*(1.5-1)) * (1-0.50) = 1206.425 average hit. Cast time 0.75 seconds gives 1608.5666666667 hit DPS; this excludes ignite DPS.",
+  "expected": { "AverageDamage": 1206.425, "TotalDPS": 1608.5666666667, "Speed": 1.3333333333333, "ManaCost": 20 },
+  "relative_tolerance": 0.000001
+}

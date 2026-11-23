@@ -1,0 +1,124 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac"
+  },
+  "input_sha256": "bd958aa4a9b55ecdb68a749e56cbd177a4ca3c5e4e2e6c1298c4c1700eac4806",
+  "adapter_sha256": "4df0bb92a9eb1ed2ba353c6c38dcc3cc899f75d3a43e1b02c5765e5d71ede605",
+  "scenario": "sustained",
+  "scenario_definition": {
+    "label": "Sustained boss audit",
+    "config": {
+      "conditionKilledRecently": false,
+      "multiplierKilledRecently": 0,
+      "buffOnslaught": false
+    },
+    "note": "Only the listed toggles are overridden. Flasks, charges, ailments and skill counts still require individual evidence."
+  },
+  "changes": {},
+  "calculation_id": "e8a803fd0be31351482bd80fb077fc4b9110af0e9db0197d758e5e33f411c141",
+  "computed_at": "2026-11-23T18:59:27.227Z",
+  "output": {
+    "FullDPS": 0,
+    "CombinedDPS": 2848.5965107973,
+    "TotalDPS": 1608.5666666667,
+    "AverageDamage": 1206.425,
+    "Speed": 1.3333333333333,
+    "HitChance": 100,
+    "CritChance": 5,
+    "Life": 1128,
+    "LifeUnreserved": 1128,
+    "EnergyShield": 0,
+    "Mana": 584,
+    "ManaUnreserved": 584,
+    "ManaCost": 20,
+    "ManaRegen": 10.2,
+    "LifeRegen": 0,
+    "Armour": 0,
+    "Evasion": 16,
+    "EffectiveMovementSpeedMod": 1,
+    "FireResist": -60,
+    "ColdResist": -60,
+    "LightningResist": -60,
+    "ChaosResist": -60,
+    "BlockChance": 0,
+    "SpellBlockChance": 0,
+    "SpellSuppressionChance": 0,
+    "PhysicalMaximumHitTaken": 1128,
+    "FireMaximumHitTaken": 692,
+    "ColdMaximumHitTaken": 692,
+    "LightningMaximumHitTaken": 692,
+    "ChaosMaximumHitTaken": 705,
+    "TotalEHP": 747.22887647106
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "None",
+    "bloodsoakedBannerStages": 1,
+    "buffOnslaught": false,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionKilledRecently": false,
+    "conditionSacrificeMinion": true,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "maniaDebuffsCount": 15,
+    "multiplierKilledRecently": 0,
+    "pantheonMajorGod": "None",
+    "pantheonMinorGod": "None",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": -60,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFireball",
+          "level": 20,
+          "name": "Fireball",
+          "quality": 0
+        }
+      ],
+      "index": 1
+    }
+  ],
+  "level": 90,
+  "unparsed_item_modifiers": [],
+  "applied_supports": [],
+  "allocated_points": {
+    "ascendancy": 0,
+    "passive": 0,
+    "secondary_ascendancy": 0
+  },
+  "engine_warnings": [
+    "You do not meet the Intelligence requirement of Fireball"
+  ],
+  "warnings": [
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": false
+}

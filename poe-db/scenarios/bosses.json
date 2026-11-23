@@ -1,0 +1,2389 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "kind": "boss_survival_scenarios",
+  "provenance": {
+    "pob_version": "2.68.1",
+    "pob_commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "sources": [
+      {
+        "file": "cache/knowledge/pob/BossSkills.json",
+        "sha256": "318e1b8fea9bdc92a868c4248f916c339010ce556c60d3845d138ca809e9d6e5"
+      },
+      {
+        "file": "cache/knowledge/pob/Bosses.json",
+        "sha256": "1cb9e52fa76a5540d7f280b85921875df80ab61089d7834bf92f9c60298d0890"
+      },
+      {
+        "file": "vendor/pob/src/Data/Misc.lua",
+        "sha256": "a8748c30ffc24296366396c8799bc406f79a41175909a6dcbe86dfecf1c96338"
+      },
+      {
+        "file": "vendor/pob/src/Modules/Data.lua",
+        "sha256": "0feed9ed473aab40f0721ebb95da645f8d9f153fec95439bd39245f8ac60fa34"
+      }
+    ]
+  },
+  "method": "Damage reproduces PoB ConfigOptions presetBossSkills placeholders (monsterDamageTable[level] * (flat + roll * perRoll) * uber multiplier). Defaults: enemy level 84 pinnacle / 85 uber, roll range 70%.",
+  "disclaimer": "Numeric engine-based estimate; not a game test. Boss mechanics beyond one PoB preset hit (degens, overlapping hits, map mods, atlas nodes) are not covered unless stated.",
+  "misc": {
+    "pinnacleBossDPSMult": 1.8181818181818181,
+    "pinnacleBossPen": 3,
+    "uberBossDPSMult": 2.3529411764705883,
+    "uberBossPen": 8,
+    "MaxEnemyLevel": 85
+  },
+  "bosses": {
+    "AlHezmin": {
+      "id": "AlHezmin",
+      "name": "AlHezmin",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 100,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Atziri": {
+      "id": "Atziri",
+      "name": "Atziri",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 25,
+        "evasion_mult_percent": 50
+      },
+      "skill_coverage": "pob_boss_skill_presets",
+      "tiers": {
+        "pinnacle": {
+          "skills": [
+            {
+              "skill": "Atziri Flameblast",
+              "tier": "pinnacle",
+              "uber_values_applied": true,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Fire": 77374
+              },
+              "penetration": {
+                "FirePen": 10
+              },
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 60,
+              "enemy_increased_damage_note": "Applied by the engine as an enemy damage modifier; PoB MaximumHitTaken already divides by it, so compare raw damage.",
+              "crit_chance_percent": null,
+              "attack_time_ms": 25000,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "The Uber variant has 10 Fire penetration (Applied on Pinnacle And Uber)",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Atziri Flameblast",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [
+            {
+              "skill": "Atziri Flameblast",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Fire": 81200
+              },
+              "penetration": {
+                "FirePen": 10
+              },
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 60,
+              "enemy_increased_damage_note": "Applied by the engine as an enemy damage modifier; PoB MaximumHitTaken already divides by it, so compare raw damage.",
+              "crit_chance_percent": null,
+              "attack_time_ms": 25000,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "The Uber variant has 10 Fire penetration (Applied on Pinnacle And Uber)",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Atziri Flameblast",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Baran": {
+      "id": "Baran",
+      "name": "Baran",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 100,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "BlackStar": {
+      "id": "BlackStar",
+      "name": "BlackStar",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 0,
+        "evasion_mult_percent": 50
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Chimera": {
+      "id": "Chimera",
+      "name": "Chimera",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 50,
+        "evasion_mult_percent": 50
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Constrictor": {
+      "id": "Constrictor",
+      "name": "Constrictor",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 100,
+        "evasion_mult_percent": 33
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Drox": {
+      "id": "Drox",
+      "name": "Drox",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 100,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "EaterOfWorlds": {
+      "id": "EaterOfWorlds",
+      "name": "The Eater of Worlds",
+      "pob_is_uber_capable": true,
+      "enemy_defence": {
+        "armour_mult_percent": 0,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "pob_boss_skill_presets",
+      "tiers": {
+        "pinnacle": {
+          "skills": [
+            {
+              "skill": "Eater Beam",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Lightning": 23991
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 2500,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Insatiable Appetite atlas node forces a 30% shock; not modelled unless configured.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Allocating Insatiable Appetite causes the beam to always shock for at least 30%",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Eater Beam",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [
+            {
+              "skill": "Eater Beam",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Lightning": 25177
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 2500,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Insatiable Appetite atlas node forces a 30% shock; not modelled unless configured.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Allocating Insatiable Appetite causes the beam to always shock for at least 30%",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Eater Beam",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Elder": {
+      "id": "Elder",
+      "name": "The Elder",
+      "pob_is_uber_capable": true,
+      "enemy_defence": {
+        "armour_mult_percent": 0,
+        "evasion_mult_percent": 33
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Enslaver": {
+      "id": "Enslaver",
+      "name": "Enslaver",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 75,
+        "evasion_mult_percent": 33
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Eradicator": {
+      "id": "Eradicator",
+      "name": "Eradicator",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 0,
+        "evasion_mult_percent": 33
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Hydra": {
+      "id": "Hydra",
+      "name": "Hydra",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 50,
+        "evasion_mult_percent": 100
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "InfiniteHunger": {
+      "id": "InfiniteHunger",
+      "name": "InfiniteHunger",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 0,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Maven": {
+      "id": "Maven",
+      "name": "The Maven",
+      "pob_is_uber_capable": true,
+      "enemy_defence": {
+        "armour_mult_percent": 25,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "pob_boss_skill_presets",
+      "tiers": {
+        "pinnacle": {
+          "skills": [
+            {
+              "skill": "Maven Fireball",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "SpellProjectile",
+              "kind": "hit",
+              "damage": {
+                "Fire": 16615
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 3000,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Throw the Gauntlet doubles damage and adds 30% fire penetration (uber).",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Allocating Throw the Gauntlet increases Damage by a further 100% (Applied on Uber) and causes the fireball to have 30 Fire penetration (Applied on Uber)",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Maven Fireball",
+                "enemyDamageRollRange": 70
+              }
+            },
+            {
+              "skill": "Maven Memory Game",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Physical": 28923
+              },
+              "penetration": {},
+              "conversion": {
+                "Physical->Cold": 100,
+                "Physical->Fire": 100,
+                "Physical->Lightning": 100
+              },
+              "flags": [
+                "CannotBeBlocked",
+                "CannotBeDodged",
+                "CannotBeSuppressed"
+              ],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 7500,
+              "roll_range_percent": 70,
+              "caveats": [
+                "In game: three separate hits plus a large DoT. PoB converts the hit into cold, fire and lightning together (with the monster phys->elemental conversion multiplier), so its hit is pessimistic for one hit; the DoT is not included.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Cannot be Blocked, Dodged, or Suppressed. \n\tIt is three separate hits, and has a large DoT effect.  Neither is taken into account here.  \n\t\ti.e. Hits before death should be more than 3 to survive",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Maven Memory Game",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [
+            {
+              "skill": "Maven Fireball",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "SpellProjectile",
+              "kind": "hit",
+              "damage": {
+                "Fire": 35349
+              },
+              "penetration": {
+                "FirePen": 30
+              },
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 3000,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Throw the Gauntlet doubles damage and adds 30% fire penetration (uber).",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Allocating Throw the Gauntlet increases Damage by a further 100% (Applied on Uber) and causes the fireball to have 30 Fire penetration (Applied on Uber)",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Maven Fireball",
+                "enemyDamageRollRange": 70
+              }
+            },
+            {
+              "skill": "Maven Memory Game",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Physical": 30615
+              },
+              "penetration": {},
+              "conversion": {
+                "Physical->Cold": 100,
+                "Physical->Fire": 100,
+                "Physical->Lightning": 100
+              },
+              "flags": [
+                "CannotBeBlocked",
+                "CannotBeDodged",
+                "CannotBeSuppressed"
+              ],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 7500,
+              "roll_range_percent": 70,
+              "caveats": [
+                "In game: three separate hits plus a large DoT. PoB converts the hit into cold, fire and lightning together (with the monster phys->elemental conversion multiplier), so its hit is pessimistic for one hit; the DoT is not included.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Cannot be Blocked, Dodged, or Suppressed. \n\tIt is three separate hits, and has a large DoT effect.  Neither is taken into account here.  \n\t\ti.e. Hits before death should be more than 3 to survive",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Maven Memory Game",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Minotaur": {
+      "id": "Minotaur",
+      "name": "Minotaur",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 100,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Phoenix": {
+      "id": "Phoenix",
+      "name": "Phoenix",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 50,
+        "evasion_mult_percent": 50
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Purifier": {
+      "id": "Purifier",
+      "name": "Purifier",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 75,
+        "evasion_mult_percent": 33
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "SearingExarch": {
+      "id": "SearingExarch",
+      "name": "The Searing Exarch",
+      "pob_is_uber_capable": true,
+      "enemy_defence": {
+        "armour_mult_percent": 0,
+        "evasion_mult_percent": 50
+      },
+      "skill_coverage": "pob_boss_skill_presets",
+      "tiers": {
+        "pinnacle": {
+          "skills": [
+            {
+              "skill": "Exarch Ball",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Fire": 16557
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [
+                "CannotBeBlocked",
+                "CannotBeDodged",
+                "CannotBeSuppressed"
+              ],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 1000,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Many waves (8-18); single-hit max hit does not cover overlapping balls."
+              ],
+              "pob_tooltip": "Spawns 8-18 waves of balls depending on which fight and which ball phase, Cannot be Blocked, Dodged, or Suppressed",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Exarch Ball",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [
+            {
+              "skill": "Exarch Ball",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Fire": 17375
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [
+                "CannotBeBlocked",
+                "CannotBeDodged",
+                "CannotBeSuppressed"
+              ],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 1000,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Many waves (8-18); single-hit max hit does not cover overlapping balls."
+              ],
+              "pob_tooltip": "Spawns 8-18 waves of balls depending on which fight and which ball phase, Cannot be Blocked, Dodged, or Suppressed",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Exarch Ball",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Shaper": {
+      "id": "Shaper",
+      "name": "The Shaper",
+      "pob_is_uber_capable": true,
+      "enemy_defence": {
+        "armour_mult_percent": 0,
+        "evasion_mult_percent": 33
+      },
+      "skill_coverage": "pob_boss_skill_presets",
+      "tiers": {
+        "pinnacle": {
+          "skills": [
+            {
+              "skill": "Shaper Ball",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "SpellProjectile",
+              "kind": "hit",
+              "damage": {
+                "Cold": 12944
+              },
+              "penetration": {
+                "ColdPen": 25
+              },
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 1400,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Cosmic Wounds raises cold penetration to 40% (uber) and adds projectiles.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Allocating Cosmic Wounds increases the penetration to 40% (Applied on Uber) and adds 2 projectiles",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Shaper Ball",
+                "enemyDamageRollRange": 70
+              }
+            },
+            {
+              "skill": "Shaper Slam",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "Melee",
+              "kind": "hit",
+              "damage": {
+                "Physical": 13710
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 3510,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Uber variant cannot be evaded, blocked or dodged; requires Cosmic Wounds for the uber multiplier."
+              ],
+              "pob_tooltip": "Cannot be Evaded.  Allocating Cosmic Wounds increases Damage by a further 100% (Applied on Uber) and cannot be blocked or dodged",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Shaper Slam",
+                "enemyDamageRollRange": 70
+              }
+            },
+            {
+              "skill": "Shaper Beam",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "DamageOverTime",
+              "kind": "damage_over_time",
+              "damage": {
+                "Cold": 7508,
+                "Fire": 9155,
+                "Lightning": 10345
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 1000,
+              "roll_range_percent": 70,
+              "caveats": [],
+              "pob_tooltip": "Damage Over Time skill",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Shaper Beam",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [
+            {
+              "skill": "Shaper Ball",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "SpellProjectile",
+              "kind": "hit",
+              "damage": {
+                "Cold": 13584
+              },
+              "penetration": {
+                "ColdPen": 40
+              },
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 1400,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Cosmic Wounds raises cold penetration to 40% (uber) and adds projectiles.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Allocating Cosmic Wounds increases the penetration to 40% (Applied on Uber) and adds 2 projectiles",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Shaper Ball",
+                "enemyDamageRollRange": 70
+              }
+            },
+            {
+              "skill": "Shaper Slam",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "Melee",
+              "kind": "hit",
+              "damage": {
+                "Physical": 23980
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [
+                "CannotBeBlocked",
+                "CannotBeDodged",
+                "CannotBeEvaded",
+                "CannotBeSuppressed"
+              ],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 1755,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Uber variant cannot be evaded, blocked or dodged; requires Cosmic Wounds for the uber multiplier."
+              ],
+              "pob_tooltip": "Cannot be Evaded.  Allocating Cosmic Wounds increases Damage by a further 100% (Applied on Uber) and cannot be blocked or dodged",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Shaper Slam",
+                "enemyDamageRollRange": 70
+              }
+            },
+            {
+              "skill": "Shaper Beam",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "DamageOverTime",
+              "kind": "damage_over_time",
+              "damage": {
+                "Cold": 7879,
+                "Fire": 9608,
+                "Lightning": 10857
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 1000,
+              "roll_range_percent": 70,
+              "caveats": [],
+              "pob_tooltip": "Damage Over Time skill",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Shaper Beam",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Sirus": {
+      "id": "Sirus",
+      "name": "Sirus, Awakener of Worlds",
+      "pob_is_uber_capable": true,
+      "enemy_defence": {
+        "armour_mult_percent": 100,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "pob_boss_skill_presets",
+      "tiers": {
+        "pinnacle": {
+          "skills": [
+            {
+              "skill": "Sirus Meteor",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Physical": 31261
+              },
+              "penetration": {},
+              "conversion": {
+                "Physical->Chaos": 25,
+                "Physical->Fire": 25,
+                "Physical->Lightning": 25
+              },
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 1500,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Damage depends on the wall phase; earlier meteors deal less.",
+                "Converted parts are scaled by PoB monster phys->elemental conversion multiplier; the pure-type cross-check ignores it.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Earlier ones with less walls do less damage. Allocating The Perfect Storm increases Damage by a further 50% (Applied on Uber)",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Sirus Meteor",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [
+            {
+              "skill": "Sirus Meteor",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "Spell",
+              "kind": "hit",
+              "damage": {
+                "Physical": 49866
+              },
+              "penetration": {},
+              "conversion": {
+                "Physical->Chaos": 25,
+                "Physical->Fire": 25,
+                "Physical->Lightning": 25
+              },
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": null,
+              "attack_time_ms": 1500,
+              "roll_range_percent": 70,
+              "caveats": [
+                "Damage depends on the wall phase; earlier meteors deal less.",
+                "Converted parts are scaled by PoB monster phys->elemental conversion multiplier; the pure-type cross-check ignores it.",
+                "Crit chance not overridden: PoB default enemy crit applies; MaximumHitTaken is a non-crit hit."
+              ],
+              "pob_tooltip": "Earlier ones with less walls do less damage. Allocating The Perfect Storm increases Damage by a further 50% (Applied on Uber)",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Sirus Meteor",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Venarius": {
+      "id": "Venarius",
+      "name": "Venarius (Cortex)",
+      "pob_is_uber_capable": true,
+      "enemy_defence": {
+        "armour_mult_percent": 50,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "pob_boss_skill_presets",
+      "tiers": {
+        "pinnacle": {
+          "skills": [
+            {
+              "skill": "Cortex Ground Degen",
+              "tier": "pinnacle",
+              "uber_values_applied": false,
+              "damage_type": "DamageOverTime",
+              "kind": "damage_over_time",
+              "damage": {
+                "Physical": 4356
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 1630,
+              "roll_range_percent": 70,
+              "caveats": [],
+              "pob_tooltip": "Damage Over Time skill",
+              "config": {
+                "enemyIsBoss": "Pinnacle",
+                "presetBossSkills": "Cortex Ground Degen",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [
+            {
+              "skill": "Cortex Ground Degen",
+              "tier": "uber",
+              "uber_values_applied": true,
+              "damage_type": "DamageOverTime",
+              "kind": "damage_over_time",
+              "damage": {
+                "Physical": 4572
+              },
+              "penetration": {},
+              "conversion": {},
+              "flags": [],
+              "enemy_increased_damage_percent": 0,
+              "crit_chance_percent": 0,
+              "attack_time_ms": 1630,
+              "roll_range_percent": 70,
+              "caveats": [],
+              "pob_tooltip": "Damage Over Time skill",
+              "config": {
+                "enemyIsBoss": "Uber",
+                "presetBossSkills": "Cortex Ground Degen",
+                "enemyDamageRollRange": 70
+              }
+            }
+          ],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    },
+    "Veritania": {
+      "id": "Veritania",
+      "name": "Veritania",
+      "pob_is_uber_capable": false,
+      "enemy_defence": {
+        "armour_mult_percent": 100,
+        "evasion_mult_percent": 0
+      },
+      "skill_coverage": "generic_only",
+      "tiers": {
+        "pinnacle": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic pinnacle",
+            "tier": "pinnacle",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 2241,
+              "Lightning": 2241,
+              "Cold": 2241,
+              "Fire": 2241,
+              "Chaos": 896
+            },
+            "penetration": {
+              "LightningPen": 3,
+              "ColdPen": 3,
+              "FirePen": 3
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Pinnacle",
+              "presetBossSkills": "None"
+            }
+          }
+        },
+        "uber": {
+          "skills": [],
+          "generic": {
+            "skill": "Generic uber",
+            "tier": "uber",
+            "kind": "hit",
+            "damage_type": "Average",
+            "damage": {
+              "Physical": 3044,
+              "Lightning": 3044,
+              "Cold": 3044,
+              "Fire": 3044,
+              "Chaos": 1218
+            },
+            "penetration": {
+              "LightningPen": 8,
+              "ColdPen": 8,
+              "FirePen": 8
+            },
+            "conversion": {},
+            "flags": [],
+            "enemy_increased_damage_percent": 0,
+            "crit_chance_percent": null,
+            "attack_time_ms": 700,
+            "roll_range_percent": null,
+            "caveats": [
+              "PoB generic expected boss hit: the engine counts all typed parts as one configured hit. Not a real boss skill."
+            ],
+            "config": {
+              "enemyIsBoss": "Uber",
+              "presetBossSkills": "None"
+            }
+          }
+        }
+      }
+    }
+  }
+}

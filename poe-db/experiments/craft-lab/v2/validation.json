@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-24",
+  "stage": "craft-lab-v2",
+  "validation_scope": "software_and_published_weight_checks",
+  "game_validated": false,
+  "contract": "3937db76392daf2a9b0b65710b3440caa3c295a513c818470bd0681f3752f442",
+  "tests": { "v2": "19/19 (node --test poe-db/experiments/craft-lab/v2/test/v2.test.mjs)", "project_total": "100/100 (node --test from poe-db)" },
+  "sweeps": { "bench_recipes_run": 782, "bench_recipes_succeeded_on_generic_item": 770, "remaining_are_input_refusals": true, "essence_class_pairs_succeeded": 2311, "fossil_runs_succeeded": 97, "programming_errors": 0, "fuzz_steps": 1346 },
+  "independent_checks": [
+    { "check": "Leather Belt magic pool ilvl 86/100", "expected": "141 rows, prefixes 51550, suffixes 67000 (PoEDB via reference claim magic_orbs.poedb_belt_weights)", "observed": "141 rows, 51550 + 67000", "match": true },
+    { "check": "Lightning tag weight on Onyx/Paua/Amber Amulet ilvl 84/86", "expected": 14950, "observed": 14950, "match": true }
+  ],
+  "elevated_links": { "ordinary_mods_linked": 166, "elevated_reached": 86, "elevated_total": 106 }
+}

@@ -1,0 +1,8 @@
+# Craft Lab v1: продолжение
+
+- Пользователь попросил полную версию, затем попросил закончить быстрее. Создана отдельная расширенная версия в `v1`, без изменения v0/общих баз/билда/CLI/skills. Не называть её полной: `coverage.mjs` содержит `complete:false` и десять gaps.
+- Вход: `node poe-db/experiments/craft-lab/v1/cli.mjs status`, затем `coverage`; команды и JSON описаны в README. Схема session 2, старые v0 sessions не мигрировать неявно. Девять исходников закреплены в `sources.json`.
+- Реализованы 1720 released-base definitions, 30 currency actions, параметризованные bench/Essence/обычные Fossil/Harvest reforge+augment/imprint/unveil, influence и Eldritch, адаптивные policies, replay, ASCII PoB export для поддерживаемых translations. Числа справочника не означают доказанную доступность/полноту.
+- В 3.30 есть counted locks, изменились costs full locks, Annulment не уважает Attack/Caster filters. Часть распределений является явно объявленной моделью; игровая проверка отсутствует. Данные Memory/Foulborn и advanced crafts недостаточны/противоречивы, их не подменять старыми алгоритмами.
+- `research/kalandralang` (MIT, commit 5a6d1fbead0fa20b239febcc69b75bc79e622466) и `research/crafting-system` скачаны только как справка. Второй описывает 3.29 и не исполняется, лицензия не установлена; не копировать его реализацию как готовую 3.30-библиотеку. Нет новых Python/npm dependencies.
+- Тесты v1: `node --test poe-db/experiments/craft-lab/v1/test/expanded.test.mjs`; полные: из poe-db `node --test`. Итоги смотреть `validation.json`. Baseline защищённых общих/v0 файлов в `baseline.json`; чужие изменения не откатывать.

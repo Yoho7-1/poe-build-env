@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: imported database preserves scope, ranges, alternatives and source provenance
+ok 1 - imported database preserves scope, ranges, alternatives and source provenance
+  ---
+  duration_ms: 205.6978
+  type: 'test'
+  ...
+# Subtest: price lookup uses the latest complete category snapshot, explicit variants and timezone-aware ordering
+ok 2 - price lookup uses the latest complete category snapshot, explicit variants and timezone-aware ordering
+  ---
+  duration_ms: 5.7594
+  type: 'test'
+  ...
+# Subtest: conflicting currency estimates are preserved and surfaced, not reconciled silently
+ok 3 - conflicting currency estimates are preserved and surfaced, not reconciled silently
+  ---
+  duration_ms: 1.4057
+  type: 'test'
+  ...
+# Subtest: economy normalization preserves zero and excludes unknown prices without inventing values
+ok 4 - economy normalization preserves zero and excludes unknown prices without inventing values
+  ---
+  duration_ms: 0.3569
+  type: 'test'
+  ...
+# Subtest: cached research sources are readable offline and private ninja APIs cannot be collected
+ok 5 - cached research sources are readable offline and private ninja APIs cannot be collected
+  ---
+  duration_ms: 2.6823
+  type: 'test'
+  ...
+# Subtest: conditional bench plans verify recipe action and base class, not just identifiers
+ok 6 - conditional bench plans verify recipe action and base class, not just identifiers
+  ---
+  duration_ms: 5.1968
+  type: 'test'
+  ...
+# Subtest: explicit migration preserves all ten real tree specs and rejects ordinary calculation of the original
+ok 7 - explicit migration preserves all ten real tree specs and rejects ordinary calculation of the original
+  ---
+  duration_ms: 254.2689
+  type: 'test'
+  ...
+# Subtest: protected PoB engine errors are fatal and comparison rejects incompatible adapter/data contracts
+ok 8 - protected PoB engine errors are fatal and comparison rejects incompatible adapter/data contracts
+  ---
+  duration_ms: 5031.5444
+  type: 'test'
+  ...
+# Subtest: compact queries reduce payload while retaining units, conditions and numeric ranges
+ok 9 - compact queries reduce payload while retaining units, conditions and numeric ranges
+  ---
+  duration_ms: 33.4932
+  type: 'test'
+  ...
+# Subtest: build state persists unknown preferences, enforces revisions and rejects path traversal
+ok 10 - build state persists unknown preferences, enforces revisions and rejects path traversal
+  ---
+  duration_ms: 54.5427
+  type: 'test'
+  ...
+# Subtest: mechanic retrieval gives versioned rules, separate caveats and source provenance
+ok 11 - mechanic retrieval gives versioned rules, separate caveats and source provenance
+  ---
+  duration_ms: 4.8806
+  type: 'test'
+  ...
+# Subtest: PoB import handles compressed codes and rejects unsafe XML and wrong version
+ok 12 - PoB import handles compressed codes and rejects unsafe XML and wrong version
+  ---
+  duration_ms: 25.8118
+  type: 'test'
+  ...
+# Subtest: pinned PoB independently recalculates controls, reports requirements, and distinguishes incompatible supports
+ok 13 - pinned PoB independently recalculates controls, reports requirements, and distinguishes incompatible supports
+  ---
+  duration_ms: 5312.3224
+  type: 'test'
+  ...
+# Subtest: bootstrap is portable and contains no invented user choices
+ok 14 - bootstrap is portable and contains no invented user choices
+  ---
+  duration_ms: 77.969
+  type: 'test'
+  ...
+# Subtest: gem normalization inherits stat identity and constants, preserves zero and unknown values
+ok 15 - gem normalization inherits stat identity and constants, preserves zero and unknown values
+  ---
+  duration_ms: 1.4115
+  type: 'test'
+  ...
+# Subtest: knowledge import keeps valid graphs, provenance and crafting references
+ok 16 - knowledge import keeps valid graphs, provenance and crafting references
+  ---
+  duration_ms: 2684.8276
+  type: 'test'
+  ...
+# Subtest: queries distinguish ordinary and transfigured gems and resolve actual level values
+ok 17 - queries distinguish ordinary and transfigured gems and resolve actual level values
+  ---
+  duration_ms: 21.1796
+  type: 'test'
+  ...
+# Subtest: normal queries withhold historical and unconfirmed tree choices
+ok 18 - normal queries withhold historical and unconfirmed tree choices
+  ---
+  duration_ms: 322.4143
+  type: 'test'
+  ...
+# Subtest: knowledge query runs from another directory and leaves the snapshot unchanged
+ok 19 - knowledge query runs from another directory and leaves the snapshot unchanged
+  ---
+  duration_ms: 78.5516
+  type: 'test'
+  ...
+# Subtest: wiki markup preserves names, conditions, line breaks and numeric ranges
+ok 20 - wiki markup preserves names, conditions, line breaks and numeric ranges
+  ---
+  duration_ms: 1.7081
+  type: 'test'
+  ...
+# Subtest: random option blocks are never presented as guaranteed fixed modifiers
+ok 21 - random option blocks are never presented as guaranteed fixed modifiers
+  ---
+  duration_ms: 1.2976
+  type: 'test'
+  ...
+# Subtest: historical and future items cannot enter the current league database
+ok 22 - historical and future items cannot enter the current league database
+  ---
+  duration_ms: 0.2888
+  type: 'test'
+  ...
+# Subtest: unknown values remain null and zero rolls remain zero
+ok 23 - unknown values remain null and zero rolls remain zero
+  ---
+  duration_ms: 0.2698
+  type: 'test'
+  ...
+# Subtest: catalog is accessible from another working directory without project session state
+ok 24 - catalog is accessible from another working directory without project session state
+  ---
+  duration_ms: 75.048
+  type: 'test'
+  ...
+# Subtest: search preserves variants and treats punctuation as data
+ok 25 - search preserves variants and treats punctuation as data
+  ---
+  duration_ms: 52.0538
+  type: 'test'
+  ...
+# Subtest: numeric query separates guaranteed ranges from possible rolls
+ok 26 - numeric query separates guaranteed ranges from possible rolls
+  ---
+  duration_ms: 3.6114
+  type: 'test'
+  ...
+# Subtest: price imports preserve zero, variants and timestamps and reject wrong league
+ok 27 - price imports preserve zero, variants and timestamps and reject wrong league
+  ---
+  duration_ms: 5.6863
+  type: 'test'
+  ...
+# Subtest: reference library keeps synthetic and historical records distinct
+ok 28 - reference library keeps synthetic and historical records distinct
+  ---
+  duration_ms: 15.0009
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5828.3196

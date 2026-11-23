@@ -1,0 +1,838 @@
+{
+  "game": "poe1",
+  "patch": "3.30",
+  "engine": {
+    "name": "Path of Building Community",
+    "version": "2.68.1",
+    "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
+    "source_fingerprint": "69f485b75803afa2b940ae2f6b2508b4365c2b7171864a8a36cb3af4460b8842",
+    "timeless_types": [
+      "GloriousVanity"
+    ]
+  },
+  "calculation_contract_sha256": "a8fc982b15068cab83b0ceafae63ad91ec4bf6b33c8b37cd755cb148e4853de8",
+  "input_sha256": "6cf8359bc8f89de3c93b76a830f3abf344ff01476a498f2784b75d63ffeb0760",
+  "new_build": {
+    "class": "Witch",
+    "ascendancy": null,
+    "bloodline": null,
+    "level": 33,
+    "tree_version": "3_30"
+  },
+  "adapter_sha256": "2fa1a26fdc2ac6dd74cde079d058ba52b5a7ecffaa5c50e28c1ed1968f43a94f",
+  "scenario": "imported",
+  "scenario_definition": {
+    "label": "Imported configuration, unchanged",
+    "config": {},
+    "note": "No uptime or enemy assumptions are corrected automatically."
+  },
+  "changes": {
+    "sets": [
+      {
+        "type": "tree",
+        "action": "new",
+        "title": "Campaign Act 3",
+        "activate": true
+      }
+    ],
+    "tree": {
+      "ascendancy": "Elementalist",
+      "allocate": [
+        "Arcanist's Dominion",
+        "Lightning Walker",
+        "Heart and Soul",
+        "Crackling Speed",
+        "Deep Thoughts",
+        "Quick Recovery",
+        "Mental Rapidity",
+        "Cruel Preparation",
+        "Shaper of Storms",
+        "Elemental Overload",
+        "Prodigal Perfection",
+        "Retribution",
+        "Annihilation"
+      ],
+      "quest_points": 6,
+      "ascendancy_points": 2,
+      "class": "Witch"
+    },
+    "skills": {
+      "add_groups": [
+        {
+          "label": "Main",
+          "main": true,
+          "include_in_full_dps": true,
+          "gems": [
+            {
+              "name": "Arc",
+              "level": 6
+            },
+            {
+              "name": "Added Lightning Damage",
+              "level": 8
+            },
+            {
+              "name": "Arcane Surge",
+              "level": 10
+            }
+          ]
+        },
+        {
+          "label": "Auras",
+          "gems": [
+            {
+              "name": "Clarity",
+              "level": 7
+            },
+            {
+              "name": "Herald of Thunder",
+              "level": 5
+            }
+          ]
+        },
+        {
+          "label": "Movement",
+          "gems": [
+            {
+              "name": "Flame Dash",
+              "level": 7
+            }
+          ]
+        }
+      ]
+    },
+    "replace_items": [
+      {
+        "slot": "Weapon 1",
+        "text": "Rarity: RARE\nTeaching Spark\nDriftwood Wand\nAdds 2 to 18 Lightning Damage to Spells\n+15 to maximum Mana"
+      },
+      {
+        "slot": "Body Armour",
+        "text": "Rarity: RARE\nTeaching Robe\nSimple Robe\n+35 to maximum Life\n+20% to Lightning Resistance"
+      },
+      {
+        "slot": "Boots",
+        "text": "Rarity: RARE\nTeaching Shoes\nWool Shoes\n10% increased Movement Speed\n+25 to maximum Life\n+20% to Fire Resistance"
+      },
+      {
+        "slot": "Ring 1",
+        "text": "Rarity: RARE\nTeaching Loop\nIron Ring\n+20% to Cold Resistance\n+20 to maximum Life"
+      }
+    ],
+    "config": {
+      "resistancePenalty": 0
+    },
+    "selection": {
+      "character_level": 33
+    }
+  },
+  "calculation_id": "da13c5fafc88cf37336faa8b4bbab8f2004309801cbdb37ea1183f87cb7c211b",
+  "computed_at": "2026-11-23T21:11:42.803Z",
+  "output": {
+    "FullDPS": 1395.1458333333,
+    "CombinedDPS": 1395.1458333333,
+    "TotalDPS": 1395.1458333333,
+    "AverageDamage": 501.25,
+    "Speed": 2.7833333333333,
+    "HitChance": 100,
+    "CritChance": 11.7,
+    "Life": 765,
+    "LifeUnreserved": 765,
+    "EnergyShield": 32,
+    "Mana": 621,
+    "ManaUnreserved": 350,
+    "ManaCost": 24,
+    "ManaPerSecondCost": 66.8,
+    "ManaRegen": 55.7,
+    "ManaRegenRecovery": 55.7,
+    "ManaLeechGainRate": 0,
+    "LifeRegen": 6.1,
+    "LifeRegenRecovery": 6.1,
+    "LifeLeechGainRate": 0,
+    "Armour": 0,
+    "Evasion": 16,
+    "EffectiveMovementSpeedMod": 1.07,
+    "FireResist": 25,
+    "ColdResist": 25,
+    "LightningResist": 40,
+    "ChaosResist": 0,
+    "BlockChance": 0,
+    "SpellBlockChance": 0,
+    "SpellSuppressionChance": 0,
+    "PhysicalMaximumHitTaken": 797,
+    "FireMaximumHitTaken": 1022,
+    "ColdMaximumHitTaken": 1022,
+    "LightningMaximumHitTaken": 1265,
+    "ChaosMaximumHitTaken": 765,
+    "TotalEHP": 958.12508645791
+  },
+  "config": {
+    "ChanceToIgnoreEnemyPhysicalDamageReductionMode": "AVERAGE",
+    "ConcPathBypassCD": true,
+    "FlickerStrikeBypassCD": true,
+    "GamblesprintMovementSpeed": 30,
+    "VigilantStrikeBypassCD": true,
+    "bandit": "None",
+    "bloodsoakedBannerStages": 1,
+    "conditionChampionIntimidate": true,
+    "conditionCorruptingCryStages": 1,
+    "conditionSacrificeMinion": true,
+    "doomBlastSource": "vixen",
+    "enemyIsBoss": "Pinnacle",
+    "enemySizePreset": "Medium",
+    "maniaDebuffsCount": 15,
+    "pantheonMajorGod": "None",
+    "pantheonMinorGod": "None",
+    "plagueBearerState": "INC",
+    "presetBossSkills": "None",
+    "raiseSpectreEnableBuffs": true,
+    "raiseSpectreEnableCurses": true,
+    "repeatMode": "AVERAGE",
+    "resistancePenalty": 0,
+    "resourceGainMode": "AVERAGE",
+    "summonElementalRelicEnableAngerAura": true,
+    "summonElementalRelicEnableHatredAura": true,
+    "summonElementalRelicEnableWrathAura": true,
+    "targetBrandedEnemy": true,
+    "touchedDebuffsCount": 10
+  },
+  "groups": [
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemArc",
+          "level": 6,
+          "name": "Arc",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportAddedLightningDamage",
+          "level": 8,
+          "name": "Added Lightning Damage",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemSupportArcaneSurge",
+          "level": 10,
+          "name": "Arcane Surge",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": true,
+      "index": 1,
+      "label": "Main"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemClarity",
+          "level": 7,
+          "name": "Clarity",
+          "quality": 0
+        },
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemHeraldOfThunder",
+          "level": 5,
+          "name": "Herald of Thunder",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": false,
+      "index": 2,
+      "label": "Auras"
+    },
+    {
+      "enabled": true,
+      "gems": [
+        {
+          "enabled": true,
+          "id": "Metadata/Items/Gems/SkillGemFlameDash",
+          "level": 7,
+          "name": "Flame Dash",
+          "quality": 0
+        }
+      ],
+      "include_in_full_dps": false,
+      "index": 3,
+      "label": "Movement"
+    }
+  ],
+  "level": 33,
+  "unparsed_item_modifiers": [],
+  "tree_version": "3_30",
+  "selection": {
+    "character_level": 33,
+    "item_set": 1,
+    "main_socket_group": 1,
+    "skill_set": 1,
+    "tree_spec": 2
+  },
+  "equipped_items": [
+    {
+      "base": "Driftwood Wand",
+      "id": 1,
+      "name": "Teaching Spark, Driftwood Wand",
+      "rarity": "RARE",
+      "slot": "Weapon 1"
+    },
+    {
+      "base": "Simple Robe",
+      "id": 2,
+      "name": "Teaching Robe, Simple Robe",
+      "rarity": "RARE",
+      "slot": "Body Armour"
+    },
+    {
+      "base": "Wool Shoes",
+      "id": 3,
+      "name": "Teaching Shoes, Wool Shoes",
+      "rarity": "RARE",
+      "slot": "Boots"
+    },
+    {
+      "base": "Iron Ring",
+      "id": 4,
+      "name": "Teaching Loop, Iron Ring",
+      "rarity": "RARE",
+      "slot": "Ring 1"
+    }
+  ],
+  "applied_supports": [
+    {
+      "id": "SupportAddedLightningDamage",
+      "level": 8,
+      "name": "Added Lightning Damage",
+      "quality": 0
+    },
+    {
+      "id": "SupportArcaneSurge",
+      "level": 10,
+      "name": "Arcane Surge",
+      "quality": 0
+    }
+  ],
+  "allocated_points": {
+    "ascendancy_total": 2,
+    "bloodline_subset": 0,
+    "passive": 39
+  },
+  "budget": {
+    "ascendancy_available": 2,
+    "ascendancy_used": 2,
+    "bloodline_subset": 0,
+    "disconnected_nodes": [],
+    "extra_points": 1,
+    "note": "Bloodline points are a subset of ascendancy_used and share its budget.",
+    "passive_available": 39,
+    "passive_used": 39,
+    "quest_points_assumed": 6
+  },
+  "engine_warnings": [],
+  "class": "Witch",
+  "ascendancy": "Elementalist",
+  "edit_report": {
+    "sets": [
+      {
+        "action": "new",
+        "active": true,
+        "id": 2,
+        "title": "Campaign Act 3",
+        "type": "tree"
+      }
+    ],
+    "skills": {
+      "added": [
+        {
+          "gems": [
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemArc",
+              "level": 6,
+              "name": "Arc",
+              "quality": 0,
+              "support": false
+            },
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemSupportAddedLightningDamage",
+              "level": 8,
+              "name": "Added Lightning Damage",
+              "quality": 0,
+              "support": true
+            },
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemSupportArcaneSurge",
+              "level": 10,
+              "name": "Arcane Surge",
+              "quality": 0,
+              "support": true
+            }
+          ],
+          "group": 1,
+          "has_active_skill": true,
+          "include_in_full_dps": true,
+          "label": "Main",
+          "main": true
+        },
+        {
+          "gems": [
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemClarity",
+              "level": 7,
+              "name": "Clarity",
+              "quality": 0,
+              "support": false
+            },
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemHeraldOfThunder",
+              "level": 5,
+              "name": "Herald of Thunder",
+              "quality": 0,
+              "support": false
+            }
+          ],
+          "group": 2,
+          "has_active_skill": true,
+          "include_in_full_dps": false,
+          "label": "Auras"
+        },
+        {
+          "gems": [
+            {
+              "enabled": true,
+              "id": "Metadata/Items/Gems/SkillGemFlameDash",
+              "level": 7,
+              "name": "Flame Dash",
+              "quality": 0,
+              "support": false
+            }
+          ],
+          "group": 3,
+          "has_active_skill": true,
+          "include_in_full_dps": false,
+          "label": "Movement"
+        }
+      ],
+      "main_socket_group": 1,
+      "modified": [],
+      "removed": [],
+      "skill_set": 1
+    },
+    "tree": {
+      "allocated": [
+        {
+          "node": {
+            "id": 11420,
+            "name": "Arcanist's Dominion",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 4397,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 11420,
+              "name": "Arcanist's Dominion",
+              "type": "Notable"
+            },
+            {
+              "id": 36542,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 37569,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 57264,
+              "name": "Spell Damage and Mana",
+              "type": "Normal"
+            }
+          ],
+          "points": 5,
+          "requested": "Arcanist's Dominion"
+        },
+        {
+          "node": {
+            "id": 30225,
+            "name": "Lightning Walker",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 4184,
+              "name": "Elemental Damage",
+              "type": "Normal"
+            },
+            {
+              "id": 30225,
+              "name": "Lightning Walker",
+              "type": "Notable"
+            }
+          ],
+          "points": 2,
+          "requested": "Lightning Walker"
+        },
+        {
+          "node": {
+            "id": 27203,
+            "name": "Heart and Soul",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 27203,
+              "name": "Heart and Soul",
+              "type": "Notable"
+            },
+            {
+              "id": 48362,
+              "name": "Mana and Life",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Heart and Soul"
+        },
+        {
+          "node": {
+            "id": 7555,
+            "name": "Crackling Speed",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 7555,
+              "name": "Crackling Speed",
+              "type": "Notable"
+            },
+            {
+              "id": 7938,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 12379,
+              "name": "Lightning Damage and Cast Speed",
+              "type": "Normal"
+            },
+            {
+              "id": 14021,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 44183,
+              "name": "Lightning Damage and Cast Speed",
+              "type": "Normal"
+            }
+          ],
+          "points": 5,
+          "requested": "Crackling Speed"
+        },
+        {
+          "node": {
+            "id": 24362,
+            "name": "Deep Thoughts",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 1031,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 24362,
+              "name": "Deep Thoughts",
+              "type": "Notable"
+            },
+            {
+              "id": 60388,
+              "name": "Mana",
+              "type": "Normal"
+            }
+          ],
+          "points": 3,
+          "requested": "Deep Thoughts"
+        },
+        {
+          "node": {
+            "id": 21330,
+            "name": "Quick Recovery",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 17821,
+              "name": "Mana Regeneration and Life",
+              "type": "Normal"
+            },
+            {
+              "id": 21330,
+              "name": "Quick Recovery",
+              "type": "Notable"
+            },
+            {
+              "id": 31875,
+              "name": "Strength",
+              "type": "Normal"
+            },
+            {
+              "id": 39648,
+              "name": "Mana Regeneration and Life",
+              "type": "Normal"
+            },
+            {
+              "id": 60398,
+              "name": "Intelligence",
+              "type": "Normal"
+            }
+          ],
+          "points": 5,
+          "requested": "Quick Recovery"
+        },
+        {
+          "node": {
+            "id": 9432,
+            "name": "Mental Rapidity",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 9432,
+              "name": "Mental Rapidity",
+              "type": "Notable"
+            },
+            {
+              "id": 34157,
+              "name": "Cast Speed",
+              "type": "Normal"
+            },
+            {
+              "id": 54657,
+              "name": "Cast Speed",
+              "type": "Normal"
+            }
+          ],
+          "points": 3,
+          "requested": "Mental Rapidity"
+        },
+        {
+          "node": {
+            "id": 21958,
+            "name": "Cruel Preparation",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 21958,
+              "name": "Cruel Preparation",
+              "type": "Notable"
+            },
+            {
+              "id": 33755,
+              "name": "Life",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Cruel Preparation"
+        },
+        {
+          "node": {
+            "ascendancy": "Elementalist",
+            "id": 27038,
+            "name": "Shaper of Storms",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "ascendancy": "Elementalist",
+              "id": 27038,
+              "name": "Shaper of Storms",
+              "type": "Notable"
+            },
+            {
+              "ascendancy": "Elementalist",
+              "id": 58998,
+              "name": "Elemental Damage, Lightning Ailment Effect",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Shaper of Storms"
+        },
+        {
+          "node": {
+            "id": 22088,
+            "name": "Elemental Overload",
+            "type": "Keystone"
+          },
+          "path": [
+            {
+              "id": 22088,
+              "name": "Elemental Overload",
+              "type": "Keystone"
+            },
+            {
+              "id": 55332,
+              "name": "Intelligence",
+              "type": "Normal"
+            }
+          ],
+          "points": 2,
+          "requested": "Elemental Overload"
+        },
+        {
+          "node": {
+            "id": 10115,
+            "name": "Prodigal Perfection",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 10115,
+              "name": "Prodigal Perfection",
+              "type": "Notable"
+            },
+            {
+              "id": 11551,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 19635,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 43000,
+              "name": "Mana and Spell Damage",
+              "type": "Normal"
+            }
+          ],
+          "points": 4,
+          "requested": "Prodigal Perfection"
+        },
+        {
+          "node": {
+            "id": 49254,
+            "name": "Retribution",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 13009,
+              "name": "Dexterity",
+              "type": "Normal"
+            },
+            {
+              "id": 17735,
+              "name": "Intelligence",
+              "type": "Normal"
+            },
+            {
+              "id": 49254,
+              "name": "Retribution",
+              "type": "Notable"
+            }
+          ],
+          "points": 3,
+          "requested": "Retribution"
+        },
+        {
+          "node": {
+            "id": 53493,
+            "name": "Annihilation",
+            "type": "Notable"
+          },
+          "path": [
+            {
+              "id": 1346,
+              "name": "Spell Critical Strike Chance",
+              "type": "Normal"
+            },
+            {
+              "id": 16790,
+              "name": "Spell Critical Strike Chance",
+              "type": "Normal"
+            },
+            {
+              "id": 53493,
+              "name": "Annihilation",
+              "type": "Notable"
+            }
+          ],
+          "points": 3,
+          "requested": "Annihilation"
+        }
+      ],
+      "ascendancy": {
+        "after": "Elementalist",
+        "before": "None",
+        "internal_id": "Elementalist",
+        "removed_nodes": []
+      },
+      "class": {
+        "after": "Witch",
+        "before": "Scion"
+      },
+      "class_side_effects": {
+        "added": [],
+        "removed": []
+      },
+      "deallocated": [],
+      "masteries": [],
+      "tree_spec": 2
+    }
+  },
+  "tree_specs": [
+    {
+      "index": 1,
+      "title": "Default",
+      "version": "3_30"
+    },
+    {
+      "index": 2,
+      "title": "Campaign Act 3",
+      "version": "3_30"
+    }
+  ],
+  "item_sets": [
+    {
+      "id": 1,
+      "title": "Default"
+    }
+  ],
+  "skill_sets": [
+    {
+      "id": 1,
+      "title": "Default"
+    }
+  ],
+  "interpretation": "CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.",
+  "warnings": [
+    {
+      "code": "conditional_calculation",
+      "detail": "Engine estimate; validate configuration, unsupported mods and actual gameplay."
+    }
+  ],
+  "synthetic_control": false,
+  "cache_hit": false,
+  "saved_xml": "<project>\\poe-db\\examples\\arc-teaching\\campaign.xml"
+}

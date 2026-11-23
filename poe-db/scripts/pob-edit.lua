@@ -322,7 +322,16 @@ function M.skills(s, report)
   for index, g in ipairs(s.groups or {}) do
     local where = string.format('skills.groups[%d]', index)
     local group = check(list[g.group], '%s: unknown socket group %s', where, tostring(g.group))
-    check(not group.source, '%s: group %d is granted by an item and cannot be edited', where, g.group)
+    if group.source then
+      -- Item-granted (or engine) groups are rebuilt from the item; only the FullDPS flag may change.
+      for key in pairs(g) do
+        check(key == 'group' or key == 'include_in_full_dps', '%s: group %d is granted by an item (%s); only include_in_full_dps can be changed', where, g.group, tostring(group.source))
+      end
+      check(g.include_in_full_dps ~= nil, '%s: group %d is granted by an item; set include_in_full_dps', where, g.group)
+      group.includeInFullDPS = g.include_in_full_dps
+      table.insert(r.modified, { group = g.group, source = group.source, item_granted = true, include_in_full_dps = group.includeInFullDPS and true or false, enabled = group.enabled })
+      goto continue
+    end
     local entry = { group = g.group, removed_gems = {}, added_gems = {}, replaced_gems = {} }
     for _, rg in ipairs(g.replace_gems or {}) do
       local old = check(group.gemList[rg.gem], '%s: unknown gem index %s', where, tostring(rg.gem))
@@ -349,6 +358,7 @@ function M.skills(s, report)
     entry.include_in_full_dps = group.includeInFullDPS and true or false
     entry.enabled = group.enabled
     table.insert(r.modified, entry)
+    ::continue::
   end
   local removeGroups = {}
   for _, i in ipairs(s.remove_groups or {}) do

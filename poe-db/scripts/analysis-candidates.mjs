@@ -181,7 +181,7 @@ export function readBuild(file) {
   const { root } = decodeBuild(fs.readFileSync(file));
   const sets = asArray(root.Skills?.SkillSet);
   const active = sets.find(s => String(s.id) === String(root.Skills?.activeSkillSet)) ?? sets[0];
-  const groups = asArray(active?.Skill ?? root.Skills?.Skill).map((s, i) => ({ index: i + 1, label: s.label ?? '', slot: s.slot ?? null, enabled: s.enabled !== 'false',
+  const groups = asArray(active?.Skill ?? root.Skills?.Skill).map((s, i) => ({ index: i + 1, label: s.label ?? '', slot: s.slot ?? null, enabled: s.enabled !== 'false', source: s.source ?? null,
     gems: asArray(s.Gem).map((g, k) => ({ index: k + 1, name: g.nameSpec, skill_id: g.skillId, gem_id: g.gemId, level: Number(g.level), quality: Number(g.quality), enabled: g.enabled !== 'false' })) }));
   const items = new Map(asArray(root.Items?.Item).map(i => [String(i.id), typeof i === 'string' ? i : (i.text ?? '')]));
   const itemSets = asArray(root.Items?.ItemSet);
@@ -207,6 +207,23 @@ function priceRows(db, name) {
   catch (e) { return { rows: [], error: e.message }; }
 }
 
+// A support-only group feeds the active skill an item grants in the same slot (e.g. Death Aura from Death's Oath):
+// PoB applies supports socketed in that item to its granted skill. Returns the item-granted group, or null.
+export function itemGrantedTarget(build, g, info) {
+  if (!g?.slot) return null;
+  return build.groups.find(x => x !== g && x.slot === g.slot && /^Item:/.test(x.source ?? '') && x.enabled
+    && x.gems.some(gem => gem.enabled && info(gem) && !info(gem).is_support)) ?? null;
+}
+// Group whose skill is measured for support candidates of group N: N itself, or the item-granted skill it supports.
+export function measuredGroup(file, group) {
+  const build = readBuild(file);
+  const g = build.groups[group - 1];
+  const k = knowledge();
+  const info = gem => k.gems.get(gem.skill_id) ?? null;
+  if (!g || g.gems.some(x => x.enabled && info(x) && !info(x).is_support)) return group;
+  return itemGrantedTarget(build, g, info)?.index ?? group;
+}
+
 // ---------- generators ----------
 export function generateSupportCandidates({ file, group = null, replace = 'auto', quality = 20, excludeAwakened = false, search = null, limit = null } = {}) {
   const build = readBuild(file);
@@ -214,8 +231,11 @@ export function generateSupportCandidates({ file, group = null, replace = 'auto'
   if (!g) throw new Error(`Socket group ${group ?? build.main_socket_group} not found (active skill set has ${build.groups.length})`);
   const k = knowledge(), pob = pobGems();
   const info = gem => k.gems.get(gem.skill_id) ?? null;
-  const actives = g.gems.filter(x => x.enabled && info(x) && !info(x).is_support);
-  if (!actives.length) throw new Error(`Group ${g.index} has no enabled active gem known to the knowledge DB`);
+  if (g.source) throw new Error(`Group ${g.index} is granted by ${g.source}; add supports to the support group socketed in the same slot (${g.slot ?? 'no slot'})`);
+  let actives = g.gems.filter(x => x.enabled && info(x) && !info(x).is_support);
+  const granted = actives.length ? null : itemGrantedTarget(build, g, info);
+  if (granted) actives = granted.gems.filter(x => x.enabled && info(x) && !info(x).is_support);
+  if (!actives.length) throw new Error(`Group ${g.index} has no enabled active gem known to the knowledge DB and no item-granted skill in slot ${g.slot ?? '(none)'}`);
   const supports = g.gems.filter(x => info(x)?.is_support);
   const activeInfo = info(actives[0]);
   const sockets = parseSockets(/^Sockets: (.+)$/m.exec(build.slots.get(g.slot) ?? '')?.[1]);
@@ -273,10 +293,13 @@ export function generateSupportCandidates({ file, group = null, replace = 'auto'
   let list = uniqueIds(candidates);
   if (limit) list = list.slice(0, limit);
   return { kind: 'supports', group: { index: g.index, slot: g.slot, label: g.label, gems: g.gems.map(x => `${x.index}:${x.name} ${x.level}/${x.quality}${x.enabled ? '' : ' (disabled)'}`) },
-    active_skill: { name: actives[0].name, skill_id: actives[0].skill_id, types: [...types].sort(), other_actives: actives.slice(1).map(a => a.name) },
+    active_skill: { name: actives[0].name, skill_id: actives[0].skill_id, types: [...types].sort(), other_actives: actives.slice(1).map(a => a.name),
+      ...(granted ? { item_granted: true, source: granted.source, measured_group: granted.index } : {}) },
+    measured_group: granted ? granted.index : g.index,
     sockets, free_sockets: free, target, candidates: list, excluded,
     notes: ['Prefilter: RePoE allowed/excluded type expressions against the active skill types plus added_types of the other supports (PoB rule, without weapon-type and item-granted checks).',
       'Engine run decides: candidates whose support is missing from applied_supports are excluded from the ranking.',
+      ...(granted ? [`Group ${g.index} has no active gem: candidates are measured on the skill granted by ${granted.source} (group ${granted.index}, same slot). PoB may not apply every support to item-granted skills; check applied_supports.`] : []),
       'Levels: PoB natural max level (exceptional 3-4, awakened 5), quality --quality (default 20). Corrupted 21/23 gems are not generated. Price only for the exact level/quality variant.',
       ...(target.provisional ? ['Replacement target "weakest" is resolved by removal probes at run time; --plan shows the last support as a provisional target.'] : [])] };
 }
@@ -402,13 +425,24 @@ export function analyzeAutoUpgrades({ file, kind, slot = null, group = null, rep
   let probe = null, runBase = base;
   const build = readBuild(file);
   const groupIndex = group ?? build.main_socket_group;
-  if (kind === 'supports' && groupIndex !== build.main_socket_group) runBase = { ...base, selection: { ...(base.selection ?? {}), main_socket_group: groupIndex } };
+  const measured = kind === 'supports' ? measuredGroup(file, groupIndex) : groupIndex;
+  if (kind === 'supports' && measured !== build.main_socket_group) runBase = { ...base, selection: { ...(base.selection ?? {}), main_socket_group: measured } };
   let gen = generateCandidates({ kind, file, slot, group: groupIndex, replace, search, limit, quality, excludeAwakened });
   if (kind === 'supports' && gen.target.mode === 'weakest') {
     probe = weakestSupport({ file, scenario, group: groupIndex, base: runBase, metric, concurrency });
     if (probe?.weakest) gen = generateCandidates({ kind, file, group: groupIndex, replace: String(probe.weakest.gem), search, limit, quality, excludeAwakened });
   }
-  if (!gen.candidates.length) return { ...gen, analysis: 'auto_upgrades', ranking: [], note: 'No candidates generated' };
+  // Supports already in the group that the engine does not apply to the measured skill (e.g. Controlled Destruction
+  // or Empower on Death Aura): reported, not hidden.
+  let existingNotApplied;
+  if (kind === 'supports') {
+    const k = knowledge();
+    const base0 = runPob({ input: fs.readFileSync(file), scenario, changes: runBase });
+    const applied = new Set((base0.applied_supports ?? []).flatMap(s => [s.id, s.name]));
+    existingNotApplied = build.groups[groupIndex - 1].gems.filter(x => x.enabled && k.gems.get(x.skill_id)?.is_support && !applied.has(x.skill_id) && !applied.has(x.name))
+      .map(x => ({ gem: x.index, name: x.name, skill_id: x.skill_id }));
+  }
+  if (!gen.candidates.length) return { ...gen, analysis: 'auto_upgrades', ranking: [], existing_supports_not_applied: existingNotApplied, note: 'No candidates generated' };
   const expanded = expandCandidates({ candidates: gen.candidates });
   const result = analyzeUpgrades({ file, scenario, metric, candidates: expanded, base: runBase, top: expanded.length, concurrency });
   const byId = new Map(gen.candidates.map(c => [c.id, c]));
@@ -416,7 +450,7 @@ export function analyzeAutoUpgrades({ file, kind, slot = null, group = null, rep
   const rejected = new Set([...verification].filter(([, v]) => v.status === 'not_applied').map(([id]) => id));
   const ranking = result.ranking.filter(r => !rejected.has(r.id)).slice(0, top).map((r, i) => ({ ...r, rank: i + 1, verification: verification.get(r.id), generated: byId.get(r.id).generated }));
   return { ...result, analysis: 'auto_upgrades', kind, generation: { ...gen, candidates: undefined, excluded: gen.excluded.length, excluded_reasons: countBy(gen.excluded, 'reason'), total: gen.candidates.length },
-    replacement_probe: probe, ranking,
+    measured_group: kind === 'supports' ? measured : undefined, existing_supports_not_applied: existingNotApplied, replacement_probe: probe, ranking,
     excluded: [...result.excluded, ...[...rejected].map(id => ({ id, reason: 'support_not_applied', detail: verification.get(id).applied_supports }))],
     by_price: { ...result.by_price, ranked: result.by_price.ranked.filter(r => !rejected.has(r.id)) },
     verification_summary: countBy([...verification.values()], 'status'),

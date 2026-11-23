@@ -114,7 +114,7 @@ export const scenarios = {
   unbuffed: { label: 'Reduced temporary buffs audit', config: { conditionKilledRecently: false, multiplierKilledRecently: 0, buffOnslaught: false, usePowerCharges: false, useFrenzyCharges: false, useEnduranceCharges: false },
     note: 'A partial stress scenario, not a guarantee that all temporary buffs are removed.' }
 };
-const selectedStats = ['FullDPS','CombinedDPS','TotalDPS','AverageDamage','Speed','HitChance','CritChance','Life','LifeUnreserved','EnergyShield','Mana','ManaUnreserved',
+const selectedStats = ['FullDPS','CombinedDPS','CombinedAvg','TotalDPS','TotalDot','TotalDotDPS','IgniteDPS','TotalIgniteDPS','PoisonDPS','TotalPoisonDPS','BleedDPS','DecayDPS','AverageDamage','Speed','HitChance','CritChance','Life','LifeUnreserved','EnergyShield','Mana','ManaUnreserved',
   'ManaCost','ManaPerSecondCost','ManaRegen','ManaRegenRecovery','ManaLeechGainRate','LifeRegen','LifeRegenRecovery','LifeLeechGainRate','Armour','Evasion','EffectiveMovementSpeedMod','FireResist','ColdResist','LightningResist','ChaosResist',
   'BlockChance','SpellBlockChance','SpellSuppressionChance','PhysicalMaximumHitTaken','FireMaximumHitTaken','ColdMaximumHitTaken','LightningMaximumHitTaken','ChaosMaximumHitTaken','TotalEHP'];
 
@@ -209,11 +209,11 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
       tree_version:result.tree_version,migration:result.migration,minion_output:result.minion_output,
       selection:result.selection,
       equipped_items:result.equipped_items,
-      applied_supports: result.applied_supports, skill_disabled_reason:result.skill_disabled_reason,
+      applied_supports: result.applied_supports, explode_mods: result.explode_mods, skill_disabled_reason:result.skill_disabled_reason,
       allocated_points:result.allocated_points,budget:result.budget,engine_warnings:result.engine_warnings,
       class:result.class,ascendancy:result.ascendancy,edit_report:result.edit_report,
       tree_specs:result.tree_specs,item_sets:result.item_sets,skill_sets:result.skill_sets,
-      interpretation:'CombinedDPS describes the selected main skill. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.',
+      interpretation:'CombinedDPS describes the selected main skill; for average-damage skills (e.g. Essence Drain) PoB leaves TotalDotDPS out of it, analyze uses hit + TotalDotDPS then. FullDPS requires configured skill groups and can be zero when not selected. Bloodline points are a subset of ascendancy_total. Costs and recovery require matching resource and scenario.',
       warnings: [...(audit?.warnings ?? []),...(migrate?[{code:'migration_requires_review',detail:'Explicit tree migration is not proof of acquisition, item/gem legality or gameplay. Inspect all node deltas and original provenance.'}]:[]), { code: 'conditional_calculation', detail: 'Engine estimate; validate configuration, unsupported mods and actual gameplay.' }],
       synthetic_control: !xml && !newBuild };
     fs.mkdirSync(path.dirname(cache),{recursive:true});

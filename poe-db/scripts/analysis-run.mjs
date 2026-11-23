@@ -65,7 +65,7 @@ export function analyzeNodes({ file, scenario = 'sustained', metric = 'dps', rad
   const rows = flagTradeoffs(evaluated.rows.map(r => r.extra?.points ? { ...r, cost: { points: r.extra.points, graph_points: r.cost?.points } } : r));
   const ranked = rankRows(rows, { metric, per: 'points', top });
   return { game: 'poe1', patch: '3.30', analysis: 'node_power', metric, scenario, radius, include,
-    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, contract: evaluated.contract, class: cls.name },
+    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, dps_basis: evaluated.dps_basis, contract: evaluated.contract, class: cls.name },
     candidates: candidates.length, top: ranked.top.map(compactRow), excluded: ranked.excluded,
     timing: { total_ms: Date.now() - started, engine_runs: evaluated.engine.runs, concurrency: evaluated.engine.concurrency, cache: evaluated.cache },
     assumptions: ['Each candidate is added on top of the current tree with allow_over_budget: true (points beyond the budget are hypothetical).', 'Cost = points of the path PoB actually allocated; small nodes on the path contribute to the gain.'],
@@ -78,7 +78,7 @@ export function analyzeStats({ file, scenario = 'sustained', metric = 'dps', can
   const evaluated = runCandidates({ file, scenario, baseline, candidates, kind: 'stats', metricsWanted: ['dps', 'ehp', 'maxhit', 'life', 'mana_sustain'], concurrency });
   const ranked = rankRows(evaluated.rows, { metric, per: 'none', top: candidates.length });
   return { game: 'poe1', patch: '3.30', analysis: 'stat_weights', experiment: 'custom_mods', metric, scenario,
-    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, contract: evaluated.contract },
+    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, dps_basis: evaluated.dps_basis, contract: evaluated.contract },
     weights: ranked.top.map(compactRow), excluded: ranked.excluded,
     timing: { total_ms: Date.now() - started, engine_runs: evaluated.engine.runs, cache: evaluated.cache },
     note: 'Gain per one synthetic unit added through PoB custom modifiers. Translate into realistic magnitudes of actual items/nodes before comparing.', disclaimer };
@@ -112,7 +112,7 @@ export function analyzeUpgrades({ file, scenario = 'sustained', metric = 'dps', 
   rows = flagTradeoffs(rows);
   const ranked = rankRows(rows, { metric, per: 'none', top });
   return { game: 'poe1', patch: '3.30', analysis: 'upgrades', metric, scenario,
-    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, contract: evaluated.contract },
+    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, dps_basis: evaluated.dps_basis, contract: evaluated.contract },
     ranking: ranked.top.map(compactRow), excluded: ranked.excluded,
     by_price: rankByPrice(rows.filter(r => !r.error), metric), packages: packageInteraction(rows, metric),
     budget: budgetSummary(rows.filter(r => !r.error && r.meta?.type === 'single' && r.price?.status !== 'not_requested')),

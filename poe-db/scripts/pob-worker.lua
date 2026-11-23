@@ -168,6 +168,25 @@ if mainSkill then
     if effect.grantedEffect.support then table.insert(result.applied_supports,{id=effect.grantedEffect.id,name=effect.grantedEffect.name,level=effect.level,quality=effect.quality}) end
   end
 end
+-- On-kill explosion sources (Profane Bloom, item mods): raw ExplodeMod entries, unevaluated conditions included,
+-- so the analysis can scale them by the encounter enemy's life (PoB uses monsterLifeTable[enemyLevel]).
+result.explode_mods={}
+do
+  local seen={}
+  local db=build.calcsTab.mainEnv and build.calcsTab.mainEnv.player and build.calcsTab.mainEnv.player.modDB
+  while db do
+    for _,m in ipairs(db.mods and db.mods.ExplodeMod or {}) do
+      local v=m.value or {}
+      local conditions={}
+      for _,tag in ipairs(m) do if tag.var then table.insert(conditions,(tag.actor and (tag.actor..':') or '')..tag.var) end end
+      local key=tostring(m.source)..'|'..tostring(v.type)..'|'..tostring(v.amount)..'|'..tostring(v.chance)
+      if not seen[key] then seen[key]=true; local nodeId=tonumber(tostring(m.source):match('^Tree:(%d+)'))
+        local node=nodeId and build.spec.nodes[nodeId]
+        table.insert(result.explode_mods,{source=m.source,source_name=node and node.dn or nil,type=v.type,amount=v.amount,chance=v.chance,conditions=conditions}) end
+    end
+    db=db.parent
+  end
+end
 local minion=build.calcsTab.mainEnv and build.calcsTab.mainEnv.minion
 if minion and minion.output then
   result.minion_output={}

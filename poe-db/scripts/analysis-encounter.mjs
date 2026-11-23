@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { runBatch, defaultConcurrency } from './analysis-engine.mjs';
-import { canonicalJson } from './analysis-core.mjs';
+import { canonicalJson, effectiveDps } from './analysis-core.mjs';
 import { buildEncounter, cleanSpec, mergeChanges, parseEnemy, isBossOnly } from './encounter.mjs';
 import { loadEnemyDb, bandOfTier } from './enemy-db.mjs';
 import { loadBossScenarios, dotOf } from './analysis-bosses.mjs';
@@ -47,19 +47,47 @@ export function defenceOf(o) {
 
 // Player output, or the minion output when the player itself deals no damage (minion builds).
 export function damageOf(o, life, minion = null) {
-  const playerBest = Math.max(num(o.FullDPS) ?? 0, num(o.CombinedDPS) ?? 0);
-  const useMinion = !(playerBest > 0) && minion && Math.max(num(minion.FullDPS) ?? 0, num(minion.CombinedDPS) ?? 0) > 0;
+  const playerBest = Math.max(num(o.FullDPS) ?? 0, effectiveDps(o).value ?? 0);
+  const useMinion = !(playerBest > 0) && minion && Math.max(num(minion.FullDPS) ?? 0, effectiveDps(minion).value ?? 0) > 0;
   const src = useMinion ? minion : o;
+  const eff = effectiveDps(src);
   const dps = num(src.CombinedDPS), full = num(useMinion ? o.FullDPS ?? minion.FullDPS : src.FullDPS);
-  const best = full > 0 ? full : dps;
-  return { scope: useMinion ? 'minion' : 'player', combined_dps: round(dps), full_dps: round(full), hit_chance: round(num(src.HitChance), 1), crit_chance: round(num(src.CritChance), 2),
+  // FullDPS covers only groups marked include_in_full_dps; the main skill may be absent from it, so take the larger.
+  const effective = eff.value ?? 0;
+  const best = Math.max(full ?? 0, effective);
+  const basis = !(best > 0) ? null : (full ?? 0) >= effective ? 'FullDPS' : eff.basis === 'CombinedDPS' ? 'CombinedDPS' : 'TotalDotDPS+hit';
+  return { scope: useMinion ? 'minion' : 'player', combined_dps: round(dps), full_dps: round(full), effective_dps: round(eff.value), best_dps: round(best) || null, dps_basis: basis,
+    dps_basis_note: eff.note ?? null, total_dot_dps: round(num(src.TotalDotDPS) ?? num(src.TotalDot)),
+    hit_chance: round(num(src.HitChance), 1), crit_chance: round(num(src.CritChance), 2),
     hit_average_by_type: Object.fromEntries(types.map(t => [t, round(num(src[`${t}HitAverage`]))]).filter(([, v]) => v > 0)),
     ignite_dps: round(num(src.IgniteDPS)), poison_dps: round(num(src.PoisonDPS)), bleed_dps: round(num(src.BleedDPS)),
     enemy_life: life?.value ?? null, enemy_life_range: life?.range ?? null, enemy_life_basis: life?.basis ?? null,
     time_to_kill_s: life?.value && best > 0 ? round(life.value / best, 2) : null,
     // Derived boss life is a range (two formulas); the time to kill is then a range too.
     time_to_kill_range_s: !life?.value && life?.range && best > 0 ? life.range.map(v => round(v / best, 2)) : null,
-    time_to_kill_basis: life?.value || life?.range ? (full > 0 ? 'FullDPS' : 'CombinedDPS') + ' against this enemy; ignores travel, uptime, phases and overkill' : null };
+    time_to_kill_basis: (life?.value || life?.range) && basis ? basis + ' against this enemy; ignores travel, uptime, phases and overkill' : null };
+}
+
+// On-kill monster explosions (Profane Bloom: 50% / 25% of max life as chaos on cursed kills; item mods such as
+// 10% / 250% as fire). PoB's "On Kill Monster Explosion" group uses monsterLifeTable[enemy level], not this enemy's
+// life, and is per kill rather than per second, so it is not part of DPS or time to kill. Here the base damage of one
+// explosion is scaled by the encounter enemy's life; player damage modifiers, enemy resistances and hit-to-other-
+// enemies geometry are not applied (method base_damage_from_enemy_life).
+export function explosionsOf(explodeMods, life) {
+  if (!Array.isArray(explodeMods) || !explodeMods.length) return null;
+  const lives = life?.value ? [life.value] : life?.range ?? null;
+  const rows = explodeMods.map(m => {
+    const pctOfLife = num(m.amount), chance = num(m.chance);
+    const types = m.type === 'RandomElement' ? 'Fire/Cold/Lightning (random)' : m.type;
+    const per = lives && pctOfLife != null ? lives.map(l => round(l * pctOfLife / 100)) : null;
+    const requires = (m.conditions ?? []).map(c => c === 'enemy:Cursed' ? 'enemy cursed' : c);
+    return { source: m.source ?? null, source_name: m.source_name ?? null, damage_type: types, chance_pct: chance == null ? null : round(chance * 100, 1), percent_of_enemy_life: pctOfLife,
+      requires, damage_per_explosion: per?.length === 1 ? per[0] : null, damage_per_explosion_range: per?.length > 1 ? per : null,
+      expected_damage_per_kill: per && chance != null ? (per.length === 1 ? round(per[0] * chance) : null) : null,
+      expected_damage_per_kill_range: per && chance != null && per.length > 1 ? per.map(v => round(v * chance)) : null };
+  });
+  return { method: lives ? 'base_damage_from_enemy_life' : 'not_modelled', enemy_life_basis: life?.basis ?? null, rows,
+    note: 'Per kill, dealt to nearby enemies; not in DPS. Unscaled base damage: player modifiers, penetration and enemy resistances are not applied; conditions (e.g. enemy cursed) are assumed met. PoB own explosion group uses generic monster life for the enemy level.' };
 }
 
 // Build-specific checks for mechanics the engine does not calculate (danger axes from the enemy database).
@@ -89,7 +117,7 @@ function summarize(encounter, result, clean) {
   const o = result.output;
   const axes = [...new Set(encounter.not_modelled.flatMap(n => n.axes).concat(encounter.modifiers.flatMap(m => m.axes ?? [])))];
   const row = { label: encounter.label, enemy: encounter.enemy, map: encounter.map, calculation_id: result.calculation_id,
-    damage: damageOf(o, encounter.life, result.minion_output), defence: defenceOf(o), modifiers: encounter.modifiers, not_modelled: encounter.not_modelled,
+    damage: { ...damageOf(o, encounter.life, result.minion_output), on_kill_explosions: explosionsOf(result.explode_mods, encounter.life) }, defence: defenceOf(o), modifiers: encounter.modifiers, not_modelled: encounter.not_modelled,
     build_checks: buildChecks(axes, o), assumptions: encounter.assumptions,
     engine_warnings: result.engine_warnings ?? [], unparsed_custom_mods: result.unparsed_custom_mods ?? [] };
   if (encounter.enemy.kind === 'damage_over_time') {
@@ -99,7 +127,7 @@ function summarize(encounter, result, clean) {
   }
   if (clean) {
     const c = clean.output, cd = defenceOf(c);
-    const best = d => (d.full_dps > 0 ? d.full_dps : d.combined_dps);
+    const best = d => d.best_dps;
     // Worst per-type change of max hit: catches resistance/defence losses the physical generic hit cannot show.
     const maxHit = types.map(t => ({ type: t, pct: pct(cd.max_hit[t], row.defence.max_hit[t]) })).filter(x => x.pct != null).sort((a, b) => a.pct - b.pct)[0] ?? null;
     row.vs_clean = { dps_pct: pct(best(damageOf(c, null, clean.minion_output)), best(row.damage)), hits_to_die_pct: pct(cd.hits_to_die, row.defence.hits_to_die),
@@ -227,7 +255,7 @@ export function markdownReport(report) {
     push(`- Ваншоты: ${s.one_shots.length ? s.one_shots.join('; ') : 'нет'}.`, `- Опасные удары (>= 70% запаса): ${s.dangerous.length ? s.dangerous.join('; ') : 'нет'}.`, `- Чаще всего самый низкий max hit: ${s.weakest_max_hit_type ?? '-'}.`);
     for (const [band, list] of Object.entries(s.map_mods_to_avoid)) push(`- Моды карт ${band}, которых стоит избегать: ${list.length ? list.join(', ') : 'нет'}.`);
     push('', '## Противники', '', '| Противник | DPS | TTK, с | Удар врага | Ударов до смерти | Итог | Тип | EHP |', '|---|---:|---:|---:|---:|---|---|---:|');
-    for (const m of report.matrix) push(`| ${m.label} | ${fmt(m.damage.full_dps > 0 ? m.damage.full_dps : m.damage.combined_dps)} | ${ttk(m.damage)} | ${fmt(m.defence.enemy_hit_after_mods)} | ${m.defence.dot ? `дегген: ${fmt(m.defence.dot.taken_dps)}/с vs реген ${fmt(m.defence.dot.recovery_per_s)}/с` : fmt(m.defence.hits_to_die)} | ${verdictRu[m.defence.verdict]} | ${m.defence.dominant_type ?? '-'} | ${fmt(m.defence.ehp)} |`);
+    for (const m of report.matrix) push(`| ${m.label} | ${fmt(m.damage.best_dps)} | ${ttk(m.damage)} | ${fmt(m.defence.enemy_hit_after_mods)} | ${m.defence.dot ? `дегген: ${fmt(m.defence.dot.taken_dps)}/с vs реген ${fmt(m.defence.dot.recovery_per_s)}/с` : fmt(m.defence.hits_to_die)} | ${verdictRu[m.defence.verdict]} | ${m.defence.dominant_type ?? '-'} | ${fmt(m.defence.ehp)} |`);
     const first = report.matrix[0];
     if (first) push('', `Max hit (${first.label}): ${Object.entries(first.defence.max_hit).map(([t, v]) => `${t} ${fmt(v)}`).join(', ')}.`);
     for (const sw of report.sweeps) push('', ...markdownSweep(sw, 3));
@@ -236,7 +264,7 @@ export function markdownReport(report) {
     push(`# ${report.label}`, '', `Сборка: ${report.build_file}, сценарий \`${report.scenario}\`.`, '');
     const d = report.damage, f = report.defence, v = report.vs_clean;
     push('| Показатель | Значение | К чистому |', '|---|---:|---:|',
-      `| DPS (${d.full_dps > 0 ? 'Full' : 'Combined'}) | ${fmt(d.full_dps > 0 ? d.full_dps : d.combined_dps)} | ${signed(v?.dps_pct)} |`,
+      `| DPS (${d.dps_basis ?? '-'}) | ${fmt(d.best_dps)} | ${signed(v?.dps_pct)} |`,
       `| Время убийства, с | ${ttk(d)} | |`, `| Удар врага после модов | ${fmt(f.enemy_hit_after_mods)} | ${signed(v?.enemy_hit_pct)} |`,
       `| Ударов до смерти | ${fmt(f.hits_to_die)} (${verdictRu[f.verdict]}) | ${signed(v?.hits_to_die_pct)} |`, `| EHP | ${fmt(f.ehp)} | ${signed(v?.ehp_pct)} |`, '');
     push(`Max hit: ${Object.entries(f.max_hit).map(([t, x]) => `${t} ${fmt(x)}`).join(', ')}. Восстановление в секунду: ${fmt(f.recovery_per_s.total)}.`, '');
@@ -251,7 +279,7 @@ export function markdownReport(report) {
 
 function markdownSweep(sw, level) {
   const h = '#'.repeat(level);
-  const lines = [`${h} Моды карт ${sw.band} (T${sw.tier}) против ${sw.enemy}`, '', `Чистый противник: ${sw.clean.label}; DPS ${fmt(sw.clean.damage.full_dps > 0 ? sw.clean.damage.full_dps : sw.clean.damage.combined_dps)}, ударов до смерти ${fmt(sw.clean.defence.hits_to_die)}.`, '',
+  const lines = [`${h} Моды карт ${sw.band} (T${sw.tier}) против ${sw.enemy}`, '', `Чистый противник: ${sw.clean.label}; DPS ${fmt(sw.clean.damage.best_dps)}, ударов до смерти ${fmt(sw.clean.defence.hits_to_die)}.`, '',
     `Итого: избегать ${sw.counts.avoid}, осторожно ${sw.counts.caution}, вручную ${sw.counts.manual}, ок ${sw.counts.ok}.`, '',
     '| Мод | Итог | DPS | Ударов до смерти | Max hit | EHP | Причины |', '|---|---|---:|---:|---:|---:|---|'];
   for (const m of sw.mods.filter(x => x.verdict !== 'ok')) lines.push(`| ${m.name}${m.compared_against === 'map_boss' && sw.enemy !== 'map_boss' ? ' (против босса карты)' : ''} | ${verdictRu[m.verdict]} | ${signed(m.vs_clean?.dps_pct)} | ${signed(m.vs_clean?.hits_to_die_pct)} | ${m.vs_clean?.max_hit_type ? `${m.vs_clean.max_hit_type} ${signed(m.vs_clean.max_hit_pct)}` : '-'} | ${signed(m.vs_clean?.ehp_pct)} | ${m.reasons.join(', ')} |`);

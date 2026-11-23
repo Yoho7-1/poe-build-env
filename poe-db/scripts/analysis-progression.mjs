@@ -329,7 +329,7 @@ export function assessStage(stage, rows) {
   const warnings = first.result.engine_warnings ?? [];
   const enc = rows.map(r => ({ label: r.encounter.label, enemy_level: r.encounter.enemy.level, life: r.encounter.life,
     damage: damageOf(r.result.output, r.encounter.life, r.result.minion_output), defence: defenceOf(r.result.output) }))
-    .map(e => ({ label: e.label, enemy_level: e.enemy_level, dps: e.damage.full_dps > 0 ? e.damage.full_dps : e.damage.combined_dps, dps_scope: e.damage.scope,
+    .map(e => ({ label: e.label, enemy_level: e.enemy_level, dps: e.damage.best_dps, dps_basis: e.damage.dps_basis, dps_scope: e.damage.scope,
       time_to_kill_s: e.damage.time_to_kill_s, enemy_life: e.damage.enemy_life, hits_to_die: e.defence.hits_to_die, verdict: e.defence.verdict, dominant_type: e.defence.dominant_type,
       weakest_type: e.defence.weakest_type, weakest_max_hit: e.defence.weakest_type ? e.defence.max_hit[e.defence.weakest_type] : null, ehp: e.defence.ehp, max_hit: e.defence.max_hit }));
   const p = enc[0];

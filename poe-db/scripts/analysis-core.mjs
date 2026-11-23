@@ -8,8 +8,24 @@ import { dbRoot, readJson, atomicJson } from './workspace.mjs';
 export const maxHitStats = ['PhysicalMaximumHitTaken', 'FireMaximumHitTaken', 'ColdMaximumHitTaken', 'LightningMaximumHitTaken', 'ChaosMaximumHitTaken'];
 const num = v => typeof v === 'number' && Number.isFinite(v) ? v : null;
 
+// Effective main-skill DPS. PoB adds TotalDotDPS (DoT, ignite, poison, bleed, decay) to CombinedDPS except for
+// skills shown as average damage per use (skillData.showAverage, e.g. Essence Drain): there CombinedDPS is only the
+// hit and the debuff DoT is left out. Detected as TotalDotDPS > CombinedDPS (otherwise Combined >= TotalDotDPS).
+// Then hit rate (TotalDPS, or AverageDamage x Speed) + TotalDotDPS is used; cull/reservation multipliers are not applied.
+export function effectiveDps(o) {
+  if (!o) return { value: null, basis: null };
+  const combined = num(o.CombinedDPS), dot = num(o.TotalDotDPS) ?? num(o.TotalDot) ?? 0;
+  if (dot > 0 && (combined ?? 0) + 1e-6 < dot) {
+    const total = num(o.TotalDPS), avg = num(o.AverageDamage), speed = num(o.Speed);
+    const hit = total > 0 ? total : avg > 0 && speed > 0 ? avg * speed : 0;
+    return { value: hit + dot, basis: 'TotalDotDPS+hit', hit_dps: hit, dot_dps: dot, combined_dps: combined,
+      note: 'PoB CombinedDPS excludes DoT for average-damage skills; effective = hit per second + TotalDotDPS (no cull/reservation multiplier)' };
+  }
+  return { value: combined, basis: 'CombinedDPS', hit_dps: null, dot_dps: dot || null, combined_dps: combined };
+}
+
 export const metrics = {
-  dps: { label: 'CombinedDPS of the selected main skill', read: o => num(o.CombinedDPS) },
+  dps: { label: 'Effective DPS of the selected main skill (CombinedDPS, or hit + TotalDotDPS when PoB leaves the DoT out)', read: o => effectiveDps(o).value },
   fulldps: { label: 'FullDPS (only skills included in FullDPS)', read: o => num(o.FullDPS) },
   ehp: { label: 'TotalEHP under the configured enemy', read: o => num(o.TotalEHP) },
   maxhit: { label: 'Smallest typed maximum hit taken', read: o => { const v = maxHitStats.map(k => num(o[k])).filter(v => v != null); return v.length === maxHitStats.length ? Math.min(...v) : null; } },
@@ -99,7 +115,7 @@ export function evaluateCandidates({ baseline, candidates, runner, metricsWanted
         engine_warnings: row.engine_warnings, unparsed_item_modifiers: row.unparsed_item_modifiers, skill_disabled_reason: row.skill_disabled_reason, extra: row.extra }) });
     onProgress?.(index + 1, candidates.length);
   }
-  return { contract, baseline_values: base, rows, elapsed_ms: Date.now() - started, cache: cache?.stats() ?? null };
+  return { contract, baseline_values: base, dps_basis: metricsWanted.includes('dps') ? effectiveDps(scope === 'minion' ? baseline.minion_output : baseline.output).basis : undefined, rows, elapsed_ms: Date.now() - started, cache: cache?.stats() ?? null };
 }
 
 // Candidates whose analysis row is not cached yet (only these need engine runs).

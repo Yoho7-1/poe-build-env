@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as B from '../scripts/design-blueprint.mjs';
-import { pickMods, kitPlan } from '../scripts/design-kit.mjs';
+import { pickMods, kitPlan, flaskPlan, flaskText } from '../scripts/design-kit.mjs';
 
 const profile = { id: 'main', profile: {
   preferred_skills: ['explosions (on-kill explode / explosion-themed)', 'Chieftain or Occultist'],
@@ -145,6 +145,20 @@ test('kit: pickMods respects affix sides, mod groups and tier; plan covers weapo
   assert.ok(kitPlan({ attr: 'dex', family: 'Bow', form: 'attack_hit' }).some(([slot, base]) => slot === 'Weapon 2' && /Quiver/.test(base)));
   assert.ok(!kitPlan({ attr: 'str', family: 'Two Hand Mace', form: 'attack_hit' }).some(([slot]) => slot === 'Weapon 2'));
   assert.throws(() => kitPlan({ attr: 'str', family: 'FishingRod', form: 'attack_hit' }), /No weapon kit/);
+});
+
+test('kit flasks: life flask reactive, four distinct automatic utility flasks by archetype', () => {
+  for (const ctx of [{ attr: 'str', family: 'Two Hand Mace', form: 'attack_hit' }, { attr: 'int', family: 'caster', form: 'damage_over_time' }, { attr: 'int', family: 'minion', form: 'minion' }]) {
+    const plan = flaskPlan(ctx);
+    assert.deepEqual(plan.map(p => p[0]), ['Flask 1', 'Flask 2', 'Flask 3', 'Flask 4', 'Flask 5']);
+    assert.equal(plan[0][2], false);
+    assert.equal(new Set(plan.map(p => p[1])).size, 5);
+    assert.ok(plan.slice(1).every(p => p[2] === true));
+  }
+  assert.equal(flaskPlan({ attr: 'dex', family: 'Bow', form: 'attack_hit' })[3][1], 'Silver Flask');
+  assert.equal(flaskPlan({ attr: 'int', family: 'caster', form: 'spell_hit' })[4][1], 'Diamond Flask');
+  assert.match(flaskText('Granite Flask', true), /Implicits: 1\n\{crafted\}Used when Charges reach full$/);
+  assert.doesNotMatch(flaskText('Divine Life Flask', false), /Used when/);
 });
 
 test('support cap keeps the supports sharing most tags with the skill', async () => {

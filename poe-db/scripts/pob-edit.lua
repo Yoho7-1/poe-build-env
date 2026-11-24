@@ -279,7 +279,20 @@ function M.jewels(list, report)
     itemsTab:PopulateSlots()
     local entry = { node = change.node, item_id = item.id, name = item.name, base = item.baseName, cluster = item.clusterJewel ~= nil, replaced_item_id = (replaced and replaced ~= 0) and replaced or nil }
     if change.allocate then
-      local sub = { allocate = change.allocate }
+      -- Names resolve inside this socket's cluster subgraph first: the main tree also holds same-named hidden
+      -- template nodes of cluster notables, which would make a plain name lookup ambiguous.
+      local graph
+      for _, sg in pairs(spec.subGraphs or {}) do if sg.parentSocket and sg.parentSocket.id == change.node then graph = sg end end
+      local refs = {}
+      for k, ref in ipairs(change.allocate) do
+        local id = ref
+        if type(ref) == 'string' and graph then
+          for _, n in ipairs(graph.nodes) do if (n.dn or n.name) == ref then id = n.id end end
+          check(type(id) == 'number', 'jewels[%d].allocate[%d]: no node "%s" in the cluster of socket %d', index, k, ref, change.node)
+        end
+        refs[k] = id
+      end
+      local sub = { allocate = refs }
       local subReport = {}
       M.tree(sub, subReport)
       entry.allocated = subReport.tree.allocated

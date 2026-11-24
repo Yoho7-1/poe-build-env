@@ -91,6 +91,25 @@ export function kitPlan({ attr, family, form, needAttrs = [], manaRegen = false 
   return spec;
 }
 
+// Pure: flask plan [slot, base, active]. Utility flasks carry the Instilling enchant "Used when Charges reach full"
+// (the corpus norm for automatic flasks: 436 of 437 "Used when" lines) and are switched on in PoB (replace_items
+// active); the life flask stays a reactive key, off. Bases follow corpus frequency: Quicksilver, a defence flask by
+// armour attribute (Granite/Jade/Amethyst), Silver for attacks / Sulphur for spells / Basalt for minions, then
+// Diamond for hits or the next unused defence flask. Charge sustain is not modelled: PoB treats active flasks as up.
+export function flaskPlan({ attr, family, form }) {
+  const attack = !['caster', 'minion'].includes(family);
+  const hit = form !== 'damage_over_time' && form !== 'minion';
+  const defence = { str: 'Granite Flask', dex: 'Jade Flask', int: 'Amethyst Flask' }[attr] ?? 'Granite Flask';
+  const offence = attack ? 'Silver Flask' : form === 'minion' ? 'Basalt Flask' : 'Sulphur Flask';
+  const used = new Set(['Quicksilver Flask', defence, offence]);
+  const fifth = [hit ? 'Diamond Flask' : null, 'Basalt Flask', 'Granite Flask', 'Jade Flask'].find(b => b && !used.has(b));
+  return [['Flask 1', 'Divine Life Flask', false], ['Flask 2', 'Quicksilver Flask', true], ['Flask 3', defence, true], ['Flask 4', offence, true], ['Flask 5', fifth, true]];
+}
+export const AUTO_FLASK_ENCHANT = 'Used when Charges reach full';
+export function flaskText(base, auto) {
+  return ['Rarity: MAGIC', base, 'Quality: 20', ...(auto ? ['Implicits: 1', `{crafted}${AUTO_FLASK_ENCHANT}`] : ['Implicits: 0'])].join('\n');
+}
+
 const kitCache = new Map();
 export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaRegen = false }) {
   const key = JSON.stringify({ attr, family, damageTypes, form, needAttrs, manaRegen });
@@ -117,6 +136,11 @@ export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaR
     replace_items.push({ slot, text: r.text });
     bases.push(`${slot}: ${name} (${mods.map(m => m.type).join(', ')})`);
   }
+  for (const [slot, base, auto] of flaskPlan({ attr, family, form })) {
+    replace_items.push({ slot, text: flaskText(base, auto), active: auto });
+    bases.push(`${slot}: ${base}${auto ? ' (auto: ' + AUTO_FLASK_ENCHANT + ')' : ' (reactive key)'}`);
+  }
+  notes.push('Flasks: utility flasks automatic (Used when Charges reach full) and active in PoB; charge sustain not modelled.');
   const out = { replace_items, notes, bases };
   kitCache.set(key, out);
   return out;

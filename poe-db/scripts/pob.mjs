@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import { dbRoot, readJson, atomicJson, hashFile } from './workspace.mjs';
 import { validateEditChanges } from './pob-changes.mjs';
+import { runPersistent, persistentEnabled } from './pob-pool.mjs';
 
 // Windows PowerShell 5.1 and PowerShell 7+ are both supported; pwsh is preferred when present.
 let resolvedHost;
@@ -144,7 +145,9 @@ export function validateVariants(changes) {
   if (changes.variant_keys != null && !changes.variants && !changes.node_power) throw new Error('variant_keys only with variants or node_power');
 }
 
-export function runPob({ input = null, scenario = 'imported', changes = {}, saveXml = null, full = false, timeout = 120000, migrate = false, newBuild = null, noCache = false } = {}) {
+// persistent: run on a pooled long-lived PoB host (pob-pool.mjs; default unless POB_PERSISTENT=0) or in one PoB
+// process per calculation. Both paths give the same result and share the calculation contract and cache.
+export function runPob({ input = null, scenario = 'imported', changes = {}, saveXml = null, full = false, timeout = 120000, migrate = false, newBuild = null, noCache = false, persistent = persistentEnabled() } = {}) {
   if (process.platform !== 'win32') throw new Error('This pinned runtime adapter currently supports Windows x64 only');
   if (!scenarios[scenario]) throw new Error(`Unknown scenario: ${scenario}`);
   const allowed = ['config','custom_mods','enemy_mods','add_support','replace_items','gem_levels','selection','sets','tree','jewels','skills','remove_nodes','variants','node_power','variant_keys'];
@@ -169,7 +172,11 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
   }
   for(const key of ['gem_levels','replace_items'])if(changes[key]!=null&&!Array.isArray(changes[key]))throw new Error(`${key} must be an array`);
   for(const g of changes.gem_levels??[])if(!Number.isInteger(g.group)||g.group<1||!Number.isInteger(g.gem)||g.gem<1||g.level!=null&&(!Number.isInteger(g.level)||g.level<1||g.level>40)||g.quality!=null&&(!Number.isInteger(g.quality)||g.quality<0||g.quality>1000))throw new Error('Invalid gem level/quality change');
-  for(const item of changes.replace_items??[])if(typeof item.slot!=='string'||typeof item.text!=='string'||!item.text.trim())throw new Error('Item change requires slot and item text');
+  for(const item of changes.replace_items??[]){
+    if(typeof item.slot!=='string'||typeof item.text!=='string'||!item.text.trim())throw new Error('Item change requires slot and item text');
+    if(item.active!=null&&typeof item.active!=='boolean')throw new Error('replace_items.active must be boolean (flask slots)');
+    for(const k of Object.keys(item))if(!['slot','text','active'].includes(k))throw new Error(`Unsupported replace_items field: ${k}`);
+  }
   if(changes.remove_nodes!=null){
     // PoB node comparison (misc calculator removeNodes): stats of allocated nodes left out, tree unchanged.
     if(!Array.isArray(changes.remove_nodes)||!changes.remove_nodes.length||changes.remove_nodes.length>100)throw new Error('remove_nodes must list 1-100 entries');
@@ -191,6 +198,7 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
   const installed=verifyEngine();
   const contract=createHash('sha256').update(JSON.stringify({source:installed.source_fingerprint,
     worker:hashFile(path.join(dbRoot,'scripts/pob-worker.lua')),host:hashFile(path.join(dbRoot,'scripts/pob-host.ps1')),
+    host_server:hashFile(path.join(dbRoot,'scripts/pob-host-server.ps1')),pool:hashFile(path.join(dbRoot,'scripts/pob-pool.mjs')),
     adapter:hashFile(path.join(dbRoot,'scripts/pob.mjs')),runtime:hashFile(path.join(dbRoot,'scripts/pob-runtime.lua')),edit:hashFile(path.join(dbRoot,'scripts/pob-edit.lua')),
     changes:hashFile(path.join(dbRoot,'scripts/pob-changes.mjs'))})).digest('hex');
   const cacheId = createHash('sha256').update(JSON.stringify({ input:xml, newBuild, scenario, definition:scenarios[scenario], changes, migrate,contract })).digest('hex');
@@ -225,8 +233,11 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
     fs.copyFileSync(path.join(dbRoot,'scripts/pob-runtime.lua'),path.join(job,'runtime.lua'));
     fs.copyFileSync(path.join(dbRoot,'scripts/pob-edit.lua'),path.join(job,'edit.lua'));
     const host = resolvePowerShellHost();
-    const child = spawnSync(host.file, hostArgs(path.join(dbRoot,'vendor/pob/runtime'),path.join(job,'launch.lua')),
+    const singleShot = () => spawnSync(host.file, hostArgs(path.join(dbRoot,'vendor/pob/runtime'),path.join(job,'launch.lua')),
       { cwd: directory, encoding: 'utf8', timeout, maxBuffer: 16 * 1024 * 1024, windowsHide: true, env: { ...process.env, CI: 'true' } });
+    const child = persistent
+      ? runPersistent({ contract, powershell: host.file, workerFile: path.join(dbRoot,'scripts/pob-worker.lua'), requestPath: `${jobName}/request.json`, timeout, legacy: singleShot })
+      : singleShot();
     if (child.error || child.status !== 0 || !fs.existsSync(path.join(job,'result.json'))) {
       const combined = `${child.stderr ?? ''}\n${child.stdout ?? ''}`;
       const changeError = /Change error: [^\r\n]*/.exec(combined);

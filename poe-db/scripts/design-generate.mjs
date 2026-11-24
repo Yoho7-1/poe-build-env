@@ -17,6 +17,7 @@ import { validatePrototype, specFromInspect } from './mechanic-validate.mjs';
 import { foundationReport, chooseNormGroup } from './corpus-norms.mjs';
 import { loadTree, rootsFor, distances, connectOne } from './tree-graph.mjs';
 import { itemKit, KIT_TIER } from './design-kit.mjs';
+import { clusterCandidates, clusterText, outerClusterSockets } from './design-cluster.mjs';
 import { pobGems, supportCompatible, readBuild } from './analysis-candidates.mjs';
 import { seedsFor } from './design-seed.mjs';
 import { buttonEstimate, buildCard } from './build-card.mjs';
@@ -226,6 +227,48 @@ export function masteryReserveFor(row, gem, cards = null, minGroup = 8) {
     return Math.max(0, Math.min(10, Math.round(norms.masteries?.count?.median ?? 0)));
   } catch { return 0; }
 }
+// WP5b item 5: cluster jewels. Reserve = CLUSTER_RESERVE points when at least half of the corpus norm group uses
+// cluster jewels (0 without norms). Candidates: the best-valued enchant + legal notables per size from the PoB data
+// (design-cluster.mjs), each in the nearest reachable outer sockets; PoB probes them and the best positive one is kept.
+export const CLUSTER_RESERVE = 12;
+export function clusterReserveFor(row, gem, cards = null, minGroup = 8) {
+  try {
+    const t = new Set(gem?.types ?? []);
+    const family = t.has('Minion') || t.has('CreatesMinion') ? 'minion' : t.has('Attack') ? 'attack' : 'spell';
+    const { norms } = chooseNormGroup({ cards: cards ?? undefined, ascendancy: row.ascendancy, family, minGroup });
+    return (norms.clusters?.uses ?? 0) >= 0.5 ? CLUSTER_RESERVE : 0;
+  } catch { return 0; }
+}
+let notableStatsMap = null;
+const notableStats = (t, name) => {
+  if (!notableStatsMap) notableStatsMap = new Map([...t.nodes.values()].filter(n => ['notable', 'keystone'].includes(n.type)).map(n => [n.name, n.stats]));
+  return notableStatsMap.get(name) ?? null;
+};
+export const withCluster = (changes, c) => ({ ...changes, tree: { ...changes.tree, allocate: [...changes.tree.allocate, c.socket] },
+  jewels: [...(changes.jewels ?? []), { node: c.socket, text: clusterText(c), allocate: c.notables.map(n => n.name) }] });
+function probeClusters({ file, base, t, row, axes, budget, concurrency, reserve, sockets = 2 }) {
+  if (reserve <= 0) return { chosen: null, probes: 0, reason: 'no cluster reserve (corpus norm below 50% or no norms)' };
+  const cls = t.classes.find(c => c.name === row.class);
+  const allocated = new Set(base.tree.allocate.map(Number).filter(id => !t.nodes.get(id)?.ascendancy));
+  allocated.add(cls.start);
+  const cands = clusterCandidates({ valueOf: s => B.nodeValue(s, axes, { family: row.family }).value, notableStats: n => notableStats(t, n) });
+  const near = outerClusterSockets(t).map(id => ({ id, path: connectOne(t, cls, allocated, id, null) })).filter(s => s.path)
+    .sort((a, b) => a.path.cost - b.path.cost || a.id - b.id).slice(0, sockets);
+  const variants = cands.flatMap(c => near.filter(s => s.path.cost + c.points <= reserve).map(s => ({ ...c, socket: s.id, socket_cost: s.path.cost })));
+  if (!variants.length) return { chosen: null, probes: 0, reason: `no outer cluster socket within ${reserve} points` };
+  const res = batch(file, [base, ...variants.map(v => withCluster(base, v))], budget, concurrency);
+  if (!res.get) return { chosen: null, probes: 0, reason: 'budget' };
+  const r0 = res.get(base), d0 = bestDps(r0), e0 = r0?.output?.TotalEHP ?? 0;
+  const rows = variants.map(v => {
+    const r = res.get(withCluster(base, v));
+    if (!r || r.error) return null;
+    const dg = d0 > 0 ? (bestDps(r) / d0 - 1) * 100 : 0, eg = e0 > 0 ? ((r.output?.TotalEHP ?? 0) / e0 - 1) * 100 : 0;
+    return { ...v, dps_gain_pct: round(dg, 1), ehp_gain_pct: round(eg, 1), gain: round(dg + eg, 2) };
+  }).filter(Boolean).sort((a, b) => b.gain - a.gain || a.socket_cost - b.socket_cost);
+  const brief = v => `${v.size} ${v.name} @${v.socket} [${v.notables.map(n => n.name).join(', ')}] (${v.gain})`;
+  const best = rows[0]?.gain > 0 ? rows[0] : null;
+  return { chosen: best, probes: rows.length, reserve, top: rows.slice(0, 6).map(brief), reason: best ? null : 'no candidate improved DPS + EHP' };
+}
 const withMasteries = (changes, chosen) => chosen.length ? { ...changes, tree: { ...changes.tree, masteries: chosen.map(c => ({ node: c.node, effect: c.effect })) } } : changes;
 
 // Support probes: every compatible support added alone; returns sorted gains.
@@ -351,7 +394,7 @@ function blueprintOf({ row, request, proto, sup, util, finalGroups, m }) {
       replaceable: [...proto.kit.bases, ...[util.offence?.name, util.defence?.name].filter(Boolean)]
     },
     success_criteria: B.successCriteria(request),
-    assumptions: [...request.assumptions, `generic rare kit (tier ${KIT_TIER} mods from each base legal pool, ilvl 84, mid rolls), gems 20/20, no uniques/jewels/flasks/masteries`, 'tree: greedy notable allocation by axis value per point, not optimised (WP6)', 'core/implementation split is the generator plan, not an ablation result (run analyze ablate on the XML)'],
+    assumptions: [...request.assumptions, `generic rare kit (tier ${KIT_TIER} mods from each base legal pool, ilvl 84, mid rolls), gems 20/20, no uniques; 5 kit flasks (utility automatic: Used when Charges reach full, charge sustain not modelled); masteries and one cluster jewel (PoB data enchant + legal notables) only where the corpus norm uses them and PoB shows a gain`, 'tree: greedy notable allocation by axis value per point, not optimised (WP6)', 'core/implementation split is the generator plan, not an ablation result (run analyze ablate on the XML)'],
     not_modelled: ['clear speed (clear_score is a documented heuristic)', ...(m.explosions.length ? ['on-kill explosion damage is reported by PoB but not part of DPS'] : []), 'boss life per boss (TTK uses enemy database estimates)', 'prices of rare items (no offline rare prices)'],
     groups: finalGroups.map(gr => ({ label: gr.label, slot: gr.slot, gems: gr.gems.map(x => x.name) }))
   });
@@ -411,11 +454,12 @@ function repairPrototype({ file, row, request, t, gems, budget, concurrency, sta
     // Second step: still unmet -> regrow the tree with an attribute axis for the missing attributes.
     const still = unmetAttrs(r2);
     if (still.length && budget.left() > 0) {
-      const p3 = prototypeChanges(row, request, t, gems, { needAttrs: need, treeAttrs: still, reserve: (finalChanges.tree?.masteries ?? []).length });
-      // Keep chosen masteries whose tree group is still allocated in the regrown tree.
+      const cl = proto.cluster?.chosen;
+      const p3 = prototypeChanges(row, request, t, gems, { needAttrs: need, treeAttrs: still, reserve: (finalChanges.tree?.masteries ?? []).length + (cl ? CLUSTER_RESERVE : 0) });
+      // Keep chosen masteries whose tree group is still allocated in the regrown tree, and the cluster socket.
       const groups = new Set(p3.changes.tree.allocate.map(id => t.nodes.get(Number(id))?.group));
       const keep = (finalChanges.tree?.masteries ?? []).filter(m => groups.has(t.nodes.get(Number(m.node))?.group));
-      const c3 = { ...finalChanges, tree: { ...p3.changes.tree, ...(keep.length ? { masteries: keep } : {}) } };
+      const c3 = { ...finalChanges, tree: { ...p3.changes.tree, allocate: [...p3.changes.tree.allocate, ...(cl ? [cl.socket] : [])], ...(keep.length ? { masteries: keep } : {}) } };
       const r3 = run1(c3);
       steps.push({ step: 'attribute_tree', need: still, resolved: !unmetAttrs(r3).length, dps_after: round(bestDps(r3)) });
       finalChanges = c3; final = r3; proto.tree = p3.tree;
@@ -426,7 +470,13 @@ function repairPrototype({ file, row, request, t, gems, budget, concurrency, sta
 
 function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency, links, masteryReserve = 0 }) {
   const file = classBase(dir, row.class, row.ascendancy, request.level);
-  const proto = prototypeChanges(row, request, t, gems, { reserve: masteryReserve });
+  const clusterReserve = clusterReserveFor(row, gems.get(row.gem));
+  let proto = prototypeChanges(row, request, t, gems, { reserve: masteryReserve + clusterReserve });
+  // WP5b item 5: a cluster jewel on the reserved points; without a gain the tree is regrown without the reserve.
+  const cluster = probeClusters({ file, base: proto.changes, t, row, axes: proto.tree.axes, budget, concurrency, reserve: clusterReserve });
+  if (cluster.chosen) proto.changes = withCluster(proto.changes, cluster.chosen);
+  else if (clusterReserve) proto = prototypeChanges(row, request, t, gems, { reserve: masteryReserve });
+  proto.cluster = cluster;
   const sup = probeSupports({ file, base: proto.changes, g: proto.gem, request, gems, budget, concurrency, links });
   const withSup = { ...proto.changes, skills: { add_groups: [{ ...proto.changes.skills.add_groups[0], gems: [gemSpec(proto.gem), ...sup.chosen.map(n => gemSpec([...gems.values()].find(x => x.name === n && x.is_support)))] }] } };
   const needCurse = proto.tree.enablers.includes('curse');
@@ -462,6 +512,8 @@ function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency,
   const done = finishPrototype({ id: row.id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups });
   const blueprint = blueprintOf({ row, request, proto, sup, util, finalGroups, m: done.metrics });
   return { ...done, blueprint, tree: { main_notables: proto.tree.main_picks.map(p => p.name), ascendancy: proto.tree.ascendancy_picks.map(p => p.name), unspent: proto.tree.unspent, enablers: proto.tree.enablers,
+      cluster: proto.cluster?.chosen ? `${proto.cluster.chosen.size} ${proto.cluster.chosen.name} in socket ${proto.cluster.chosen.socket}: ${proto.cluster.chosen.notables.map(n => n.name).join(', ')}` : null,
+      cluster_probe: proto.cluster ? { probes: proto.cluster.probes, reserve: proto.cluster.reserve ?? 0, reason: proto.cluster.reason, top: proto.cluster.top } : null,
       masteries: proto.masteries?.chosen?.map(m => `${m.name}: ${m.text}`) ?? [], mastery_probe: proto.masteries ? { probes: proto.masteries.probes, reserve: proto.masteries.reserve, reason: proto.masteries.reason, top: proto.masteries.top } : null },
     supports: sup, utility: { ...util, dropped_for_mana: dropped.filter(Boolean) }, repairs: repairs.steps, kit_notes: proto.kit.notes };
 }

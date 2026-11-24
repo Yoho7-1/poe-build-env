@@ -5,14 +5,18 @@ arg = {}
 local json = require('dkjson')
 local function read(file) local f=assert(io.open(file,'rb')); local s=f:read('*a'); f:close(); return s end
 local function write(file,text) local f=assert(io.open(file,'wb')); f:write(text); f:close() end
-local request = assert(json.decode(read(AGENT_REQUEST)))
 -- Network and updates are deliberately unavailable in this local calculator.
-local oldRead = io.read
-io.read = function() error('Interactive PoB prompt: ' .. tostring(__mainObject__ and __mainObject__.promptMsg)) end
-dofile('HeadlessWrapper.lua')
-dofile(request.runtime_helpers)
-io.read = oldRead
-local edit = dofile(request.edit_helpers)
+local function loadEngine(runtimeHelpers)
+  local oldRead = io.read
+  io.read = function() error('Interactive PoB prompt: ' .. tostring(__mainObject__ and __mainObject__.promptMsg)) end
+  dofile('HeadlessWrapper.lua')
+  dofile(runtimeHelpers)
+  io.read = oldRead
+end
+-- One calculation: import, edits, PoB calculation, result.json (+ result.xml). Runs once per process in the
+-- single-shot mode and once per request in the persistent host (pob-host-server.ps1), always on the state PoB has
+-- right after HeadlessWrapper start-up (see AGENT_RESET).
+local function calculate(request, edit)
 if request.xml then
   loadBuildFromXML(read(request.xml), 'Local agent calculation')
 elseif request.new_build then
@@ -121,6 +125,13 @@ if request.replace_items then
     assert(build.itemsTab:IsItemValidForSlot(item,change.slot), 'Invalid item for requested slot')
     build.itemsTab:AddDisplayItem(true)
     slot:SetSelItemId(item.id)
+    if change.active ~= nil then
+      -- Flask slots: PoB applies a flask only while its slot is active (the GUI's activate checkbox).
+      local toggle = slot.controls.activate
+      assert(toggle, 'Change error: replace_items.active applies to flask slots only, not ' .. change.slot)
+      toggle.state = change.active
+      toggle.changeFunc(change.active)
+    end
     build.itemsTab:PopulateSlots()
   end
 end
@@ -326,7 +337,12 @@ if removedNodes then result.removed_nodes = { method = 'pob_misc_calculator_remo
 if variantResults then result.variants = variantResults end
 result.unparsed_item_modifiers = {}
 result.equipped_items = {}
-for slotName,slot in pairs(build.itemsTab.slots) do
+-- Slots in name order: pairs() order depends on the Lua string hash seed, i.e. differed between processes.
+local slotNames = {}
+for slotName in pairs(build.itemsTab.slots) do table.insert(slotNames, slotName) end
+table.sort(slotNames)
+for _,slotName in ipairs(slotNames) do
+  local slot = build.itemsTab.slots[slotName]
   if slot.selItemId and slot.selItemId ~= 0 and not slot.inactive then
     local item = build.itemsTab.items[slot.selItemId]
     if item then
@@ -352,3 +368,37 @@ if request.custom_mods then
 end
 write(request.result,json.encode(result))
 if request.save_xml then write(request.save_xml,build:SaveDB('code')) end
+end
+
+if not AGENT_SERVE_DIR then
+  -- Single-shot mode (pob-host.ps1): one process per calculation.
+  local request = assert(json.decode(read(AGENT_REQUEST)))
+  loadEngine(request.runtime_helpers)
+  calculate(request, dofile(request.edit_helpers))
+else
+  -- Persistent mode (pob-host-server.ps1): PoB and its data load once; the host then calls AGENT_SERVE per request
+  -- and AGENT_RESET after each response. Helpers are this host's copies in AGENT_SERVE_DIR.
+  loadEngine(AGENT_SERVE_DIR .. '/runtime.lua')
+  function AGENT_SERVE(requestFile)
+    local request = assert(json.decode(read(requestFile)))
+    calculate(request, dofile(AGENT_SERVE_DIR .. '/edit.lua'))
+  end
+  -- Return to the state right after HeadlessWrapper start-up, so a request never sees the previous build:
+  -- a freshly loaded Build module (the mode object is a singleton that Init only partly re-initialises),
+  -- initialised exactly as at start-up (main:Init -> SetMode('BUILD', false, 'Unnamed build'), then one frame),
+  -- with PoB's global calculation cache, popups and prompt cleared.
+  function AGENT_RESET()
+    local main = __mainObject__.main
+    if main.mode and main.modes[main.mode] and main.modes[main.mode].Shutdown then main:CallMode('Shutdown') end
+    main.mode, main.newMode, main.newModeArgs, main.newModeChangeToTree = nil, nil, nil, nil
+    wipeTable(main.popups)
+    __mainObject__.promptMsg = nil
+    wipeGlobalCache()
+    main.modes['BUILD'] = LoadModule('Modules/Build')
+    build = main.modes['BUILD']
+    main:SetMode('BUILD', false, 'Unnamed build')
+    runCallback('OnFrame')
+    assert(not __mainObject__.promptMsg, 'PoB reset failed: ' .. tostring(__mainObject__.promptMsg))
+    assert(main.mode == 'BUILD' and build == main.modes['BUILD'], 'PoB reset failed: build mode not active')
+  end
+end

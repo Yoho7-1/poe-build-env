@@ -724,7 +724,9 @@ export function designCommand(rest) {
     let request;
     if (options.request) request = B.validateRequest(readJson(path.resolve(options.request)));
     else {
-      const prof = options.profile ?? 'builds/main/build.json';
+      // The system is not tied to one build: the request comes from an explicit profile or request file.
+      if (!options.profile) throw new Error(`design ${op} needs --profile <build.json | build id> or --request <req.json>`);
+      const prof = options.profile;
       const file = path.resolve(prof);
       const build = fs.existsSync(file) ? readJson(file) : loadBuild(prof);
       request = B.requestFromProfile(build, { level: options.level ? int(options.level, null, 'level') : null, mapTier: options['map-tier'] ? int(options['map-tier'], null, 'map-tier') : null });
@@ -757,7 +759,7 @@ export function designCommand(rest) {
 export const designHelp = {
   ...optimizeHelp,
   ...reverseHelp,
-  'design request [--profile builds/main/build.json | --request req.json] [--ascendancy A,B] [--themes t1,t2] [--level N] [--map-tier N]': 'Build Request Mode: structured request from the profile (unknown = null, defaults listed in assumptions), blueprint schema id and success criteria',
+  'design request [--profile <build.json> | --request req.json] [--ascendancy A,B] [--themes t1,t2] [--level N] [--map-tier N]': 'Build Request Mode: structured request from the profile (unknown = null, defaults listed in assumptions), blueprint schema id and success criteria',
   'design candidates [same request options] [--limit 30]': 'Main-skill candidates from the knowledge DB x requested ascendancies: theme/axis/ascendancy-synergy score and excluded skills with reasons (no engine)',
   'design generate [same request options] [--limit 6] [--screen 24] [--budget-calcs 1000] [--links 6] [--gems id,id] [--seed both|only|none] [--no-novelty] [--no-lab] [--out dir]': 'Candidates -> (scratch: greedy axis tree + generic rare kit; corpus seed: tree/items/jewels/flasks/masteries of the closest corpus build of the ascendancy with only the main group replaced; --seed both by default) -> structural novelty vs the corpus as an extra Pareto axis (--no-novelty off) -> PoB screen -> PoB-probed supports/auras/curse enabler -> T-tier boss/rare encounters -> hard filters -> Pareto front; Blueprints, XML and report in research/lab/designs/<run>/, rejected prototypes as lab failures',
   'design verify --example <id> [--prototype] [--limit N] [--screen N] [--budget-calcs N]': 'Generator check: synthetic request from a reference example (class + main-skill structure, name withheld); reports the rank of the reference skill and, with --prototype, whether it reaches the prototype stage',

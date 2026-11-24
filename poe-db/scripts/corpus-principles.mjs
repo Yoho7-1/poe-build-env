@@ -1,5 +1,5 @@
 // WP7: principle candidates from the corpus (master prompt 3A.4). The tier model counts how often a component carries
-// builds overall; a principle is conditional: "component K carries builds in context C (attack builds, cold DoT, life
+// builds overall; a principle is conditional: "component K carries builds in context C (attack builds, DoT builds, life
 // pool, mana by leech...) and rarely outside it". Local statistics over stored corpus ablations x BuildCard features;
 // every candidate keeps its supporting builds and counterexamples. Candidates become lab hypotheses (verification
 // 'hypothesis'); status only moves through lab gates after a test (ablation on a held-out build or transfer).

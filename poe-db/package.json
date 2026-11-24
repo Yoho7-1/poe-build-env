@@ -19,7 +19,11 @@
     "setup:pob": "node scripts/setup-pob.mjs",
     "mechanics:build": "node scripts/agent.mjs mechanic build",
     "examples:seed": "node scripts/seed-examples.mjs",
-    "report:environment": "node scripts/report-environment.mjs"
+    "report:environment": "node scripts/report-environment.mjs",
+    "references:collect": "node scripts/collect-references.mjs",
+    "craft:seed": "node scripts/seed-craft-plans.mjs",
+    "data:pack": "node scripts/data-pack.mjs",
+    "data:fetch-game": "node scripts/fetch-game-data.mjs"
   },
   "dependencies": {
     "fast-xml-parser": "5.12.1"

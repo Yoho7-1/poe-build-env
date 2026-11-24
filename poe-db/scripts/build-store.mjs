@@ -90,9 +90,15 @@ export function appendBuildEvent(id, expectedRevision, kind, event, directory = 
     return next;
   } finally { fs.closeSync(fd); fs.unlinkSync(lock); }
 }
+// Compact state for bootstrap and write acknowledgements: profile and design in full, long free text shortened,
+// only the latest decisions/calculations. `build show <id> --full` returns everything.
+const clip = (v, n) => typeof v === 'string' && v.length > n ? `${v.slice(0, n - 3)}...` : v;
 export function briefBuild(value) {
   return { id: value.id, revision: value.revision, game: value.game, patch: value.patch, mode: value.mode, phase: value.phase,
-    profile: value.profile, design: value.design, progression: Object.fromEntries(Object.entries(value.progression).map(([key, stage]) => [key, { status: stage.status, pob: stage.pob, unresolved: stage.unresolved }])),
-    decisions: value.decisions.slice(-5), decisions_total: value.decisions.length, open_questions: value.open_questions,
-    hypotheses: value.hypotheses, calculations: value.calculations.slice(-2), calculations_total: value.calculations.length };
+    profile: value.profile, design: value.design,
+    progression: Object.fromEntries(Object.entries(value.progression).map(([key, stage]) => [key, { status: stage.status, pob: stage.pob, unresolved: stage.unresolved.map(x => clip(x, 100)) }])),
+    decisions: value.decisions.slice(-3).map(d => ({ id: d.id, statement: clip(d.statement, 140), status: d.status, at: d.at })), decisions_total: value.decisions.length,
+    open_questions: value.open_questions.map(q => clip(q, 140)), hypotheses: value.hypotheses.map(h => clip(typeof h === 'string' ? h : JSON.stringify(h), 140)),
+    calculations: value.calculations.slice(-2).map(c => ({ calculation_id: c.calculation_id?.slice(0, 16), scenario: c.scenario, result_file: c.result_file, at: c.at })), calculations_total: value.calculations.length,
+    detail: `agent.mjs build show ${value.id} --full` };
 }

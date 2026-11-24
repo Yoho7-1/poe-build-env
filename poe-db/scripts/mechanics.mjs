@@ -4,6 +4,10 @@ import { DatabaseSync } from 'node:sqlite';
 import { createHash, randomUUID } from 'node:crypto';
 import { dbRoot, projectRoot, readJson, hashFile, atomicJson } from './workspace.mjs';
 import { cards, sourceFiles } from '../mechanics/catalog.mjs';
+import { gaps, externalReferences } from '../mechanics/gaps.mjs';
+import { validatePrototype, specFromInspect } from './mechanic-validate.mjs';
+import { inspectBuild, runPob } from './pob.mjs';
+import { loadTree, readXmlSpec } from './tree-graph.mjs';
 
 export function buildMechanics() {
   const lock = readJson(path.join(dbRoot,'environment.lock.json'));
@@ -58,7 +62,7 @@ export function queryMechanics(command,text='',{limit=5,related=false}={}) {
       const rows=db.prepare('SELECT c.json FROM card_search JOIN cards c ON c.id=card_search.id WHERE card_search MATCH ? ORDER BY rank LIMIT ?').all(query,limit);
       return {...context,results:rows.map(r=>{const c=JSON.parse(r.json);return {id:c.id,title:c.title,summary:c.summary,confidence:c.confidence};})};
     }
-    if(command!=='get')throw new Error('Use mechanic list, search <text>, get <id>');
+    if(command!=='get')throw new Error('Use mechanic list, search <text>, get <id>, gaps [id], validate <file>');
     const found=db.prepare('SELECT json FROM cards WHERE id=?').get(text);
     if(!found)return {...context,count:0,results:[]};
     const card=JSON.parse(found.json);
@@ -66,4 +70,47 @@ export function queryMechanics(command,text='',{limit=5,related=false}={}) {
     const neighbors=related?card.relations.map(r=>{const c=JSON.parse(db.prepare('SELECT json FROM cards WHERE id=?').get(r.target).json);return {relation:r.type,id:c.id,title:c.title,summary:c.summary};}):undefined;
     return {...context,count:1,results:[{...card,sources,related:neighbors}]};
   } finally {db.close();}
+}
+
+// ---------- WP9: PoB gap registry and prototype validator ----------
+export function mechanicGaps(id = null, { status = null, axis = null, full = false } = {}) {
+  const statuses = ['not_modelled', 'partial', 'config_assumed'];
+  if (status && !statuses.includes(status)) throw new Error(`--status ${statuses.join('|')}`);
+  const sourceList = fs.existsSync(path.join(dbRoot, 'mechanics/sources.json')) ? readJson(path.join(dbRoot, 'mechanics/sources.json')) : [];
+  const resolveSource = s => externalReferences[s] ? { id: s, ...externalReferences[s] } : (({ id, kind, version, url }) => ({ id, kind, version, url }))(sourceList.find(x => x.id === s) ?? { id: s, kind: 'unknown' });
+  const context = { game: 'poe1', patch: '3.30', pob: '2.68.1', note: 'Mechanics outside PoB numbers. Approximate models print in analyze encounter|report under "approximations"; validator rules run with mechanic validate.' };
+  if (id) {
+    const gap = gaps.find(x => x.id === id);
+    if (!gap) throw new Error(`Unknown gap: ${id}. Known: ${gaps.map(x => x.id).join(', ')}`);
+    return { ...context, results: [{ ...gap, sources: gap.sources.map(resolveSource) }] };
+  }
+  const list = gaps.filter(x => (!status || x.pob_status === status) && (!axis || x.axes.includes(axis)));
+  const counts = Object.fromEntries(statuses.map(s => [s, gaps.filter(x => x.pob_status === s).length]));
+  return { ...context, total: gaps.length, counts, with_model: gaps.filter(x => x.model).map(x => `${x.id}:${x.model}`),
+    results: full ? list.map(x => ({ ...x, sources: x.sources.map(resolveSource) })) : list.map(({ id, title, pob_status, model, checks, axes }) => ({ id, title, pob_status, model, checks, axes })) };
+}
+
+export function mechanicValidate(file, { run = false, scenario = 'sustained', rules = null, out = null } = {}) {
+  if (!file) throw new Error('mechanic validate <prototype.json|build.xml>');
+  const abs = path.resolve(file);
+  let spec, basis;
+  if (/\.json$/i.test(abs)) { spec = readJson(abs); basis = 'prototype spec'; }
+  else {
+    const input = fs.readFileSync(abs);
+    const result = run ? runPob({ input, scenario, full: true }) : null;
+    spec = specFromInspect(inspectBuild(input), result);
+    // Keystones and ascendancy notables of the active tree spec (pinned GGG tree), when the XML is plain 3.30.
+    try {
+      const xml = readXmlSpec(abs), t = loadTree();
+      if (!xml.treeVersion || xml.treeVersion === '3_30') {
+        const nodes = xml.nodes.map(id => t.nodes.get(id)).filter(Boolean);
+        spec.keystones = nodes.filter(n => n.type === 'keystone').map(n => n.name);
+        spec.ascendancy_nodes = nodes.filter(n => n.ascendancy && n.type === 'notable').map(n => n.name);
+      }
+    } catch { /* share code or non-3.30 tree: keystone rules stay unknown */ }
+    basis = run ? `pob inspect + active tree spec + pob run (${scenario})` : 'pob inspect + active tree spec (add --run for explode sources, curse limit, recovery and ascendancy points from PoB)';
+  }
+  const report = { game: 'poe1', patch: '3.30', file: path.basename(abs), basis, spec, ...validatePrototype(spec, { only: rules }) };
+  if (out) atomicJson(path.resolve(out), report);
+  return report;
 }

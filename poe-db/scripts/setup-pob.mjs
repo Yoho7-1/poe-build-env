@@ -13,7 +13,7 @@ let previousFeatures=[];
 try{previousFeatures=readJson(featureFile).timeless_types??[];}catch{}
 const featureIndex=process.argv.indexOf('--timeless');
 const timeless=[...new Set([...previousFeatures,...(featureIndex>=0?(process.argv[featureIndex+1]??'').split(','):[])])];
-for(const type of timeless)if(!['GloriousVanity','LethalPride','BrutalRestraint','MilitantFaith','ElegantHubris'].includes(type))throw new Error('Unknown --timeless type; use the repository type names without spaces');
+for(const type of timeless)if(!['GloriousVanity','LethalPride','BrutalRestraint','MilitantFaith','ElegantHubris','HeroicTragedy'].includes(type))throw new Error('Unknown --timeless type; use the repository type names without spaces');
 await fs.mkdir(path.dirname(directory), { recursive: true });
 try { await fs.access(path.join(directory, '.git/HEAD')); }
 catch {

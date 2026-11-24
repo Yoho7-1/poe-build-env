@@ -14,6 +14,7 @@ import { validateCandidateFile, expandCandidates } from './analysis-upgrades.mjs
 import { analyzeUpgrades } from './analysis-run.mjs';
 import { runBatch, batchRunner, defaultConcurrency } from './analysis-engine.mjs';
 import { readMetric, metrics } from './analysis-core.mjs';
+import { planAblation, isSupportGem } from './analysis-ablation.mjs';
 
 const pobSrc = rel => path.join(dbRoot, 'vendor/pob/src', rel);
 const asArray = v => v == null ? [] : Array.isArray(v) ? v : [v];
@@ -386,14 +387,13 @@ export function generateCandidates({ kind, ...options }) {
 // ---------- engine-backed ----------
 // Removal probes: drop each enabled support once; the smallest loss of `metric` is the weakest support.
 export function weakestSupport({ file, scenario = 'sustained', group, base = {}, metric = 'dps', concurrency = defaultConcurrency }) {
+  // Removal probes are the support components of the ablation plan (one definition of 'remove a support').
   const build = readBuild(file);
-  const g = build.groups[group - 1];
-  const k = knowledge();
-  const supports = g.gems.filter(x => x.enabled && k.gems.get(x.skill_id)?.is_support);
-  if (!supports.length) return null;
+  const probes = planAblation({ build, isSupport: isSupportGem(pobGems()), kinds: ['supports'], base, supportGroup: group }).components
+    .map(c => ({ gem: c.target.gem, name: c.label, changes: c.changes }));
+  if (!probes.length) return null;
   const baseline = runPob({ input: fs.readFileSync(file), scenario, changes: base });
   const before = readMetric(baseline, metric);
-  const probes = supports.map(s => ({ gem: s.index, name: s.name, changes: { ...base, skills: { groups: [{ group: g.index, remove_gems: [s.index] }] } } }));
   const batch = runBatch({ file, scenario, changesList: probes.map(p => p.changes), concurrency });
   const run = batchRunner(batch);
   const rows = probes.map(p => { try { const v = readMetric(run(p.changes), metric); return { gem: p.gem, name: p.name, after: v, loss_pct: before > 0 && v != null ? (1 - v / before) * 100 : null }; } catch (e) { return { gem: p.gem, name: p.name, error: e.message }; } });

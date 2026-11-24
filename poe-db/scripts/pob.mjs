@@ -118,10 +118,36 @@ const selectedStats = ['FullDPS','CombinedDPS','CombinedAvg','TotalDPS','TotalDo
   'ManaCost','ManaPerSecondCost','ManaRegen','ManaRegenRecovery','ManaLeechGainRate','LifeRegen','LifeRegenRecovery','LifeLeechGainRate','Armour','Evasion','EffectiveMovementSpeedMod','FireResist','ColdResist','LightningResist','ChaosResist',
   'BlockChance','SpellBlockChance','SpellSuppressionChance','PhysicalMaximumHitTaken','FireMaximumHitTaken','ColdMaximumHitTaken','LightningMaximumHitTaken','ChaosMaximumHitTaken','TotalEHP'];
 
+// variants / node_power: PoB comparison calculations (misc calculator) in one process; see pob-worker.lua.
+const nodeRefOk = r => r && typeof r === 'object' && Number.isInteger(r.node) && r.node > 0 && Object.keys(r).every(k => ['node','with_dependents'].includes(k)) && (r.with_dependents == null || typeof r.with_dependents === 'boolean');
+export function validateVariants(changes) {
+  if (changes.variants != null) {
+    if (!Array.isArray(changes.variants) || !changes.variants.length || changes.variants.length > 500) throw new Error('variants must list 1-500 entries');
+    const ids = new Set();
+    for (const v of changes.variants) {
+      if (!v || typeof v !== 'object' || typeof v.id !== 'string' || !/^[\w:+.-]{1,120}$/.test(v.id)) throw new Error('variant needs id (1-120 of letters, digits, _:+.-)');
+      if (ids.has(v.id)) throw new Error(`Duplicate variant id ${v.id}`); ids.add(v.id);
+      for (const k of Object.keys(v)) if (!['id','remove_nodes','add_nodes'].includes(k)) throw new Error(`Unsupported variant field: ${k}`);
+      if (v.remove_nodes != null && (!Array.isArray(v.remove_nodes) || !v.remove_nodes.every(nodeRefOk))) throw new Error(`variant ${v.id}: remove_nodes entries need node and optional with_dependents`);
+      if (v.add_nodes != null && (!Array.isArray(v.add_nodes) || !v.add_nodes.every(n => Number.isInteger(n) && n > 0))) throw new Error(`variant ${v.id}: add_nodes must be node ids`);
+      if (!v.remove_nodes?.length && !v.add_nodes?.length) throw new Error(`variant ${v.id} changes nothing`);
+    }
+  }
+  if (changes.node_power != null) {
+    const p = changes.node_power;
+    if (!p || typeof p !== 'object' || !Number.isInteger(p.max_dist) || p.max_dist < 1 || p.max_dist > 12) throw new Error('node_power.max_dist must be 1-12');
+    for (const k of Object.keys(p)) if (!['max_dist','types','shard'].includes(k)) throw new Error(`Unsupported node_power field: ${k}`);
+    if (p.types != null && (!Array.isArray(p.types) || !p.types.every(t => ['Notable','Keystone','Normal'].includes(t)))) throw new Error('node_power.types: Notable|Keystone|Normal');
+    if (p.shard != null && !(Number.isInteger(p.shard.count) && p.shard.count >= 1 && Number.isInteger(p.shard.index) && p.shard.index >= 0 && p.shard.index < p.shard.count)) throw new Error('node_power.shard needs index < count');
+  }
+  if ((changes.variants || changes.node_power) && (!Array.isArray(changes.variant_keys) || !changes.variant_keys.length || changes.variant_keys.some(k => typeof k !== 'string' || !/^[A-Za-z][\w:]*$/.test(k)))) throw new Error('variant_keys must list the output keys to return');
+  if (changes.variant_keys != null && !changes.variants && !changes.node_power) throw new Error('variant_keys only with variants or node_power');
+}
+
 export function runPob({ input = null, scenario = 'imported', changes = {}, saveXml = null, full = false, timeout = 120000, migrate = false, newBuild = null, noCache = false } = {}) {
   if (process.platform !== 'win32') throw new Error('This pinned runtime adapter currently supports Windows x64 only');
   if (!scenarios[scenario]) throw new Error(`Unknown scenario: ${scenario}`);
-  const allowed = ['config','custom_mods','enemy_mods','add_support','replace_items','gem_levels','selection','sets','tree','jewels','skills'];
+  const allowed = ['config','custom_mods','enemy_mods','add_support','replace_items','gem_levels','selection','sets','tree','jewels','skills','remove_nodes','variants','node_power','variant_keys'];
   if(!changes||typeof changes!=='object'||Array.isArray(changes))throw new Error('Changes must be a JSON object');
   for (const key of Object.keys(changes)) if (!allowed.includes(key)) throw new Error(`Unsupported change: ${key}`);
   if(changes.selection!=null) {
@@ -144,6 +170,17 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
   for(const key of ['gem_levels','replace_items'])if(changes[key]!=null&&!Array.isArray(changes[key]))throw new Error(`${key} must be an array`);
   for(const g of changes.gem_levels??[])if(!Number.isInteger(g.group)||g.group<1||!Number.isInteger(g.gem)||g.gem<1||g.level!=null&&(!Number.isInteger(g.level)||g.level<1||g.level>40)||g.quality!=null&&(!Number.isInteger(g.quality)||g.quality<0||g.quality>1000))throw new Error('Invalid gem level/quality change');
   for(const item of changes.replace_items??[])if(typeof item.slot!=='string'||typeof item.text!=='string'||!item.text.trim())throw new Error('Item change requires slot and item text');
+  if(changes.remove_nodes!=null){
+    // PoB node comparison (misc calculator removeNodes): stats of allocated nodes left out, tree unchanged.
+    if(!Array.isArray(changes.remove_nodes)||!changes.remove_nodes.length||changes.remove_nodes.length>100)throw new Error('remove_nodes must list 1-100 entries');
+    for(const r of changes.remove_nodes){
+      if(!r||typeof r!=='object'||!Number.isInteger(r.node)||r.node<1)throw new Error('remove_nodes entry needs node (allocated node id)');
+      if(r.with_dependents!=null&&typeof r.with_dependents!=='boolean')throw new Error('remove_nodes.with_dependents must be boolean');
+      for(const k of Object.keys(r))if(!['node','with_dependents'].includes(k))throw new Error(`Unsupported remove_nodes field: ${k}`);
+    }
+    if(changes.tree||changes.jewels||changes.sets)throw new Error('remove_nodes is a calculation override; do not combine it with tree/jewels/sets edits');
+  }
+  validateVariants(changes);
   validateEditChanges(changes);
   if (newBuild && input != null) throw new Error('newBuild cannot be combined with an input build');
   const xml = input == null ? null : decodeBuild(input).xml;
@@ -209,7 +246,8 @@ export function runPob({ input = null, scenario = 'imported', changes = {}, save
       tree_version:result.tree_version,migration:result.migration,minion_output:result.minion_output,
       selection:result.selection,
       equipped_items:result.equipped_items,
-      applied_supports: result.applied_supports, explode_mods: result.explode_mods, skill_disabled_reason:result.skill_disabled_reason,
+      applied_supports: result.applied_supports, explode_mods: result.explode_mods, skill_disabled_reason:result.skill_disabled_reason, removed_nodes: result.removed_nodes, variants: result.variants, main_skill: result.main_skill,
+      conversion: result.conversion, active_skills: result.active_skills, card_export_error: result.card_export_error,
       allocated_points:result.allocated_points,budget:result.budget,engine_warnings:result.engine_warnings,
       class:result.class,ascendancy:result.ascendancy,edit_report:result.edit_report,
       tree_specs:result.tree_specs,item_sets:result.item_sets,skill_sets:result.skill_sets,

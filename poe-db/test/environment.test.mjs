@@ -8,7 +8,8 @@ import { spawnSync } from 'node:child_process';
 import { dbRoot, readJson } from '../scripts/workspace.mjs';
 import { compactQuery } from '../scripts/compact-query.mjs';
 import { queryCatalog } from '../scripts/query.mjs';
-import { createBuild, loadBuild, updateBuild, appendBuildEvent } from '../scripts/build-store.mjs';
+import { createBuild, loadBuild, updateBuild, appendBuildEvent, briefBuild } from '../scripts/build-store.mjs';
+import { bootstrap } from '../scripts/environment.mjs';
 import { queryMechanics } from '../scripts/mechanics.mjs';
 import { decodeBuild, inspectBuild, runPob, compareResults } from '../scripts/pob.mjs';
 
@@ -109,7 +110,32 @@ test('bootstrap is portable and contains no invented user choices',()=>{
   assert.equal(child.status,0,child.stderr);
   const result=JSON.parse(child.stdout);
   assert.equal(result.network_required,false);
-  assert.equal(result.build.profile.trade_mode,null);
-  assert.equal(result.build.design.main_skill,null);
-  assert.ok(JSON.stringify(result).length<6500);
+  // The local builds/main holds the user's own choices; "no invented choices" is checked on a fresh build.
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'poe-bootstrap-'));
+  try {
+    createBuild('fresh','Fresh',dir);
+    const fresh=bootstrap('fresh',{buildsDirectory:dir,ledger:path.join(dir,'none.jsonl')});
+    assert.equal(fresh.build.profile.trade_mode,null);
+    assert.equal(fresh.build.design.main_skill,null);
+    assert.equal(fresh.lab.records,0);
+    assert.ok(JSON.stringify(fresh).length<6500);
+  } finally { fs.rmSync(dir,{recursive:true,force:true}); }
+});
+
+test('build brief stays compact for a filled build', () => {
+  const long = 'x'.repeat(600);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'poe-brief-'));
+  try {
+    const value = structuredClone(createBuild('heavy', 'Heavy', dir));
+    value.decisions = Array.from({ length: 20 }, (_, i) => ({ id: `d${i}`, statement: long, reason: long, evidence: long, status: 'accepted', at: '2026-11-24T00:00:00Z' }));
+    value.calculations = Array.from({ length: 10 }, (_, i) => ({ calculation_id: 'a'.repeat(64), scenario: 'sustained', result_file: 'f.json', input_file: 'i.xml', input_sha256: 'b'.repeat(64), engine: { commit: 'c'.repeat(40) }, at: 'now' }));
+    value.hypotheses = Array.from({ length: 5 }, () => long);
+    value.open_questions = Array.from({ length: 4 }, () => long);
+    const brief = briefBuild(value);
+    assert.equal(brief.decisions.length, 3); assert.equal(brief.decisions_total, 20);
+    assert.equal(brief.decisions[0].reason, undefined);
+    assert.ok(brief.hypotheses.every(h => h.length <= 140));
+    assert.ok(JSON.stringify(brief).length < 3500, String(JSON.stringify(brief).length));
+    assert.match(brief.detail, /--full/);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });

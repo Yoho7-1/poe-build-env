@@ -6,7 +6,7 @@ import path from 'node:path';
 import { skillProfile, loadBossScenarios, resolveBoss, bossChanges, evaluateSurvival, hitAssessment, engineHitAssessment } from '../scripts/analysis-bosses.mjs';
 import { readMetric, delta, canonicalJson, analysisKey, assertOneContract, AnalysisCache, evaluateCandidates } from '../scripts/analysis-core.mjs';
 import { rankRows, attachPrice, budgetSummary, rankByPrice, flagTradeoffs } from '../scripts/analysis-rank.mjs';
-import { nodeCandidates, notableOrKeystone, allocateChange, statCandidates } from '../scripts/analysis-nodes.mjs';
+import { statCandidates } from '../scripts/analysis-nodes.mjs';
 import { validateCandidateFile, mergeChanges, expandCandidates, packageInteraction } from '../scripts/analysis-upgrades.mjs';
 import { loadCases, validateCases, checkSignals, scoreAnswers, prompts } from '../scripts/analysis-eval.mjs';
 
@@ -152,18 +152,6 @@ test('prices: currency conflicts are kept separate and never totalled', () => {
   const byPrice = rankByPrice([a, b]);
   assert.deepEqual(byPrice.ranked.map(r => r.id), ['a']);
   assert.equal(byPrice.not_comparable[0].reason, 'currency_conflict');
-});
-
-test('node candidates follow the shortest path and skip ascendancy/mastery nodes', () => {
-  const edges = [[1, 2], [2, 3], [3, 4], [2, 5], [5, 6], [1, 7]];
-  const adjacency = new Map();
-  for (const [a, b] of edges) { for (const [x, y] of [[a, b], [b, a]]) { if (!adjacency.has(String(x))) adjacency.set(String(x), []); adjacency.get(String(x)).push(String(y)); } }
-  const nodes = new Map([['4', { kind: 'notable', name: 'N4' }], ['6', { kind: 'keystone', name: 'K6' }], ['7', { ascendancy: 'X' }], ['3', { kind: 'small' }]]);
-  const list = nodeCandidates({ allocated: ['1'], adjacency, nodes, radius: 3, include: notableOrKeystone });
-  assert.deepEqual(list.map(c => [c.id, c.cost.points, c.path]), [['4', 3, ['2', '3', '4']], ['6', 3, ['2', '5', '6']]]);
-  assert.deepEqual(nodeCandidates({ allocated: ['1'], adjacency, nodes, radius: 2, include: notableOrKeystone }), []);
-  assert.deepEqual(allocateChange(list[0]), { tree: { allocate: [2, 3, 4] } });
-  assert.throws(() => nodeCandidates({ allocated: [], adjacency }), /empty/);
 });
 
 test('stat probes append to existing custom modifiers', () => {

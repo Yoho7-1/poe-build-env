@@ -17,7 +17,7 @@ import { validatePrototype, specFromInspect } from './mechanic-validate.mjs';
 import { foundationReport, chooseNormGroup } from './corpus-norms.mjs';
 import { loadTree, rootsFor, distances, connectOne } from './tree-graph.mjs';
 import { itemKit, KIT_TIER } from './design-kit.mjs';
-import { clusterCandidates, clusterText, outerClusterSockets } from './design-cluster.mjs';
+import { clusterCandidates, clusterText, outerClusterSockets, innerClusterSockets, nestedCandidates } from './design-cluster.mjs';
 import { pobGems, supportCompatible, readBuild } from './analysis-candidates.mjs';
 import { seedsFor } from './design-seed.mjs';
 import { buttonEstimate, buildCard } from './build-card.mjs';
@@ -173,7 +173,7 @@ function prototypeChanges(row, request, t, gems, { needAttrs = [], treeAttrs = [
   const tree = treeFor(t, g, row.class, row.ascendancy, request, points, treeAttrs, row.family);
   // Armour/jewellery attribute follows the class; gem attribute deficits are covered by the attribute repair.
   const attr = B.CLASS_ATTRIBUTES[row.class][0];
-  const kit = itemKit({ attr, family: row.family, damageTypes: row.damage_types, form: row.form, needAttrs, manaRegen: !!request.constraints?.no_mana_flask && row.form !== 'minion' });
+  const kit = itemKit({ attr, family: row.family, damageTypes: row.damage_types, form: row.form, needAttrs, manaRegen: !!request.constraints?.no_mana_flask && row.form !== 'minion', axes: tree.axes });
   const changes = { tree: { allocate: tree.allocate, ascendancy_points: 8 }, replace_items: kit.replace_items,
     skills: { add_groups: [{ label: 'Main', slot: 'Body Armour', main: true, gems: [gemSpec(g)] }] } };
   return { changes, tree, kit, gem: g };
@@ -244,8 +244,13 @@ const notableStats = (t, name) => {
   if (!notableStatsMap) notableStatsMap = new Map([...t.nodes.values()].filter(n => ['notable', 'keystone'].includes(n.type)).map(n => [n.name, n.stats]));
   return notableStatsMap.get(name) ?? null;
 };
+// c.nested (optional): a smaller cluster in the first inner socket c.inner_socket (a real tree node inside the outer
+// subgraph). The socket sits on the ring between the outer notables, so the path to them allocates it; pob-edit refuses
+// an explicit allocation of an allocated node. A layout where the path misses the socket fails in PoB ("not allocated")
+// and the probe drops that variant.
 export const withCluster = (changes, c) => ({ ...changes, tree: { ...changes.tree, allocate: [...changes.tree.allocate, c.socket] },
-  jewels: [...(changes.jewels ?? []), { node: c.socket, text: clusterText(c), allocate: c.notables.map(n => n.name) }] });
+  jewels: [...(changes.jewels ?? []), { node: c.socket, text: clusterText(c), allocate: c.notables.map(n => n.name) },
+    ...(c.nested ? [{ node: c.inner_socket, text: clusterText(c.nested), allocate: c.nested.notables.map(n => n.name) }] : [])] });
 function probeClusters({ file, base, t, row, axes, budget, concurrency, reserve, sockets = 2 }) {
   if (reserve <= 0) return { chosen: null, probes: 0, reason: 'no cluster reserve (corpus norm below 50% or no norms)' };
   const cls = t.classes.find(c => c.name === row.class);
@@ -254,7 +259,11 @@ function probeClusters({ file, base, t, row, axes, budget, concurrency, reserve,
   const cands = clusterCandidates({ valueOf: s => B.nodeValue(s, axes, { family: row.family }).value, notableStats: n => notableStats(t, n) });
   const near = outerClusterSockets(t).map(id => ({ id, path: connectOne(t, cls, allocated, id, null) })).filter(s => s.path)
     .sort((a, b) => a.path.cost - b.path.cost || a.id - b.id).slice(0, sockets);
-  const variants = cands.flatMap(c => near.filter(s => s.path.cost + c.points <= reserve).map(s => ({ ...c, socket: s.id, socket_cost: s.path.cost })));
+  const single = cands.flatMap(c => near.filter(s => s.path.cost + c.points <= reserve).map(s => ({ ...c, socket: s.id, socket_cost: s.path.cost })));
+  // Nested: the best outer cluster with sockets + the best smaller cluster in its first inner socket, when it fits.
+  const nested = nestedCandidates(cands).flatMap(c => near.filter(s => s.path.cost + c.points <= reserve).map(s => ({ ...c, socket: s.id, socket_cost: s.path.cost, inner_socket: innerClusterSockets(t, s.id, c.size)[0] })))
+    .filter(v => v.inner_socket != null);
+  const variants = [...single, ...nested];
   if (!variants.length) return { chosen: null, probes: 0, reason: `no outer cluster socket within ${reserve} points` };
   const res = batch(file, [base, ...variants.map(v => withCluster(base, v))], budget, concurrency);
   if (!res.get) return { chosen: null, probes: 0, reason: 'budget' };
@@ -265,7 +274,7 @@ function probeClusters({ file, base, t, row, axes, budget, concurrency, reserve,
     const dg = d0 > 0 ? (bestDps(r) / d0 - 1) * 100 : 0, eg = e0 > 0 ? ((r.output?.TotalEHP ?? 0) / e0 - 1) * 100 : 0;
     return { ...v, dps_gain_pct: round(dg, 1), ehp_gain_pct: round(eg, 1), gain: round(dg + eg, 2) };
   }).filter(Boolean).sort((a, b) => b.gain - a.gain || a.socket_cost - b.socket_cost);
-  const brief = v => `${v.size} ${v.name} @${v.socket} [${v.notables.map(n => n.name).join(', ')}] (${v.gain})`;
+  const brief = v => `${v.size} ${v.name} @${v.socket} [${v.notables.map(n => n.name).join(', ')}]${v.nested ? ` + ${v.nested.size} ${v.nested.name} @${v.inner_socket} [${v.nested.notables.map(n => n.name).join(', ')}]` : ''} (${v.gain})`;
   const best = rows[0]?.gain > 0 ? rows[0] : null;
   return { chosen: best, probes: rows.length, reserve, top: rows.slice(0, 6).map(brief), reason: best ? null : 'no candidate improved DPS + EHP' };
 }
@@ -394,7 +403,7 @@ function blueprintOf({ row, request, proto, sup, util, finalGroups, m }) {
       replaceable: [...proto.kit.bases, ...[util.offence?.name, util.defence?.name].filter(Boolean)]
     },
     success_criteria: B.successCriteria(request),
-    assumptions: [...request.assumptions, `generic rare kit (tier ${KIT_TIER} mods from each base legal pool, ilvl 84, mid rolls), gems 20/20, no uniques; 5 kit flasks (utility automatic: Used when Charges reach full, charge sustain not modelled); masteries and one cluster jewel (PoB data enchant + legal notables) only where the corpus norm uses them and PoB shows a gain`, 'tree: greedy notable allocation by axis value per point, not optimised (WP6)', 'core/implementation split is the generator plan, not an ablation result (run analyze ablate on the XML)'],
+    assumptions: [...request.assumptions, `generic rare kit (tier ${KIT_TIER} mods from each base legal pool, ilvl 84, mid rolls), gems 20/20, no uniques; eldritch implicits (Exarch + Eater, tier 4 of 6, no Presence variants) on helmet/body/gloves/boots chosen by axis value; 5 kit flasks (utility automatic: Used when Charges reach full, charge sustain not modelled); masteries and one cluster jewel (PoB data enchant + legal notables), optionally with a smaller cluster in its inner socket, only where the corpus norm uses them and PoB shows a gain`, 'tree: greedy notable allocation by axis value per point, not optimised (WP6)', 'core/implementation split is the generator plan, not an ablation result (run analyze ablate on the XML)'],
     not_modelled: ['clear speed (clear_score is a documented heuristic)', ...(m.explosions.length ? ['on-kill explosion damage is reported by PoB but not part of DPS'] : []), 'boss life per boss (TTK uses enemy database estimates)', 'prices of rare items (no offline rare prices)'],
     groups: finalGroups.map(gr => ({ label: gr.label, slot: gr.slot, gems: gr.gems.map(x => x.name) }))
   });
@@ -512,7 +521,7 @@ function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency,
   const done = finishPrototype({ id: row.id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups });
   const blueprint = blueprintOf({ row, request, proto, sup, util, finalGroups, m: done.metrics });
   return { ...done, blueprint, tree: { main_notables: proto.tree.main_picks.map(p => p.name), ascendancy: proto.tree.ascendancy_picks.map(p => p.name), unspent: proto.tree.unspent, enablers: proto.tree.enablers,
-      cluster: proto.cluster?.chosen ? `${proto.cluster.chosen.size} ${proto.cluster.chosen.name} in socket ${proto.cluster.chosen.socket}: ${proto.cluster.chosen.notables.map(n => n.name).join(', ')}` : null,
+      cluster: proto.cluster?.chosen ? `${proto.cluster.chosen.size} ${proto.cluster.chosen.name} in socket ${proto.cluster.chosen.socket}: ${proto.cluster.chosen.notables.map(n => n.name).join(', ')}${proto.cluster.chosen.nested ? `; ${proto.cluster.chosen.nested.size} ${proto.cluster.chosen.nested.name} in inner socket ${proto.cluster.chosen.inner_socket}: ${proto.cluster.chosen.nested.notables.map(n => n.name).join(', ')}` : ''}` : null,
       cluster_probe: proto.cluster ? { probes: proto.cluster.probes, reserve: proto.cluster.reserve ?? 0, reason: proto.cluster.reason, top: proto.cluster.top } : null,
       masteries: proto.masteries?.chosen?.map(m => `${m.name}: ${m.text}`) ?? [], mastery_probe: proto.masteries ? { probes: proto.masteries.probes, reserve: proto.masteries.reserve, reason: proto.masteries.reason, top: proto.masteries.top } : null },
     supports: sup, utility: { ...util, dropped_for_mana: dropped.filter(Boolean) }, repairs: repairs.steps, kit_notes: proto.kit.notes };

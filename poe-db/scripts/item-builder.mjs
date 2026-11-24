@@ -139,9 +139,24 @@ function chooseValues(mod, spec, policy, violations) {
   }), source: `${policy}_of_range` };
 }
 
+// Some RePoE translation groups pair a stat with a companion the mod never carries (local weapon mods:
+// local_physical_damage_+% + local_weapon_no_physical_damage). The companion is absent = 0, so the roll is
+// rendered against a copy of the mod that lists those companions with value 0.
+export function companionStats(cat, mod) {
+  const own = new Set(mod.stats.map(stat => stat.id)), extra = new Set();
+  for (const group of cat.translations) if (group.ids.some(id => own.has(id))) for (const id of group.ids) if (!own.has(id)) extra.add(id);
+  return [...extra];
+}
 function renderLines(cat, roll, violations) {
   try { return renderRoll(cat, roll); }
-  catch (error) { violations.push({ code: 'untranslated_stat', mod: roll.id, detail: error.message }); return []; }
+  catch (error) {
+    const mod = cat.mods.get(roll.id), extra = mod ? companionStats(cat, mod) : [];
+    if (extra.length) {
+      const padded = { ...mod, stats: [...mod.stats, ...extra.map(id => ({ id, min: 0, max: 0 }))] };
+      try { return renderRoll({ ...cat, mods: new Map([[mod.id, padded]]) }, { ...roll, values: [...roll.values, ...extra.map(() => 0)] }); } catch {}
+    }
+    violations.push({ code: 'untranslated_stat', mod: roll.id, detail: error.message }); return [];
+  }
 }
 
 // ---------- public builder
@@ -246,7 +261,9 @@ export function buildItem(input, cat = catalog()) {
   const pobInfluence = { Shaper: 'Shaper', Elder: 'Elder', Crusader: 'Crusader', Redeemer: 'Redeemer', Hunter: 'Hunter', Warlord: 'Warlord' };
   for (const influence of item.influences) lines.push(`${pobInfluence[influence]} Item`);
   const implicitText = implicitRolls.map(roll => ({ roll, lines: renderLines(cat, roll, violations) }));
-  lines.push(`Implicits: ${implicitText.reduce((sum, row) => sum + row.lines.length, 0)}`, ...implicitText.flatMap(row => row.lines));
+  // PoB line flags for eldritch implicits ({exarch}/{eater}); other implicits are plain lines.
+  const lineFlag = roll => ({ searing_exarch_implicit: '{exarch}', eater_of_worlds_implicit: '{eater}' })[cat.mods.get(roll.id)?.generation_type] ?? '';
+  lines.push(`Implicits: ${implicitText.reduce((sum, row) => sum + row.lines.length, 0)}`, ...implicitText.flatMap(row => row.lines.map(line => lineFlag(row.roll) + line)));
   const modText = entries.map((entry, index) => ({ entry, lines: renderLines(cat, item.mods[index], violations) }));
   // PoB shows prefixes before suffixes; order does not change the calculation.
   for (const row of [...modText.filter(r => r.entry.mod.generation_type === 'prefix'), ...modText.filter(r => r.entry.mod.generation_type !== 'prefix')])

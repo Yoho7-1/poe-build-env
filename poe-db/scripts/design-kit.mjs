@@ -3,6 +3,8 @@
 // min(KIT_TIER, available), mid rolls, one mod per mod group, at most 3 prefixes + 3 suffixes. Every item is
 // re-validated by buildItem. The kit is a common yardstick for comparing architectures, not a gear recommendation.
 import { buildItem, itemPool, catalog as itemCatalog } from './item-builder.mjs';
+import { nodeValue } from './design-blueprint.mjs';
+import { firstWeight } from '../experiments/craft-lab/engine.mjs';
 
 export const KIT_TIER = 3;
 export const ARMOUR = {
@@ -28,7 +30,7 @@ export const INTENTS = {
   dot_type: c => [exact(c.T + 'DamageOverTimeMultiplier'), /^GlobalDamageOverTimeMultiplier$/], dot_global: [/^GlobalDamageOverTimeMultiplier$/],
   minion_damage: [/^MinionDamageOnWeapon$/], minion_gem: [/^GlobalIncreaseMinionSpellSkillGemLevel$/], minion_speed: [/^MinionAttackSpeedAndCastSpeed$/], minion_crit: [/^MinionCriticalStrikeMultiplier$/], minion_life: [/^MinionLife$/],
   phys_pct: [/^LocalPhysicalDamagePercent$/, /^LocalIncreasedPhysicalDamagePercentAndAccuracyRating$/], phys_added: [/^LocalPhysicalDamage(TwoHand(ed)?)?$/],
-  type_added: c => [exact('Local' + c.T + 'Damage(TwoHand(ed)?)?')],
+  type_added: c => c.T === 'Physical' ? [] : [exact('Local' + c.T + 'Damage(TwoHand(ed)?)?')],
   attack_speed: [/^LocalIncreasedAttackSpeed$/], attack_crit: [/^LocalCriticalStrikeChance$/], mana_regen: [/^ManaRegeneration$/]
 };
 
@@ -39,6 +41,7 @@ export function pickMods(types, intents, ctx, tier = KIT_TIER) {
     const def = INTENTS[intent];
     if (!def) throw new Error(`Unknown kit intent ${intent}`);
     const pats = typeof def === 'function' ? def(ctx) : def;
+    if (!pats.length) continue; // intent does not apply to this context (e.g. type_added for Physical = phys_added)
     let hit = null;
     for (const p of pats) { hit = types.find(t => p.test(t.type) && used[t.side] < 3 && !t.groups.some(g => groups.has(g))); if (hit) break; }
     if (!hit) { missing.push(intent); continue; }
@@ -110,9 +113,55 @@ export function flaskText(base, auto) {
   return ['Rarity: MAGIC', base, 'Quality: 20', ...(auto ? ['Implicits: 1', `{crafted}${AUTO_FLASK_ENCHANT}`] : ['Implicits: 0'])].join('\n');
 }
 
+// WP5b item 5: eldritch implicits. Pool = RePoE mods with generation_type searing_exarch_implicit /
+// eater_of_worlds_implicit whose spawn weight on the base tags is > 0 at ELDRITCH_TIER (id suffix 1..6: Lesser ..
+// Perfect ember/ichor; the tier gate is the no_tier_N_eldritch_implicit tag, absent from a plain base). Presence
+// variants ("while a Unique/Pinnacle enemy is in your Presence") are left out: their value depends on encounter config.
+// Each armour piece gets the best Exarch and the best Eater type by the generator axes (nodeValue of the rendered
+// text); ties go to the higher spawn weight (the more common outcome), then the type name.
+export const ELDRITCH_TIER = 4;
+export const ELDRITCH_SLOTS = ['Helmet', 'Body Armour', 'Gloves', 'Boots'];
+export const ELDRITCH_SIDES = { searing_exarch_implicit: 'exarch', eater_of_worlds_implicit: 'eater' };
+export function eldritchPool(cat, baseId, tier = ELDRITCH_TIER) {
+  const base = cat.bases.get(baseId), tags = new Set(base.tags);
+  const out = [];
+  for (const mod of cat.mods.values()) {
+    if (!ELDRITCH_SIDES[mod.generation_type] || /Presence$/.test(mod.type) || !mod.id.endsWith(String(tier))) continue;
+    const weight = firstWeight(mod.spawn_weights, tags, 0);
+    if (weight > 0) out.push({ id: mod.id, type: mod.type, side: ELDRITCH_SIDES[mod.generation_type], weight, text: mod.text ?? mod.id });
+  }
+  return out;
+}
+// Pure: best row per side; valueOf(text) -> number. Rows with value 0 still win over nothing (an empty implicit
+// slot is never better), so the choice is deterministic for every skill.
+export function pickEldritch(rows, valueOf) {
+  const out = {};
+  for (const side of ['exarch', 'eater']) {
+    const best = rows.filter(r => r.side === side).map(r => ({ ...r, value: valueOf(r.text) }))
+      .sort((a, b) => b.value - a.value || b.weight - a.weight || a.type.localeCompare(b.type))[0];
+    if (best) out[side] = best;
+  }
+  return out;
+}
+
+// Delivery filter on top of nodeValue (whose axes do not separate attack and spell lines): an attack-only line has no
+// value for spell/minion kits, a spell-only line none for attack kits; minion lines only for minion kits.
+const ATTACK_LINE = /\b(to|with) attacks\b|\battack (damage|speed|skills?)\b|\baccuracy\b/i;
+// "Suppress/Block Spell Damage" is defence, not spell delivery.
+const SPELL_LINE = /\bto spells\b|(?<!(suppress|block) )\bspell damage\b|\bcast speed\b|\bspell skills?\b/i;
+export function eldritchValue(text, axes, family) {
+  const caster = family === 'caster', minion = family === 'minion';
+  const attack = ATTACK_LINE.test(text), spell = SPELL_LINE.test(text);
+  if (/\bminions?\b/i.test(text) && !minion) return 0;
+  if (attack && !spell && (caster || minion)) return 0;
+  if (spell && !attack && !caster) return 0;
+  return nodeValue(text, axes, { family }).value;
+}
+
 const kitCache = new Map();
-export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaRegen = false }) {
-  const key = JSON.stringify({ attr, family, damageTypes, form, needAttrs, manaRegen });
+// axes: generator scaling axes [{axis, pattern, weight}] (eldritch implicit choice); without axes no eldritch implicits.
+export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaRegen = false, axes = null }) {
+  const key = JSON.stringify({ attr, family, damageTypes, form, needAttrs, manaRegen, axes: axes?.map(a => [a.axis, a.weight]) ?? null });
   if (kitCache.has(key)) return kitCache.get(key);
   const cat = itemCatalog(), notes = [];
   const ctx = { T: damageTypes[0] ?? 'Physical', attr: ATTR_TYPE[attr] ?? 'Intelligence' };
@@ -120,11 +169,13 @@ export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaR
   for (const [slot, name, intents, sockets] of kitPlan({ attr, family, form, needAttrs, manaRegen })) {
     const base = resolveBase(cat, name);
     let types = itemPool({ base, item_level: 84, tiers: 20, limit: 500 }, cat).types;
-    let mods, missing, r;
+    let mods, missing, r, implicits;
+    const eld = axes?.length && ELDRITCH_SLOTS.includes(slot) ? pickEldritch(eldritchPool(cat, base), text => eldritchValue(text, axes, family)) : null;
+    if (eld) implicits = Object.values(eld).map(e => e.id);
     // A type the builder cannot export (violation names the mod) is removed from the pool and the intent re-picked.
     for (let attempt = 0; attempt < 8; attempt++) {
       ({ mods, missing } = pickMods(types, intents, ctx));
-      r = buildItem({ base, item_level: 84, rarity: 'rare', roll: 'mid', mods: mods.map(m => m.id), sockets }, cat);
+      r = buildItem({ base, item_level: 84, rarity: 'rare', roll: 'mid', mods: mods.map(m => m.id), sockets, ...(implicits ? { implicits } : {}) }, cat);
       if (r.legal) break;
       const bad = new Set(r.violations.map(v => mods.find(m => m.id === v.mod)?.type).filter(Boolean));
       if (!bad.size) break;
@@ -134,7 +185,7 @@ export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaR
     if (missing.length) notes.push(`${slot} ${name}: no legal ${missing.join(', ')}`);
     if (!r.legal) throw new Error(`Kit item ${name} illegal: ${r.violations.map(v => `${v.code} ${v.detail ?? ''}`).join('; ').slice(0, 300)}`);
     replace_items.push({ slot, text: r.text });
-    bases.push(`${slot}: ${name} (${mods.map(m => m.type).join(', ')})`);
+    bases.push(`${slot}: ${name} (${mods.map(m => m.type).join(', ')})${eld ? ` + eldritch ${Object.values(eld).map(e => e.type).join(' / ')}` : ''}`);
   }
   for (const [slot, base, auto] of flaskPlan({ attr, family, form })) {
     replace_items.push({ slot, text: flaskText(base, auto), active: auto });

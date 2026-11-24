@@ -99,3 +99,31 @@ export function clusterText(c) {
 
 // Outer sockets that hold any cluster size (Large expansion sockets of the main tree).
 export const outerClusterSockets = t => [...t.nodes.values()].filter(n => n.expansion?.size === 2 && !n.expansion.parent).map(n => n.id).sort((a, b) => a - b);
+
+// Nested sockets. The jewel sockets inside a cluster are real tree nodes whose expansion.parent is the socket the
+// cluster sits in (PassiveSpec:BuildSubgraph -> FindClusterSocket in the proxy group); PoB fills them in the order of
+// expansion.index {0, 2, 1}, and a Large cluster with a single socket uses index 1. A Large cluster's inner sockets
+// are Medium-size (Medium or Small jewels), a Medium cluster's inner socket is Small-size (Small jewels).
+export const INNER_SIZES = { Large: ['Medium', 'Small'], Medium: ['Small'], Small: [] };
+export function innerClusterSockets(t, socketId, size) {
+  const n = CLUSTER_SHAPE[size]?.sockets ?? 0;
+  if (!n) return [];
+  const order = size === 'Large' && n === 1 ? [1] : [0, 2, 1].slice(0, n);
+  const kids = [...t.nodes.values()].filter(x => x.expansion && Number(x.expansion.parent) === Number(socketId));
+  return order.map(i => kids.find(k => k.expansion.index === i)?.id).filter(id => id != null);
+}
+// Pure: nested pairs from ranked candidates: the best outer candidate of each size with sockets x the best candidate
+// of each size its inner socket holds. Points = outer + 1 (inner socket node) + inner.
+export function nestedCandidates(cands) {
+  const best = size => cands.find(c => c.size === size);
+  const out = [];
+  for (const size of ['Large', 'Medium']) {
+    const outer = best(size);
+    if (!outer) continue;
+    for (const s of INNER_SIZES[size]) {
+      const inner = best(s);
+      if (inner) out.push({ ...outer, nested: inner, points: outer.points + 1 + inner.points, value: Math.round((outer.value + inner.value) * 100) / 100 });
+    }
+  }
+  return out;
+}

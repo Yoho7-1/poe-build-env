@@ -191,8 +191,11 @@ export function readBuild(file) {
   for (const s of asArray(itemSet?.Slot ?? root.Items?.Slot)) if (s.itemId && s.itemId !== '0' && items.has(String(s.itemId))) slots.set(s.name, items.get(String(s.itemId)));
   const specs = asArray(root.Tree?.Spec);
   const spec = specs[Number(root.Tree?.activeSpec ?? 1) - 1] ?? specs[0];
+  const allocated = new Set(String(spec?.nodes ?? '').split(',').filter(Boolean));
+  // Chosen mastery effects of the active spec ({node,effect} pairs; only allocated mastery nodes count).
+  const masteries = [...String(spec?.masteryEffects ?? '').matchAll(/\{(\d+),(\d+)\}/g)].map(m => ({ node: Number(m[1]), effect: Number(m[2]) })).filter(m => allocated.has(String(m.node)));
   return { level: Number(root.Build.level), class: root.Build.className, ascendancy: root.Build.ascendClassName, main_socket_group: Number(root.Build.mainSocketGroup ?? 1),
-    groups, slots, allocated: new Set(String(spec?.nodes ?? '').split(',').filter(Boolean)) };
+    groups, slots, allocated, masteries };
 }
 const itemName = text => { const l = (text ?? '').replace(/\r/g, '').split('\n').map(s => s.trim()).filter(Boolean); return l[0]?.startsWith('Rarity:') ? l[1] : l[0]; };
 const itemBase = text => { const l = (text ?? '').replace(/\r/g, '').split('\n').map(s => s.trim()).filter(Boolean); return /^Rarity: (UNIQUE|RARE|RELIC)/i.test(l[0] ?? '') ? l[2] : l[1]; };

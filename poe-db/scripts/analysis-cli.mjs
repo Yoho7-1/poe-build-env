@@ -15,6 +15,8 @@ import { atlasCombatNodes } from './atlas-combat.mjs';
 import { progressionCommand, progressionHelp } from './analysis-progression.mjs';
 import { candidatesCommand, candidatesHelp, analyzeAutoUpgrades, autoUpgradeOptions } from './analysis-candidates.mjs';
 import { analyzeEncounter, analyzeMapModSweep, analyzeReport, writeMarkdown } from './analysis-encounter.mjs';
+import { foundationReport } from './corpus-norms.mjs';
+import { coverageCommand } from './analysis-coverage.mjs';
 import { ablateCommand, ablationHelp } from './analysis-ablation.mjs';
 import { interactionsCommand, interactionsHelp } from './analysis-interactions.mjs';
 
@@ -37,6 +39,7 @@ export function analyze(args) {
   if (args[0] === 'candidates') return candidatesCommand(args.slice(1));
   if (args[0] === 'ablate') return ablateCommand(args.slice(1));
   if (args[0] === 'interactions') return interactionsCommand(args.slice(1));
+  if (args[0] === 'coverage') return coverageCommand(args.slice(1));
   const { positional, options } = flags(args, ['boss', 'tier', 'results', 'changes', 'out-dir', 'out', 'candidates', 'metric', 'scenario', 'radius', 'probes', 'top', 'include', 'concurrency',
     'enemy', 'map-tier', 'mods', 'map-mod-effect', 'delirium', 'level', 'enemy-life', 'boss-tier', 'md', 'search', 'band', 'method', 'sweep-tiers', 'damage-profile', 'pantheon-major', 'pantheon-minor', 'atlas', 'auto', 'slot', 'group', 'replace', 'limit', 'quality'], ['plan', 'full', 'exclude-awakened']);
   const [operation, ...rest] = positional;
@@ -88,8 +91,12 @@ export function analyze(args) {
   if (operation === 'report') {
     if (!rest[0]) throw new Error('Build file required');
     const sweepTiers = (options['sweep-tiers'] ?? '16,17').split(',').filter(Boolean).map(t => intOption(t, 'sweep-tiers', 1, 17));
-    return write(analyzeReport({ file: path.resolve(rest[0]), scenario: options.scenario ?? 'sustained', tier: mapTier(), bossTier: bossTier(), base: baseChanges(), concurrency: conc(), sweepTiers,
-      enemyLife: intOption(options['enemy-life'], 'enemy-life', 1, 1e12), extra: Object.fromEntries([['pantheon_major', options['pantheon-major']], ['pantheon_minor', options['pantheon-minor']], ['atlas', options.atlas ? options.atlas.split(',').map(x => x.trim()).filter(Boolean) : null]].filter(([, v]) => v != null)) }));
+    const report = analyzeReport({ file: path.resolve(rest[0]), scenario: options.scenario ?? 'sustained', tier: mapTier(), bossTier: bossTier(), base: baseChanges(), concurrency: conc(), sweepTiers,
+      enemyLife: intOption(options['enemy-life'], 'enemy-life', 1, 1e12), extra: Object.fromEntries([['pantheon_major', options['pantheon-major']], ['pantheon_minor', options['pantheon-minor']], ['atlas', options.atlas ? options.atlas.split(',').map(x => x.trim()).filter(Boolean) : null]].filter(([, v]) => v != null)) });
+    // WP5b: build basics vs corpus norms of the ascendancy (warnings, not failures).
+    try { report.foundation =foundationReport({ file: path.resolve(rest[0]), scenario: options.scenario ?? 'sustained' }); }
+    catch (e) { report.foundation = { error: String(e.message ?? e).slice(0, 300) }; }
+    return write(report);
   }
   if (operation === 'bosses') {
     if (rest[0] === 'build') return writeBossScenarios();
@@ -154,7 +161,8 @@ export const analysisHelp = {
   'analyze mapmod <id|name>':'One map modifier: RePoE text/stats per tier, PoB affix, translation, danger axes',
   'analyze encounter <xml> [--enemy rare] [--map-tier 16] [--mods a,b] [--enemy-life N] [--md f.md] [--out f.json]':'DPS/time-to-kill and hits-to-die/max hit/EHP against one encounter, compared with the same enemy without mods',
   'analyze mapmod-sweep <xml> [--map-tier 16] [--enemy rare] [--include combat|all] [--md f.md]':'Every map mod of the tier alone: avoid/caution/manual/ok with DPS, hits-to-die and EHP deltas',
-  'analyze report <xml> [--map-tier 16] [--boss-tier uber] [--sweep-tiers 16,17] [--md f.md] [--out f.json]':'Full survival/damage report: map content, generic bosses, every boss skill preset, map mod sweeps',
+  'analyze report <xml> [--map-tier 16] [--boss-tier uber] [--sweep-tiers 16,17] [--md f.md] [--out f.json]':'Full survival/damage report: map content, generic bosses, every boss skill preset, map mod sweeps; block foundation = build basics vs corpus norms of the ascendancy',
+  'analyze coverage <xml> [--out f.json]':'Coverage audit: every power layer the build leaves unused (unspent points, masteries without effect, empty jewel/gem sockets and slots, flasks, anoint, eldritch implicits, open affixes without craft, quality, gems below 20/20, curse, free mana for auras, movement/guard skills, Pantheon) with the command that values each gap',
   'analyze bosses [build]':'Boss survival scenarios from pinned PoB boss data; "build" regenerates scenarios/bosses.json',
   'analyze boss <name> [--tier pinnacle|uber]':'Boss skill damage, penetration, flags and the PoB config that reproduces them',
   'analyze boss-changes <name> [--tier] [--changes base.json] [--out-dir dir]':'One --changes file per boss skill for pob run',

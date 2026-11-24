@@ -16,8 +16,10 @@ export const externalReferences = {
   'project.enemy-db': { kind: 'local_data', url: 'local:poe-db/scenarios/enemies.json', note: 'Map mod texts, danger axes and engine method per tier (RePoE 3.30.0.4 + PoB map affixes).' }
 };
 
-const g = (id, title, pob_status, axes, pob_does, gap, { model = null, checks = [], cards = [], sources = [], observe = null } = {}) =>
-  ({ id, title, pob_status, axes, pob_does, gap, model, checks, cards, sources, observe });
+// confidence: how sure the registry is about the gap description itself (high = read off PoB code, medium = read off
+// PoB data plus one calculation, low = inferred). It says nothing about a PoB number and is never mixed with one.
+const g = (id, title, pob_status, axes, pob_does, gap, { model = null, checks = [], cards = [], sources = [], observe = null, confidence = null } = {}) =>
+  ({ id, title, pob_status, axes, pob_does, gap, model, checks, cards, sources, observe, confidence });
 
 export const gaps = [
   g('recoup', 'Recoup (life/ES/mana returned over 3-4 s)', 'partial', [],
@@ -96,6 +98,11 @@ export const gaps = [
     'Corpse explosion damage from configured corpse life.',
     'Whether corpses exist (boss fights, first pack) is not checked.',
     { checks: ['corpse_source'], cards: ['uptime'], sources: ['pob.calc-offence'] }),
+  g('skill_source_uptime', 'Uptime and density of the entity a skill detonates or consumes (Lingering Blades, corpses, placed mines)', 'config_assumed', [],
+    'Damage per detonation times a count taken from Config: the stage multiplier of Blade Blast (Multiplier:BladeBlastStage, up to 50 blades), the configured corpse life for corpse skills, the mine count in a detonation sequence. The count is an input, so the DPS is "if this many entities are there".',
+    'PoB never asks where the entity comes from, nor how many of them are really up: no cast of the source skill, no travel or placement time, no decay of ground blades, no per-pack density and no boss case where there is nothing to detonate. A prototype with no source at all still reports full DPS at one button (the WP11 stage-1 check run: Blade Blast / Deadeye, 5.06M boss DPS, buttons 1, with nothing in the build creating blades).',
+    { checks: ['skill_source_required'], cards: ['uptime'], sources: ['pob.data-module', 'pob.calc-perform', 'pob.config'], confidence: 'high',
+      observe: 'Record, for a build whose source skill is in the build: how many blades/corpses/mines are actually up when the detonating skill fires at a white pack, at a rare and at a map boss, and how many presses of the source skill one detonation costs. Until then the entity count in PoB stays an assumption, and the ratio between PoB DPS and real DPS is unknown.' }),
   g('mana_sustain_cadence', 'Mana sustain with recast cadence and burst costs', 'partial', [],
     'Mana cost per use, regeneration and leech per second.',
     'Recast cadence of several skills and spending bursts are not combined into one sustain check.',

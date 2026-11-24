@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { decideLayer, layerGain, withItems, probeCap, manaCondition } from '../scripts/design-layers.mjs';
+import { decideLayer, layerGain, withItems, probeCap, manaCondition, layerRecord, DECIDED_BY } from '../scripts/design-layers.mjs';
 import { neutralConfig } from '../scripts/design-seed.mjs';
 import { screenQuota, prototypeFlags, reconcileFoundation, SEED_MIN_CALCS, SEED_TAIL_CALCS, JOB_MIN_CALCS } from '../scripts/design-generate.mjs';
 import { kitPlan } from '../scripts/design-kit.mjs';
@@ -73,30 +73,40 @@ test('mana deficit is flagged on every non-minion prototype', () => {
 });
 
 test('basics warnings a layer decision already answered become decisions, not warnings', () => {
-  const layers = [{ layer: 'cluster', taken: false, gain_vs_alternative: { total: -17.84 }, alternative: 'the same 8 points on ordinary tree nodes', reason: 'best of 8 cluster variants loses to the tree' },
-    { layer: 'masteries', taken: false, gain_vs_alternative: null, alternative: 'the same 4 points on ordinary tree nodes', reason: 'no mastery effect improved the prototype; reserve returned to the tree' },
-    { layer: 'anoint', taken: false, gain_vs_alternative: null, alternative: 'amulet without anoint', reason: 'not probed (calculation budget)' }];
-  const check = { status: 'warn', counts: { fail: 0, warn: 4, info: 0 }, warnings: [
+  const L = (layer, extra) => layerRecord(layer, false, extra.gain ?? null, 'the same points on ordinary tree nodes', extra.reason, { decided_by: extra.by });
+  const layers = [L('cluster', { by: 'pob_probe', gain: { total: -17.84 }, reason: 'best of 8 cluster variants does not beat the same points on the tree' }),
+    L('masteries', { by: 'pob_probe', reason: 'no mastery effect improved the prototype; reserve returned to the tree' }),
+    L('anoint', { by: 'budget', reason: 'not probed (calculation budget)' }),
+    L('eldritch', { by: 'no_option', reason: 'no eldritch implicit on the kit' })];
+  const check = { status: 'warn', counts: { fail: 0, warn: 5, info: 0 }, warnings: [
     { code: 'no_cluster_jewels', severity: 'warn', detail: 'no cluster jewels' },
     { code: 'masteries_low', severity: 'warn', detail: '0 masteries' },
     { code: 'no_anoint', severity: 'warn', detail: 'amulet without anoint' },
+    { code: 'no_eldritch_implicits', severity: 'warn', detail: 'no eldritch implicits' },
     { code: 'attribute_surplus', severity: 'warn', detail: '+395 attributes over requirements' }] };
   const r = reconcileFoundation(check, layers);
-  assert.deepEqual(r.warnings.map(w => w.code), ['no_anoint', 'attribute_surplus']);
+  // Only the two layers PoB actually compared lose their warning; budget and no_option keep theirs.
+  assert.deepEqual(r.warnings.map(w => w.code), ['no_anoint', 'no_eldritch_implicits', 'attribute_surplus']);
   assert.deepEqual(r.layer_decisions.map(d => d.code), ['no_cluster_jewels', 'masteries_low']);
   assert.match(r.layer_decisions[0].decision, /gain vs alternative -17\.84%/);
   assert.match(r.layer_decisions[1].decision, /rejected by PoB calculation \(alternative/);
-  assert.equal(r.counts.warn, 2);
+  assert.equal(r.counts.warn, 3);
   assert.equal(r.status, 'warn');
   // No layers, or a layer that was taken: the check is untouched.
   assert.equal(reconcileFoundation(check, []), check);
-  assert.equal(reconcileFoundation(check, [{ layer: 'cluster', taken: true, reason: 'beats the tree' }]), check);
+  assert.equal(reconcileFoundation(check, [layerRecord('cluster', true, null, 'tree', 'beats the tree')]), check);
 });
 
 test('a seeded job keeps enough of its share for the steps after the support probe', () => {
   assert.ok(SEED_MIN_CALCS > SEED_TAIL_CALCS + 1);
   assert.equal(JOB_MIN_CALCS.seed, SEED_MIN_CALCS);
-  // The support probe may not take the tail: share 36 -> 32 probes, 4 left for final run and encounters.
+  // The support probe may not take the tail: of a share of 36 it gets 32, leaving the final run and the encounters.
   const left = 36;
   assert.equal(left - (left - SEED_TAIL_CALCS), SEED_TAIL_CALCS);
+});
+
+test('layer records default to pob_probe and keep an explicit decided_by', () => {
+  assert.equal(layerRecord('cluster', true, null, 'tree', 'beats the tree').decided_by, 'pob_probe');
+  assert.equal(layerRecord('anoint', false, null, 'no anoint', 'no option', { decided_by: 'no_option' }).decided_by, 'no_option');
+  assert.ok(DECIDED_BY.includes('budget'));
 });

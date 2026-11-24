@@ -96,7 +96,7 @@ test('ablate CLI validates options before running the engine', () => {
   assert.throws(() => agent(['analyze', 'ablate']), /Build file required/);
   assert.throws(() => agent(['analyze', 'ablate', 'x.xml', '--kinds', 'flasks']), /--kinds accepts/);
   assert.throws(() => agent(['analyze', 'ablate', 'x.xml', '--core', '5', '--major', '10']), /core >= major >= minor/);
-  assert.ok(Object.keys(agent(['help']).commands).some(k => k.startsWith('analyze ablate')));
+  assert.ok(Object.keys(agent(['help', '--full']).commands).some(k => k.startsWith('analyze ablate')));
 });
 
 test('with_dependents: branch loss, freed points and other key nodes, as the PoB tree tooltip', () => {

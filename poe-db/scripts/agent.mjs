@@ -24,7 +24,7 @@ export const lazyModules = mod;
 
 // `agent.mjs <group> [operation] --help` (or `-h`): the help entries of that group, narrowed to the operation if given.
 export function groupHelp(command, rest) {
-  const all = agent(['help']).commands;
+  const all = agent(['help', '--full']).commands;
   const op = rest.find(x => !x.startsWith('-') && x !== 'help');
   const group = Object.fromEntries(Object.entries(all).filter(([k]) => k === command || k.startsWith(`${command} `) || k.split('|').some(p => p.trim().startsWith(`${command} `))));
   if (!Object.keys(group).length) throw new Error(`Unknown command: ${command}; run agent.mjs help`);
@@ -39,6 +39,29 @@ export function errorCode(message) {
   if (/^Unknown (command|option)|^Use |required|must be|Missing value|^--/i.test(message)) return 'usage';
   if (/Change error|Calculation requires|engine/i.test(message)) return 'engine';
   return 'error';
+}
+
+// Default help is a compact index (group -> operations); the full entry list is `help --full` or `<group> --help`.
+export function helpIndex(full, commands) {
+  if (full) return { root: projectRoot, network_required: false, commands };
+  const groups = {};
+  for (const key of Object.keys(commands)) {
+    let bare = key;
+    while (/\[[^\[\]]*\]|<[^<>]*>/.test(bare)) bare = bare.replace(/\[[^\[\]]*\]|<[^<>]*>/g, ' ');
+    const group = bare.trim().split(/\s+/)[0];
+    if (!/^[a-z][a-z-]*$/.test(group)) continue;
+    const ops = (groups[group] ??= new Set());
+    let flagValues = false; // "--type a|b|c": the alternatives after a flag are its values, not operations
+    for (const part of bare.split('|')) {
+      const raw = part.trim().split(/\s+/);
+      const words = raw.filter(w => /^[a-z][a-z-]*$/.test(w));
+      if (raw[0] === group) { if (words[1]) ops.add(words[1]); }
+      else if (!flagValues && raw.length === 1 && words[0]) ops.add(words[0]);
+      flagValues = raw.length > 1 ? raw[raw.length - 2].startsWith('--') : flagValues;
+    }
+  }
+  return { network_required: false, usage: 'agent.mjs <group> [operation] --help for options; agent.mjs help --full for every entry',
+    groups: Object.fromEntries(Object.entries(groups).map(([g, ops]) => [g, [...ops].join(' ')])) };
 }
 
 export function agent(args) {
@@ -159,7 +182,8 @@ export function agent(args) {
     }
     throw new Error('Use pob inspect/run/new/export-code/import-code/migrate/control/compare/scenarios/hosts');
   }
-  if(command==='help'||command==null)return {root:projectRoot,network_required:false,commands:{
+  if(command==='--help'||command==='-h')return agent(['help',...rest]);
+  if(command==='help'||command==null)return helpIndex(rest.includes('--full'),{
     'bootstrap [build-id]':'Small starting context and current build state',
     'doctor [--deep] [--report file.json]':'Offline environment, snapshot and provenance checks',
     'backup [label]':'Consistent local SQLite snapshots, build state and knowledge cards',
@@ -198,7 +222,7 @@ export function agent(args) {
     ,'price list|get <exact name>|import --file snapshot.json':'Offline dated price observations; --variant, --corrupted true|false, --links, --gem-level, --gem-quality, --base-type, --history; platform pc by default'
     ,'craft list|get <id>|import --file plan.json':'Recorded craft plans; identifiers are checked, probabilities are not simulated (simulate with craftsim)'
     ,'craftsim help|status|coverage|rules|tiers|pool|new|step|preview|replay|export|train ...':'3.30 crafting simulator (craft-lab v2): step-by-step crafts, Monte Carlo policies, rule ids and confidence per step; model, not a game test'
-  }};
+  });
   throw new Error(`Unknown command: ${command}`);
 }
 

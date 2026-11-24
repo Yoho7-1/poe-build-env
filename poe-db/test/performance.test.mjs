@@ -11,7 +11,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // imports such a module) would fail only when its command is called, so every lazy module is loaded here.
 test('every lazily loaded command module loads synchronously', () => {
   for (const [name, load] of Object.entries(lazyModules)) assert.equal(typeof load(), 'object', name);
-  assert.ok(Object.keys(agent(['help']).commands).length > 50);
+  assert.ok(Object.keys(agent(['help', '--full']).commands).length > 50);
 });
 
 // The analysis batch pool runs jobs in worker threads; a failing job must still come back as { error } per job.

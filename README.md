@@ -45,7 +45,7 @@ git pull
 node poe-db/scripts/setup.mjs
 ```
 
-Code, skills and mechanic cards come with `git pull`. When a new data snapshot is published, `data-release.json` changes; move the old `poe-db/data` aside (or delete it) and rerun `setup.mjs`. Your `builds/` stay local and are never committed. Maintainers: see [`RELEASING.md`](RELEASING.md).
+Code, skills and mechanic cards come with `git pull`. When a new data snapshot is published, `data-release.json` changes; move the old `poe-db/data` aside (or delete it) and rerun `setup.mjs`. Your `builds/` stay local and are never committed. Maintainers: see [`poe-db/docs/dev/RELEASING.md`](poe-db/docs/dev/RELEASING.md).
 
 ## Licenses
 
@@ -55,4 +55,4 @@ Code: [MIT](LICENSE). Data is **not** covered by the code license: PoE Wiki cont
 
 ## Кратко по-русски
 
-Локальное окружение, с которым нейросеть-агент собирает и проверяет билды PoE 1 3.30 по реальным данным и расчётам PoB, а не по памяти. Установка — три команды выше (Windows, Node.js 24+, PowerShell 7, Git), дальше работает без сети. Обновление — `git pull` и повторный `setup.mjs`. Личные билды хранятся в `builds/` и в репозиторий не попадают. Инструкции для агента — `AGENTS.md`, методика — `poe-db/docs/BUILDING.md`, устройство — `poe-db/docs/ENVIRONMENT.md`.
+Локальное окружение, с которым нейросеть-агент собирает и проверяет билды PoE 1 3.30 по реальным данным и расчётам PoB, а не по памяти. Установка — три команды выше (Windows, Node.js 24+, PowerShell 7, Git), дальше работает без сети. Обновление — `git pull` и повторный `setup.mjs`. Личные билды хранятся в `builds/` и в репозиторий не попадают. Инструкции для агента — `AGENTS.md`, методика — `poe-db/docs/BUILDING.md`, устройство — `poe-db/docs/dev/ENVIRONMENT.md`.

@@ -367,7 +367,9 @@ function summarise(final, boss, rare, gem, groups) {
     clear_score: B.clearScore([...gem.types, ...gem.minion_types], (final.explode_mods ?? []).length),
     buttons: buttons.pressed, buttons_detail: buttons, minion,
     unmet_requirements: warnings.filter(w => /do not meet/i.test(w)), skill_disabled: final.skill_disabled_reason ?? null,
-    unparsed_item_mods: (final.unparsed_item_modifiers ?? []).length, engine_warnings: warnings,
+    // Flask activation triggers ("Used when Charges reach full", the kit's automatic flasks) carry no stat: PoB leaves
+    // them unparsed and models them through the slot's active flag, so they are not unparsed kit modifiers.
+    unparsed_item_mods: (final.unparsed_item_modifiers ?? []).filter(u => !(/^Flask \d/.test(u.slot ?? '') && /^Used when /.test(u.line ?? ''))).length, engine_warnings: warnings,
     budget: final.budget ?? null
   };
 }

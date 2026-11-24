@@ -148,7 +148,7 @@ export function requestFromProfile(build, { level = null, mapTier = null } = {})
     assumptions
   };
   if (!req.classes.length) assumptions.push('no ascendancy named: generator considers every ascendancy (slow); pass --ascendancy');
-  if (req.budget && req.platform == null) assumptions.push('platform unknown: budget is not checked against prices (rare prices are not in local data anyway)');
+  if (req.budget && req.platform == null) assumptions.push('platform not given: prices use the project market platform pc (dated local snapshots); rare items are band estimates');
   return validateRequest(req);
 }
 
@@ -244,10 +244,24 @@ export function axesFor(g) {
   const defence = DEFENCE_AXES.filter(d => !d.when || d.when.some(x => t.has(x)));
   return [...offence, ...defence].map(r => ({ axis: r.axis, pattern: r.pattern, weight: r.weight }));
 }
-export function nodeValue(stats, axes) {
-  const text = strList(stats).join('\n');
+// Per line: a line about minions only counts for minion axes; a line limited to a weapon class ("while wielding a
+// Staff", "with Bows") only counts when the prototype's weapon family is that class (unknown family: counted).
+const WEAPON_WORDS = { staff: /staff|staves/i, bow: /\bbows?\b/i, wand: /\bwands?\b/i, sceptre: /sceptres?/i, sword: /swords?/i, axe: /\baxes?\b/i, mace: /\bmaces?\b/i, dagger: /daggers?/i, claw: /claws?/i, shield: /shields?/i };
+const weaponLimited = line => /\b(while wielding|with|using)\b/i.test(line) ? Object.keys(WEAPON_WORDS).filter(k => WEAPON_WORDS[k].test(line)) : [];
+export function nodeValue(stats, axes, { family = null } = {}) {
+  const lines = strList(stats).flatMap(s => String(s).split('\n'));
+  const fam = family ? String(family).toLowerCase() : null;
   let v = 0; const hit = [];
-  for (const a of axes) if (a.pattern.test(text)) { v += a.weight; hit.push(a.axis); }
+  for (const a of axes) {
+    const minionAxis = /^minion/.test(a.axis);
+    const ok = lines.some(l => {
+      if (!minionAxis && /\bminions?\b/i.test(l)) return false;
+      const limited = weaponLimited(l);
+      if (fam && limited.length && !limited.some(k => fam.includes(k))) return false;
+      return a.pattern.test(l);
+    });
+    if (ok) { v += a.weight; hit.push(a.axis); }
+  }
   return { value: v, axes: hit };
 }
 

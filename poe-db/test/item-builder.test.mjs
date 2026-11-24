@@ -81,3 +81,21 @@ test('engine: built helmet equips in the control build without unparsed modifier
   assert.ok(check.key_stats.Life.delta > 0);
   assert.ok(check.key_stats.LightningResist.delta > 0);
 });
+
+test('local weapon mods export: translation groups with an absent companion stat render as 0', { skip: !cacheReady }, () => {
+  const r = buildItem({ base: 'Jewelled Foil', item_level: 84, mods: ['LocalPhysicalDamagePercent', 'LocalPhysicalDamage', 'LocalIncreasedPhysicalDamagePercentAndAccuracyRating'] });
+  assert.equal(r.legal, true, JSON.stringify(r.violations));
+  const lines = r.text.split('\n');
+  assert.ok(lines.includes('179% increased Physical Damage'));
+  assert.ok(lines.includes('79% increased Physical Damage') && lines.includes('+200 to Accuracy Rating'));
+  assert.ok(!lines.some(l => /No Physical Damage/.test(l)));
+});
+
+test('eldritch implicits carry the PoB line flags', { skip: !cacheReady }, () => {
+  const r = buildItem({ base: 'Hubris Circlet', item_level: 84, implicits: ['SpellAddedFireDamageEldritchImplicit4', 'SpellDamageEldritchImplicit4'], mods: ['IncreasedLife'] });
+  assert.equal(r.legal, true, JSON.stringify(r.violations));
+  const lines = r.text.split('\n');
+  assert.ok(lines.includes('Implicits: 2'));
+  assert.ok(lines.some(l => /^\{exarch\}Adds \d+ to \d+ Fire Damage to Spells$/.test(l)));
+  assert.ok(lines.some(l => /^\{eater\}2\d% increased Spell Damage$/.test(l)));
+});

@@ -279,6 +279,13 @@ export function markdownReport(report) {
     if (first) push('', `Max hit (${first.label}): ${Object.entries(first.defence.max_hit).map(([t, v]) => `${t} ${fmt(v)}`).join(', ')}.`);
     for (const sw of report.sweeps) push('', ...markdownSweep(sw, 3));
     if (report.approximations) push('', ...markdownApprox(report.approximations, 2, `${report.approximations.encounter}; thorns: моды ${report.approximations.thorns_band}`));
+    const fc = report.foundation?.check;
+    if (fc) {
+      const ng = report.foundation.norm_group;
+      push('', '## Основы билда против норм корпуса', '', `Группа норм: ${[ng.ascendancy, ng.skill_tag].filter(Boolean).join(' + ') || 'весь корпус'} (${ng.builds} билдов). Нормы описывают популярные гайды, а не оптимум.`, '');
+      if (!fc.warnings.length) push(fc.status === 'no_norms' ? `- ${fc.note}` : '- Отклонений от норм нет.');
+      for (const w of fc.warnings) push(`- **${w.code}** (${w.severity}): ${w.detail}. ${w.evidence}.`);
+    }
   } else if (report.analysis === 'map_mod_sweep') push(...markdownSweep(report, 2));
   else if (report.analysis === 'encounter') {
     push(`# ${report.label}`, '', `Сборка: ${report.build_file}, сценарий \`${report.scenario}\`.`, '');

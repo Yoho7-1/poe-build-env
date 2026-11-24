@@ -19,11 +19,18 @@ const asset = `poe-${tag}.tar.gz`;
 // Everything a fresh clone needs for `doctor --deep`, except npm packages and PoB (installed separately).
 const rel = file => path.relative(projectRoot, path.join(dbRoot, file)).split(path.sep).join('/');
 const files = new Set();
+// Third-party build pages (corpus collection) stay local: the corpus is private and the pages are not ours to redistribute.
+const BUILD_HOSTS = /(^|.)(pobb.in|pob.codes|pastebin.com|poebuilds.cc)$/;
+const privateSource = (folder, name) => {
+  if (folder !== 'cache/research') return false;
+  const meta = path.join(dbRoot, folder, `${name.split(/[-.]/)[0]}.json`);
+  try { return BUILD_HOSTS.test(new URL(JSON.parse(fs.readFileSync(meta, 'utf8')).url).hostname); } catch { return false; }
+};
 const addTree = folder => {
   const absolute = path.join(dbRoot, folder);
   if (!fs.existsSync(absolute)) throw new Error(`Missing ${folder}`);
   for (const entry of fs.readdirSync(absolute, { recursive: true, withFileTypes: true })) {
-    if (!entry.isFile() || entry.name.endsWith('.tmp') || entry.name === '.write-lock') continue;
+    if (!entry.isFile() || entry.name.endsWith('.tmp') || entry.name === '.write-lock' || privateSource(folder, entry.name)) continue;
     files.add(rel(path.relative(dbRoot, path.join(entry.parentPath, entry.name))));
   }
 };

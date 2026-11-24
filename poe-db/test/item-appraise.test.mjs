@@ -122,7 +122,7 @@ test('ambiguous bases, advanced grouping, corruption and merged lines are report
 
 test('CLI is registered under item appraise', { skip: !cacheReady }, () => {
   assert.ok(Object.keys(appraiseHelp)[0].startsWith('item appraise'));
-  assert.ok(Object.keys(agent(['help']).commands).some(key => key.startsWith('item appraise')));
+  assert.ok(Object.keys(agent(['help', '--full']).commands).some(key => key.startsWith('item appraise')));
   const result = agent(['item', 'appraise', '--text', GAME_RING, '--brief']);
   assert.equal(result.item.base, 'Two-Stone Ring');
   assert.equal(result.pob_text, undefined);

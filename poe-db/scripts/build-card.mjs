@@ -12,6 +12,7 @@ import { readBuild, pobGems } from './analysis-candidates.mjs';
 import { effectiveDps, canonicalJson, metrics } from './analysis-core.mjs';
 import { loadTree } from './tree-graph.mjs';
 import { planConfigAblation, isSupportGem } from './analysis-ablation.mjs';
+import { foundationOf } from './build-foundation.mjs';
 
 export const cardDirectory = () => path.join(projectRoot, 'research/lab/cards');
 const damageTypes = ['Physical', 'Fire', 'Cold', 'Lightning', 'Chaos'];
@@ -263,6 +264,8 @@ export function buildCard({ file, scenario = 'sustained', ablation = null, sourc
       tags: mainActive ? Object.keys(info(mainActive)?.tags ?? {}).filter(t => info(mainActive).tags[t] === true).sort() : [] } : null,
       active: activeSkills, active_count: activeSkills.filter(s => !s.item_granted).length, applied_supports: (r.applied_supports ?? []).map(s => s.name) },
     damage, defense, resources: resourceProfile(o), buttons,
+    // Build basics (WP5b): sustain sources, attribute headroom, masteries, eldritch, clusters, anoint, flasks. Additive field.
+    foundation: foundationOf({ build, output: o, equipped: r.equipped_items ?? [], tree, keystones, scope: damage.scope, uniques }),
     tree: { points: r.allocated_points ?? null, keystones, ascendancy_notables: ascNotables, notables: allocated.filter(n => n.type === 'notable' && !n.ascendancy).length },
     items: { uniques, equipped: (r.equipped_items ?? []).filter(i => !/Swap/.test(i.slot)).map(i => ({ slot: i.slot, rarity: i.rarity, name: i.name, base: i.base })) },
     assumptions, architecture: ablation ? architectureSplit(ablation) : null,

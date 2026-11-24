@@ -8,6 +8,7 @@ import { referenceDb, priceQuery } from './reference-store.mjs';
 import { evaluateCandidates, cacheMisses, AnalysisCache } from './analysis-core.mjs';
 import { rankRows, flagTradeoffs, attachPrice, budgetSummary, rankByPrice } from './analysis-rank.mjs';
 import { packageInteraction } from './analysis-upgrades.mjs';
+import { upgradeVariants, priceVariant, selectInBudget, withPriceContext } from './design-variants.mjs';
 import { bossChanges, evaluateSurvival } from './analysis-bosses.mjs';
 import { runBatch, batchRunner, runVariants, variantRunner, defaultConcurrency } from './analysis-engine.mjs';
 
@@ -76,7 +77,7 @@ function quoteFor(price, db) {
   return priceQuery('get', price.name, db, { platform: price.platform ?? 'pc', limit: 1, history: false, filters: { ...(price.filters ?? {}), ...(price.variant ? { variant: price.variant } : {}) } });
 }
 
-export function analyzeUpgrades({ file, scenario = 'sustained', metric = 'dps', candidates, base = {}, top = 20, concurrency = defaultConcurrency }) {
+export function analyzeUpgrades({ file, scenario = 'sustained', metric = 'dps', candidates, base = {}, top = 20, concurrency = defaultConcurrency, budget = null }) {
   const started = Date.now();
   const withBase = candidates.map(c => ({ ...c, changes: { ...base, ...c.changes } }));
   const baseline = baselineRun(file, scenario, base);
@@ -97,11 +98,16 @@ export function analyzeUpgrades({ file, scenario = 'sustained', metric = 'dps', 
   } finally { db.close(); }
   rows = flagTradeoffs(rows);
   const ranked = rankRows(rows, { metric, per: 'none', top });
+  // WP11 shared variant model: each row against the current build, priced by prices-model (exact/estimated/unknown).
+  const variantModel = withPriceContext(ctx => { const vs = upgradeVariants(rows.filter(r => r.meta?.type !== 'package'), new Map(withBase.map(c => [c.id, c]))).map(v => priceVariant(v, ctx));
+    return { variants: vs.map(v => ({ id: v.id, resource: v.resource.key, gain: v.gain, cost_class: v.price.cost_class, exact_chaos: v.price.exact_chaos, estimated_chaos: v.price.estimated_chaos, unknown: v.price.unknown.length ? v.price.unknown : undefined })),
+      selection: selectInBudget(vs, { budget, ctx }) }; });
   return { game: 'poe1', patch: '3.30', analysis: 'upgrades', metric, scenario,
     baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, dps_basis: evaluated.dps_basis, contract: evaluated.contract },
     ranking: ranked.top.map(compactRow), excluded: ranked.excluded,
     by_price: rankByPrice(rows.filter(r => !r.error), metric), packages: packageInteraction(rows, metric),
     budget: budgetSummary(rows.filter(r => !r.error && r.meta?.type === 'single' && r.price?.status !== 'not_requested')),
+    variant_model: variantModel,
     timing: { total_ms: Date.now() - started, engine_runs: evaluated.engine.runs, cache: evaluated.cache },
     note: 'Requirements: inspect new_warnings (unmet attributes, disabled skills). Prices are dated, variant-specific observations; totals are refused across currency conflicts.', disclaimer };
 }

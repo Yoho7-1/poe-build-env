@@ -13,7 +13,7 @@ builds/
 research/*
 !research/330/
 KNOWLEDGE.md
-poe-db/docs/HANDOFF.local.md
+poe-db/docs/dev/HANDOFF.local.md
 poe-db/references/repairs/
 poe-db/reports/pob-text-repair.json
 poe-db/experiments/craft-lab/research/
@@ -23,3 +23,4 @@ exile-atlas.tar.gz
 # --- Transient ---
 *.tmp
 *.write-lock
+personal/

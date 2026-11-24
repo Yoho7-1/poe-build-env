@@ -2,9 +2,9 @@
 
 Local, offline toolkit that lets an AI coding agent (Codex, Claude Code, etc.) design and audit **Path of Exile 1 / 3.30 / Softcore** builds with real data instead of memory:
 
-- SQLite knowledge base: 98 870 records in 40 sections (gems by level, mods, bases, tree, ascendancies, bloodlines, essences, fossils...), uniques catalog filtered by 3.30 availability, 40 mechanic cards with sources;
+- SQLite knowledge base: 98 870 records in 40 sections (gems by level, mods, bases, tree, ascendancies, bloodlines, essences, fossils...), uniques catalog filtered by 3.30 availability, 56 mechanic cards with sources;
 - headless **Path of Building 2.68.1** runner: import, scenarios (`sustained`, `burst`, ...), compare, explicit 3.28/3.29 -> 3.30 tree migration;
-- dated price snapshots (poe.ninja), craft-bench recipes, audited reference PoBs;
+- dated price snapshots (poe.ninja) with exact/estimated/unknown cost quotes for build components, craft-bench recipes, audited reference PoBs;
 - versioned build state with decisions and evidence; agent skills in `.agents/skills`.
 
 Documentation is in Russian; game terms stay in English. Entry point for agents: [`AGENTS.md`](AGENTS.md).
@@ -45,7 +45,7 @@ git pull
 node poe-db/scripts/setup.mjs
 ```
 
-Code, skills and mechanic cards come with `git pull`. When a new data snapshot is published, `data-release.json` changes; move the old `poe-db/data` aside (or delete it) and rerun `setup.mjs`. Your `builds/` stay local and are never committed. Maintainers: see [`RELEASING.md`](RELEASING.md).
+Code, skills and mechanic cards come with `git pull`. When a new data snapshot is published, `data-release.json` changes; move the old `poe-db/data` aside (or delete it) and rerun `setup.mjs`. Your `builds/` stay local and are never committed. Maintainers: see [`poe-db/docs/dev/RELEASING.md`](poe-db/docs/dev/RELEASING.md).
 
 ## Licenses
 
@@ -55,4 +55,4 @@ Code: [MIT](LICENSE). Data is **not** covered by the code license: PoE Wiki cont
 
 ## Кратко по-русски
 
-Локальное окружение, с которым нейросеть-агент собирает и проверяет билды PoE 1 3.30 по реальным данным и расчётам PoB, а не по памяти. Установка — три команды выше (Windows, Node.js 24+, PowerShell 7, Git), дальше работает без сети. Обновление — `git pull` и повторный `setup.mjs`. Личные билды хранятся в `builds/` и в репозиторий не попадают. Инструкции для агента — `AGENTS.md`, методика — `poe-db/docs/BUILDING.md`, устройство — `poe-db/docs/ENVIRONMENT.md`.
+Локальное окружение, с которым нейросеть-агент собирает и проверяет билды PoE 1 3.30 по реальным данным и расчётам PoB, а не по памяти. Установка — три команды выше (Windows, Node.js 24+, PowerShell 7, Git), дальше работает без сети. Обновление — `git pull` и повторный `setup.mjs`. Личные билды хранятся в `builds/` и в репозиторий не попадают. Инструкции для агента — `AGENTS.md`, методика — `poe-db/docs/BUILDING.md`, устройство — `poe-db/docs/dev/ENVIRONMENT.md`.

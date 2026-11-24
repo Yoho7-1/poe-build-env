@@ -25,3 +25,12 @@ test('error codes classify CLI failures', () => {
   assert.equal(errorCode('generalized needs supporting evidence from at least two different builds (transfer)'), 'gate');
   assert.equal(errorCode('something else'), 'error');
 });
+
+test('help is a compact group index; --full keeps every entry', () => {
+  const index = agent(['help']);
+  assert.ok(JSON.stringify(index).length < 3000);
+  assert.match(index.groups.lab, /\bevidence\b/);
+  assert.match(index.groups.pob, /\brun\b/);
+  assert.ok(!('commands' in index));
+  assert.deepEqual(agent(['--help']), index);
+});

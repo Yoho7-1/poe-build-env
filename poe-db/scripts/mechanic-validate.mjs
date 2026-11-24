@@ -1,14 +1,22 @@
 // WP9: executable preconditions/conflicts from mechanic cards, for build prototypes (WP5 generator) and saved builds.
-// Pure and offline: works on a small prototype spec, or on `pob inspect` output (+ optional `pob run` result).
+// Offline: works on a small prototype spec, or on `pob inspect` output (+ optional `pob run` result). The rules are
+// pure functions of the spec; only `skill_source_required` reads the pinned skill snapshot (read-only, memoized,
+// injectable as `spec.source_catalog`).
 //
 // Prototype spec (all fields optional; a missing field makes dependent rules return "unknown", never "pass"):
 // { ascendancy: 'Occultist', ascendancy_nodes: ['Profane Bloom', ...], keystones: ['Mind Over Matter', ...],
-//   skills: [{ label, enabled: true, gems: ['Blasphemy', 'Frostbite'] }], items: ['Viscera ...'],
+//   skills: [{ label, enabled: true, gems: ['Blasphemy', 'Frostbite'], gem_ids: ['Blasphemy', ...] }], items: ['Viscera ...'],
 //   recovery: ['life_recoup', 'life_leech', ...], config: { usePowerCharges: true }, curse_limit: 1,
-//   explode_sources: ['Profane Bloom'], charge_sources: ['Cold Snap of Power'] }
+//   explode_sources: ['Profane Bloom'], charge_sources: ['Cold Snap of Power'],
+//   active_skills: [PoB active-skill flags] or buttons: buttonEstimate output, source_catalog: deriveSourceCatalog(...) }
 //
 // Statuses: pass | fail (mechanically impossible or the effect never happens) | warn (likely wrong, needs a source)
 // | unknown (not enough data) | not_applicable.
+
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { DatabaseSync } from 'node:sqlite';
+import { classifySkill } from './build-card.mjs';
 
 // Curse gems of 3.30 (hexes and marks). Marks are curses but cannot be supported by Blasphemy (hex-only aura curse).
 export const hexes = ['Frostbite', 'Flammability', 'Conductivity', 'Vulnerability', 'Despair', 'Elemental Weakness', 'Enfeeble', 'Temporal Chains', 'Punishment'];
@@ -27,6 +35,157 @@ const enabledGroups = spec => (spec.skills ?? []).filter(s => s.enabled !== fals
 const lower = list => (list ?? []).map(x => String(x).toLowerCase());
 
 const result = (id, card, gap, status, evidence) => ({ id, card, gap, status, evidence });
+
+// Skill names that the button estimate (build-card `buttonEstimate`, WP1) counts as keys the player presses, or null
+// when the spec carries neither PoB active-skill flags nor a ready estimate.
+function buttonKeyNames(spec) {
+  if (spec.buttons && (spec.buttons.pressed || spec.buttons.utility)) {
+    const names = [...(spec.buttons.pressed ?? []), ...(spec.buttons.utility ?? []), ...(spec.buttons.uncertain ?? [])].map(x => String(x?.name ?? x));
+    return new Set(names);
+  }
+  if (!Array.isArray(spec.active_skills)) return null;
+  const names = new Set();
+  for (const s of spec.active_skills) {
+    if (!s?.name) continue;
+    const kind = classifySkill(s).kind;
+    if (kind === 'pressed' || kind === 'utility' || kind === 'uncertain') names.add(s.name);
+  }
+  return names;
+}
+
+// ---------- WP9: skills that need an entity another skill must provide (derived, not a hand list) ----------
+// Blade Blast detonates Lingering Blades, Detonate Dead consumes a corpse, Detonate Mines detonates placed mines:
+// PoB multiplies damage by a Config stage/corpse count and never asks where the entity comes from. The pair
+// "who needs it / who makes it" is derived from the pinned skill data (knowledge DB rows `gems` and
+// `granted_skills`, RePoE 3.30.0.4 `active_skill`: skill types, description, stat ids) by three machine routes:
+//   types  - a skill type `Destroys<Entity>` needs the entity, `Creates<Entity>` provides it;
+//   text   - the entity is the direct object of a consuming verb (detonate/consume/destroy/target) in the
+//            skill's own description, or the subject of "explodes" near the entity word;
+//   stats  - a skill provides the entity when one of its stat ids names making or leaving it
+//            (`..._blade_left_in_ground_for_every_X_volleys`); a bare cap (`maximum_number_of_blades...`,
+//            `number_of_corpses_to_consume`) is a count, not production, and does not count. A skill type that
+//            names the entity provides it too (`RemoteMined` -> mine), while a capability type does not
+//            (`Mineable` only means the skill can be put in a mine).
+// An entity with no provider anywhere in the data is not judgeable (kept in `unjudgeable`): the rule stays
+// silent instead of guessing. Whether the provider keeps the entity up during a fight is a PoB gap, not a
+// rule - see gap `skill_source_uptime` in mechanics/gaps.mjs.
+const FILLER = /^(?:any|all|some|multiple|your|a|an|the|of|up|to|nearby|and|other|more|own|from|its|at)$/i;
+const CONSUME_VERB = /^(?:detonat|consum|destro|target)/i;
+const ENTITY_WORD = /^[A-Z][a-z]{2,}$/;
+// A stat id that only counts or caps the entity is not a source of it.
+const COUNT_ONLY_STAT = /^(?:maximum_)?number_of_|_to_consume(?:_|$)|^maximum_/;
+// The entity must be what the stat creates, next to the verb - not a condition elsewhere in the id
+// ("..._blade_left_in_ground_for_every_X_volleys" makes blades, "create_barnacle_..._vs_rare_unique" does not make rares).
+const MAKE_VERB = 'create[ds]?|spawn(?:s|ed)?|place[ds]?|summon(?:s|ed)?|leave[s]?|left|drop(?:s|ped)?';
+const MADE_SUFFIX = 'left_in_ground|on_ground|created|spawned|placed|summoned|dropped';
+const makesEntity = (token, head) => new RegExp(`(?:^|_)(?:(?:${MAKE_VERB})_(?:${token}|${head})s?|(?:${token}|${head})s?_(?:${MADE_SUFFIX}))(?:_|$)`);
+const CAPABILITY_TYPE = /able$|^Destroys/;
+// A thing that most skills provide is a property, not an entity a build must arrange for (705 active skills in 3.30).
+const ENTITY_MAX_SKILLS = 25;
+const camelWords = t => String(t).split(/(?=[A-Z])/).map(w => w.toLowerCase()).filter(Boolean);
+
+const titleSingular = e => String(e).trim().replace(/s$/, '');
+const entityHead = e => titleSingular(e).toLowerCase().split(/\s+/).pop();
+const entityToken = e => titleSingular(e).toLowerCase().replace(/\s+/g, '_');
+
+// Direct object of a verb: skip determiners/prepositions, then take 1-3 capitalised words ("any of your Lingering Blades").
+export function objectsAfter(description, verbRe) {
+  const out = [], words = String(description ?? '').split(/[\s,]+/);
+  for (let i = 0; i < words.length; i++) {
+    if (!verbRe.test(words[i].replace(/[^A-Za-z]/g, ''))) continue;
+    let j = i + 1;
+    for (let k = 0; k < 4 && j < words.length && FILLER.test(words[j]); k++) j++;
+    const phrase = [];
+    while (j < words.length && phrase.length < 3 && ENTITY_WORD.test(words[j].replace(/[.;:]$/, ''))) phrase.push(words[j++].replace(/[.;:]$/, ''));
+    if (phrase.length) out.push(phrase.join(' '));
+  }
+  return out;
+}
+
+// skills: [{ id, name, types: [], description, stat_ids: [] }] from the pinned skill data.
+export function deriveSourceCatalog(skills = []) {
+  const entities = new Map();
+  const rec = e => { const k = titleSingular(e); if (!entities.has(k)) entities.set(k, { entity: k, consumers: new Map(), providers: new Map() }); return entities.get(k); };
+  const mark = (e, side, skill, how) => { const m = rec(e)[side]; if (!m.has(skill.name)) m.set(skill.name, { name: skill.name, id: skill.id ?? null, how }); };
+  for (const s of skills) {
+    for (const t of s.types ?? []) {
+      const d = /^Destroys(.+)$/.exec(t); if (d) mark(d[1], 'consumers', s, `skill_type:${t}`);
+      const c = /^Creates(.+)$/.exec(t); if (c) mark(c[1], 'providers', s, `skill_type:${t}`);
+    }
+    for (const e of objectsAfter(s.description, CONSUME_VERB)) mark(e, 'consumers', s, 'description:consume_object');
+  }
+  const typedEntities = new Set([...entities.keys()].filter(k => [...entities.get(k).consumers.values(), ...entities.get(k).providers.values()].some(x => x.how.startsWith('skill_type:Creates') || x.how.startsWith('skill_type:Destroys'))));
+  for (const r of [...entities.values()]) {
+    const head = entityHead(r.entity), token = entityToken(r.entity);
+    const inStat = new RegExp(`(?:^|_)(?:${token}|${head})s?(?:_|$)`);
+    const makes = makesEntity(token, head);
+    const asWord = new RegExp(`^${head}(?:s|d|ed)?$`);
+    const inText = new RegExp(`\\b${head}s?\\b[^.]{0,40}\\bexplod|\\btarget\\w*\\s+(?:\\w+\\s+){0,3}${head}s?\\b`, 'i');
+    r.attested = typedEntities.has(r.entity) || skills.some(s => (s.stat_ids ?? []).some(id => inStat.test(id)));
+    for (const s of skills) {
+      if ((s.stat_ids ?? []).some(id => makes.test(id) && !COUNT_ONLY_STAT.test(id))) mark(r.entity, 'providers', s, 'stat_id:makes_entity');
+      else if ((s.types ?? []).some(t => !CAPABILITY_TYPE.test(t) && camelWords(t).some(w => asWord.test(w)))) mark(r.entity, 'providers', s, 'skill_type:names_entity');
+      if (!r.providers.has(s.name) && inText.test(s.description ?? '')) mark(r.entity, 'consumers', s, 'description:entity_targeted_or_exploded');
+    }
+  }
+  // An entity is judgeable only when the data names it as an object (stat id or Creates/Destroys type), both sides
+  // exist, and it is a discrete entity rather than a property of most skills (cardinality limit).
+  const judgeable = [], unjudgeable = [];
+  for (const r of entities.values()) {
+    const row = { entity: r.entity, head: entityHead(r.entity), consumers: [...r.consumers.values()], providers: [...r.providers.values()] };
+    const ok = r.attested && row.providers.length && row.consumers.length && row.providers.length <= ENTITY_MAX_SKILLS && row.consumers.length <= ENTITY_MAX_SKILLS;
+    (ok ? judgeable : unjudgeable).push(row);
+  }
+  const byConsumer = new Map();
+  for (const r of judgeable) for (const c of r.consumers) {
+    if (!byConsumer.has(c.name)) byConsumer.set(c.name, []);
+    byConsumer.get(c.name).push({ entity: r.entity, how: c.how, providers: r.providers.map(p => p.name) });
+    if (c.id && !byConsumer.has(c.id)) byConsumer.set(c.id, byConsumer.get(c.name));
+  }
+  const providerNames = new Map();
+  for (const r of judgeable) for (const p of r.providers) {
+    for (const key of [p.name, p.id].filter(Boolean)) {
+      if (!providerNames.has(key)) providerNames.set(key, new Set());
+      providerNames.get(key).add(r.entity);
+    }
+  }
+  return { entities: judgeable, unjudgeable: unjudgeable.map(r => ({ entity: r.entity, consumers: r.consumers.map(c => c.name), providers: r.providers.map(p => p.name) })),
+    requirementsOf: key => byConsumer.get(key) ?? [], providesOf: key => providerNames.get(key) ?? new Set(),
+    note: 'Derived from the pinned skill data (skill types, descriptions, stat ids); entities without a known provider are in `unjudgeable`.' };
+}
+
+// Pinned skill data from the knowledge snapshot (read-only, no network). Returns null when the snapshot is absent,
+// and the rule then reports `unknown` instead of guessing.
+export function readSkillData(db) {
+  const skills = [];
+  for (const row of db.prepare("SELECT id, name, payload_json FROM records WHERE category IN ('gems', 'granted_skills')").all()) {
+    const payload = JSON.parse(row.payload_json);
+    if (payload.is_support || !payload.active_skill) continue;
+    const statIds = new Set();
+    const walk = o => {
+      if (!o || typeof o !== 'object') return;
+      if (Array.isArray(o)) { o.forEach(walk); return; }
+      if (typeof o.id === 'string' && o.type) statIds.add(o.id);
+      for (const v of Object.values(o)) if (v && typeof v === 'object') walk(v);
+    };
+    walk(payload);
+    skills.push({ id: row.id, name: row.name, types: payload.active_skill.types ?? [], description: payload.active_skill.description ?? '', stat_ids: [...statIds] });
+  }
+  return skills;
+}
+
+let catalogCache;
+export function sourceCatalog() {
+  if (catalogCache !== undefined) return catalogCache;
+  catalogCache = null;
+  try {
+    const file = fileURLToPath(new URL('../data/knowledge-3.30.sqlite', import.meta.url));
+    if (!fs.existsSync(file)) return catalogCache;
+    const db = new DatabaseSync(file, { readOnly: true });
+    try { catalogCache = deriveSourceCatalog(readSkillData(db)); } finally { db.close(); }
+  } catch { catalogCache = null; }
+  return catalogCache;
+}
 
 export const rules = {
   // Profane Bloom: cursed enemies killed explode. No curse source = no explosions (PoB keeps the explosion group anyway).
@@ -85,6 +244,35 @@ export const rules = {
     return makers.length ? result('corpse_source', 'uptime', 'corpse_availability', 'pass', `Corpse maker: ${makers.join(', ')}.`)
       : result('corpse_source', 'uptime', 'corpse_availability', 'warn', `${[...new Set(users)].join(', ')} without Desecrate/Unearth: no corpses at bosses or the first pack.`);
   },
+  // A skill that needs an entity another skill creates (Lingering Blades, corpses, placed mines): the entity must have
+  // a source among the prototype's own skill groups, and that source is a key the player presses.
+  skill_source_required(spec) {
+    const r = (status, evidence, extra = {}) => ({ ...result('skill_source_required', 'uptime', 'skill_source_uptime', status, evidence), ...extra });
+    if (!spec.skills) return r('unknown', 'No skills in the prototype.');
+    const catalog = spec.source_catalog ?? sourceCatalog();
+    if (!catalog) return r('unknown', 'Pinned skill data (knowledge snapshot) unavailable: cannot derive which skills need a source.');
+    const groups = enabledGroups(spec);
+    const keys = [...new Set(groups.flatMap(g => [...(g.gems ?? []), ...(g.gem_ids ?? [])]).map(String))];
+    const required = new Map();
+    for (const key of keys) for (const req of catalog.requirementsOf(key)) {
+      const seen = required.get(req.entity);
+      if (seen) { if (!seen.needed_by.includes(key)) seen.needed_by.push(key); continue; }
+      required.set(req.entity, { entity: req.entity, needed_by: [key], how: req.how, known_providers: req.providers });
+    }
+    if (!required.size) return r('not_applicable', 'No skill in the prototype needs an entity another skill creates.');
+    const provided = new Set(keys.flatMap(key => [...catalog.providesOf(key)]));
+    const sources = { entities: [...required.values()].map(x => ({ entity: x.entity, needed_by: x.needed_by[0], derived_from: x.how, provided: provided.has(x.entity) })) };
+    const missing = [...required.values()].filter(x => !provided.has(x.entity));
+    if (missing.length) return r('fail', missing.map(x => `${x.needed_by[0]} needs ${x.entity}: no skill group of the prototype creates ${x.entity} (skills that do: ${x.known_providers.slice(0, 4).join(', ')}${x.known_providers.length > 4 ? ', ...' : ''}); PoB multiplies damage by a Config count of ${x.entity} regardless.`).join(' '), { sources });
+    // Source present: its placement is a pressed key and must be inside the button estimate.
+    const pressedNames = buttonKeyNames(spec);
+    const present = [...required.values()].map(x => ({ entity: x.entity, providers: x.known_providers.filter(p => keys.includes(p)) }));
+    const evidence = present.map(x => `${x.entity} from ${x.providers.join(', ') || 'a skill of the prototype'}`).join('; ');
+    if (!pressedNames) return r('pass', `Source present: ${evidence}. Button accounting not checked (no PoB active skills or button estimate in the spec).`, { sources });
+    const uncounted = present.flatMap(x => x.providers.filter(p => !pressedNames.has(p)).map(p => `${p} (source of ${x.entity})`));
+    return uncounted.length ? r('warn', `Source present but not counted as a pressed key: ${uncounted.join(', ')}. The button estimate understates how many keys the build needs.`, { sources })
+      : r('pass', `Source present and counted as a pressed key: ${evidence}.`, { sources });
+  },
   // Ascendancy points: 8 in total, a Bloodline spends the same budget.
   ascendancy_budget(spec) {
     if (!spec.ascendancy_nodes && spec.ascendancy_points == null) return result('ascendancy_budget', 'ascendancy-budget', null, 'unknown', 'No ascendancy_nodes in the prototype.');
@@ -117,11 +305,14 @@ export function validatePrototype(spec, { only = null } = {}) {
 // Spec from `pob inspect` output (+ optional `pob run` result for explode sources and keystones of the calculation).
 export function specFromInspect(inspect, run = null) {
   const skills = (inspect.skills ?? []).filter(s => s.label !== 'On Kill Monster Explosion')
-    .map(s => ({ label: s.label, enabled: s.enabled !== 'false', gems: (s.gems ?? []).filter(g => g.enabled !== 'false' && g.name).map(g => g.name) }));
+    .map(s => { const gems = (s.gems ?? []).filter(g => g.enabled !== 'false' && g.name);
+      const ids = gems.map(g => g.skill_id).filter(Boolean);
+      return { label: s.label, enabled: s.enabled !== 'false', gems: gems.map(g => g.name), ...(ids.length ? { gem_ids: ids } : {}) }; });
   const spec = { ascendancy: inspect.ascendancy ?? null, skills, config: inspect.config ?? {} };
   if (!run) return spec;
   const o = run.output ?? {};
   spec.explode_sources = (run.explode_mods ?? []).map(m => m.source_name).filter(Boolean);
+  if (Array.isArray(run.active_skills)) spec.active_skills = run.active_skills;
   if (Array.isArray(run.equipped_items)) spec.items = run.equipped_items.map(i => [i.name, i.base].filter(Boolean).join(' '));
   if (Number.isFinite(run.budget?.ascendancy_used)) spec.ascendancy_points = run.budget.ascendancy_used;
   if (Number.isFinite(o.EnemyCurseLimit)) spec.curse_limit = o.EnemyCurseLimit;

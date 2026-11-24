@@ -2259,5 +2259,284 @@
         "target": "defense-metrics"
       }
     ]
+  },
+  {
+    "id": "player-buffs",
+    "title": "Баффы игрока: Onslaught, Arcane Surge, Elusive, Adrenaline, Unholy Might, Fortification",
+    "aliases": [
+      "onslaught",
+      "arcane surge",
+      "elusive",
+      "adrenaline",
+      "unholy might",
+      "fortify",
+      "fortification",
+      "phasing",
+      "buff effect",
+      "buffeffectonself",
+      "onslaughteffect",
+      "arcanesurgeeffect",
+      "elusiveeffect",
+      "баффы"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Баффы дают фиксированные базовые значения, которые масштабируются «increased effect»; PoB включает их только при флаге или в Config, а их поддержание не проверяет.",
+    "rules": [
+      "Onslaught (CalcPerform): floor(20 × (1 + OnslaughtEffect + BuffEffectOnSelf)) % increased скорости атаки, каста и передвижения. Если источник — Silver Flask, к эффекту добавляется эффект флакона (FlaskEffect, MagicUtilityFlaskEffect у магического).",
+      "Arcane Surge: effect = 1 + ArcaneSurgeEffect + BuffEffectOnSelf (+ FlaskEffect × FlaskEffectToArcaneSurgeEffect). База — 30% increased регенерации маны и 20% increased скорости каста (ArcaneSurgeManaRegen/ArcaneSurgeCastSpeed могут её заменить); ArcaneSurgeDamage даёт MORE урон заклинаний; добавочные ArcaneSurgeAlso* — LifeRegen, ManaRecoup, ManaCostEfficiency.",
+      "Elusive: база — 15% избежать урон от попаданий и 30% increased скорости передвижения; эффект убывает со временем. PoB берёт среднее между текущим и пороговым эффектом (ElusiveEffectMod), Override ElusiveEffect фиксирует значение.",
+      "Adrenaline: floor(100 × effect) % increased урона, по 25% скорости атаки/каста/передвижения, 10% физического снижения урона.",
+      "Unholy Might: 100 × (1 + BuffEffectOnSelf) % конверсии физического урона в хаос (PhysicalDamageConvertToChaos) и возможность наложить Wither; UnholyMightAlsoChaosPenetration добавляет пенетрацию хаоса.",
+      "Fortification: по 1% MORE меньше урона от попаданий за стак (DamageTakenWhenHit MORE −stacks); максимум — base_max_fortification из констант персонажа (по умолчанию 20) + MaximumFortification; длительность — FortifyBaseDuration 6 с × (1 + FortifyDuration). Config overrideFortification задаёт число стаков, иначе PoB берёт максимум.",
+      "Config: buffOnslaught, buffArcaneSurge, buffFortification, buffElusive включают сам бафф и условия «while you have X». Сценарий sustained выключает Onslaught."
+    ],
+    "conditions": [
+      "Источник и поддержание баффа (флакон, «on kill», триггер Arcane Surge Support при трате маны) PoB не моделирует: включённый флаг — допущение аптайма.",
+      "Elusive и Onslaught «on kill» почти не работают против одиночного босса; для боссового сценария выключать.",
+      "BuffEffectOnSelf масштабирует все баффы на себе (в том числе ауры от себя), а не только перечисленные."
+    ],
+    "pitfalls": [
+      "Включить buffOnslaught и buffElusive в боссовом сценарии без источника, который действует против одной цели.",
+      "Считать Fortification при её отсутствии в билде (флаг Config ставится вручную).",
+      "Складывать OnslaughtEffect с эффектом флакона, если Onslaught дают не флаконом."
+    ],
+    "sources": [
+      "pob.calc-perform",
+      "pob.config"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "uptime"
+      },
+      {
+        "type": "check_with",
+        "target": "charges"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      },
+      {
+        "type": "check_with",
+        "target": "enemy-config"
+      }
+    ]
+  },
+  {
+    "id": "attributes-requirements",
+    "title": "Атрибуты, требования и бонусы атрибутов",
+    "aliases": [
+      "attributes",
+      "attribute",
+      "strength",
+      "dexterity",
+      "intelligence",
+      "str",
+      "dex",
+      "int",
+      "requirement",
+      "reqstr",
+      "omniscience",
+      "атрибуты",
+      "сила",
+      "ловкость",
+      "интеллект",
+      "требования"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Атрибуты дают встроенные бонусы и открывают предметы и камни; недостаток требований отключает предмет или камень, а излишек атрибутов без масштабирования от них — потерянная сила.",
+    "rules": [
+      "Бонусы (CalcPerform): каждые 2 Str — +1 к жизни; каждые 5 Str — 1% increased физического урона ближнего боя (+DexIntToMeleeBonus); каждый Dex — AccuracyPerDexBase = 2 к меткости; каждые 5 Dex — 1% increased уклонения; каждые 2 Int — +1 к мане; каждые 10 Int — 1% increased энергощита.",
+      "Атрибуты считаются в два прохода из-за взаимных зависимостей («X выше Y»); Omniscience переводит атрибуты в Omni с вычетом двойного учёта.",
+      "Требования ReqStr/ReqDex/ReqInt — максимум требований предметов и камней; при Str < ReqStr PoB выдаёт предупреждение «You do not meet the Strength requirement of …» и источник требования.",
+      "Нормы корпуса 3.30 (corpus norms, 24.11.2026): медианный запас атрибутов сверх требований — около 170; верхние 10% — выше 340–360 (у атак встречаются выбросы, связанные с масштабированием от атрибутов).",
+      "Флаги NoAttributeBonuses, NoStrBonusToLife, NoIntBonusToMana и подобные (keystones и уникальные предметы) отключают соответствующие бонусы."
+    ],
+    "conditions": [
+      "Масштабирование «per X attribute» (PerStat в ModCache) делает излишек атрибутов полезным; без таких модов излишек — кандидат на замену.",
+      "Требования камней растут с уровнем; при прокачке гемов требования меняются."
+    ],
+    "pitfalls": [
+      "Считать большой запас атрибутов ошибкой, если в билде есть масштабирование от атрибутов (PerStat).",
+      "Игнорировать предупреждение о невыполненных требованиях: PoB может показывать урон, а в игре камень или предмет не работает."
+    ],
+    "sources": [
+      "pob.calc-perform"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "item-level-equipment"
+      },
+      {
+        "type": "check_with",
+        "target": "support-compatibility"
+      },
+      {
+        "type": "check_with",
+        "target": "resource-sustain"
+      }
+    ]
+  },
+  {
+    "id": "jewels-clusters",
+    "title": "Jewels, радиусы и cluster jewels",
+    "aliases": [
+      "jewel",
+      "jewels",
+      "cluster",
+      "cluster jewel",
+      "clusterjewelnotable",
+      "addtoclusterjewelnode",
+      "abyss",
+      "timeless",
+      "radius",
+      "socketedjeweleffect",
+      "кластер",
+      "самоцвет"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Гнёзда для jewels в дереве — отдельный слой силы: обычные, абиссальные и timeless jewels дают моды или трансформируют узлы в радиусе, а cluster jewels добавляют новые узлы в дерево.",
+    "rules": [
+      "Cluster jewel (PassiveSpec:BuildClusterJewelGraphs): большой или средний cluster в гнезде-расширении создаёт подграф узлов; его notables (ClusterJewelNotable) и малые узлы (AddToClusterJewelNode) выделяются как обычные узлы и стоят очков.",
+      "Средние гнёзда внутри большого cluster (expansionJewel size 2) работают только при валидном вставленном jewel (clusterJewelValid); дерево без jewel не даёт пути к таким узлам (pob run выдаёт ошибку «cluster without jewel»).",
+      "Радиусные jewels: моды «in radius» применяются к узлам из nodesInRadius[radiusIndex] гнезда; timeless jewels трансформируют узлы по seed (данные установлены в проекте).",
+      "Абиссальные гнёзда в предметах (Sockets: A) принимают абиссальные jewels; пустое абиссальное гнездо показывает analyze coverage.",
+      "Нормы корпуса 3.30: cluster jewels есть примерно у 72% билдов (83% атак, 89% миньонов, 68% заклинаний)."
+    ],
+    "conditions": [
+      "Узлы cluster jewel существуют в дереве только после вставки jewel; генератору нужна поддержка cluster в сборщике предметов (WP5b п. 5).",
+      "SocketedJewelEffect и ограничения limitDisabled меняют эффект; уникальные jewels с «Limited to» проверяются PoB."
+    ],
+    "pitfalls": [
+      "Выделить узлы cluster без вставленного jewel.",
+      "Считать гнёзда для jewels в дереве бесполезными очками: это слот для силы, которую оценивает item pool и analyze nodes."
+    ],
+    "sources": [
+      "pob.passive-spec",
+      "pob.items-tab",
+      "ggg.tree"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "item-level-equipment"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      },
+      {
+        "type": "check_with",
+        "target": "ascendancy-budget"
+      }
+    ]
+  },
+  {
+    "id": "keystones",
+    "title": "Keystones: правила-компромиссы и их источники",
+    "aliases": [
+      "keystone",
+      "keystones",
+      "impossible escape",
+      "impossibleescapekeystones",
+      "mind over matter",
+      "chaos inoculation",
+      "eldritch battery",
+      "elemental overload",
+      "zealots oath",
+      "кейстоун"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Keystone меняет правило игры ценой недостатка; его ценность зависит от архетипа, поэтому выбор проверяется расчётом и нормами корпуса, а не одним числом.",
+    "rules": [
+      "Источники keystone в PoB: узел дерева (type Keystone, CalcSetup), мод «Keystone LIST <name>» из предмета или условия (например, Perfect Agony «if you have dealt a critical strike recently», Crimson Dance при Cat's Stealth), Impossible Escape (ImpossibleEscapeKeystones: узлы в радиусе выбранного keystone без пути).",
+      "Keystones с предметов и узлов объединяются modLib.mergeKeystones; повторный keystone не складывается.",
+      "Условные keystone («while», «if») включаются только при выполнении Condition в Config; сценарий может их выключить.",
+      "Нормы корпуса 3.30 (corpus norms): у заклинаний чаще всего Mind Over Matter (~36%), Chaos Inoculation и Zealot's Oath (~20%); у атак — Chaos Inoculation, Unwavering Stance, Versatile Combatant; keystone вне нормы группы проверка основ помечает как keystone_unusual (info)."
+    ],
+    "conditions": [
+      "Конфликты keystones (например, CI и жизнь, EB и MoM) частично проверяет mechanic validate.",
+      "Ценность keystone в PoB видна через analyze ablate (снятие узла штатным remove_nodes) и analyze nodes --types Keystone."
+    ],
+    "pitfalls": [
+      "Брать keystone по популярности без проверки архетипа (CI без ES-базы, MoM без запаса маны).",
+      "Считать условный keystone с предмета постоянным."
+    ],
+    "sources": [
+      "pob.calc-setup",
+      "pob.mod-parser",
+      "ggg.tree"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "eldritch-battery-mom"
+      },
+      {
+        "type": "check_with",
+        "target": "low-life-ci-hybrid"
+      },
+      {
+        "type": "check_with",
+        "target": "stacking"
+      }
+    ]
+  },
+  {
+    "id": "ward",
+    "title": "Ward: поглощение урона перед жизнью",
+    "aliases": [
+      "ward",
+      "варда",
+      "wardbypass",
+      "wardrechargedelay"
+    ],
+    "game": "poe1",
+    "patch": "3.30",
+    "confidence": "pob_implementation",
+    "summary": "Ward поглощает урон попадания до остальных пулов; если он сломан, восстанавливается после задержки, а не постепенно.",
+    "rules": [
+      "PoB (CalcDefence): попадание сначала тратит Ward (с учётом WardBypass), остаток идёт в ES и жизнь; при WardAvoidBreakChance или Condition:WardNotBreak Ward может не сломаться.",
+      "WardBypassBelowPercent позволяет урону обходить Ward ниже порога; PhysicalReductionBasedOnWard (некоторые навыки) считает физическое снижение от Ward вместо брони.",
+      "Задержка восстановления — WardRechargeDelay = 2 с / (1 + WardRechargeFaster)."
+    ],
+    "conditions": [
+      "В EHP PoB Ward учитывается как вероятность активного Ward (WardActiveChance); серия частых попаданий против Ward PoB полностью не моделирует."
+    ],
+    "pitfalls": [
+      "Складывать Ward с жизнью как постоянный пул против частых попаданий."
+    ],
+    "sources": [
+      "pob.calc-defence"
+    ],
+    "verification": "Inspect the cited implementation and compare a controlled PoB calculation before applying to a real build.",
+    "relations": [
+      {
+        "type": "check_with",
+        "target": "defense-metrics"
+      },
+      {
+        "type": "check_with",
+        "target": "damage-taken-as"
+      },
+      {
+        "type": "check_with",
+        "target": "recovery"
+      }
+    ]
   }
 ]

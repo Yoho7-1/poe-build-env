@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { sampleComponents, baselines, scoreTiers, validatePredictions, predictBenchmark, scoreBenchmark, showBenchmark, benchmarkStats } from '../scripts/lab-bench.mjs';
+import { sampleComponents, baselines, scoreTiers, validatePredictions, predictBenchmark, scoreBenchmark, showBenchmark, benchmarkStats, ensembleTier, routeFromCells, parseRoute, ensembleTaskScore } from '../scripts/lab-bench.mjs';
 import { createRecord, getRecord } from '../scripts/lab.mjs';
 
 const comps = [
@@ -55,4 +55,43 @@ test('benchmark flow: no truth before scoring, frozen predictions, agent vs base
     const st = benchmarkStats(ledger);
     assert.equal(st.scored, 1); assert.equal(st.agent_exact, 0.75); assert.equal(st.baselines.kind_prior, 0.75);
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('ensemble routes kinds to the stronger predictor and learns a route from other builds only', () => {
+  // Fixed route: items from the agent, everything else from empirical.
+  assert.equal(ensembleTier('items', { agent: 'core', empirical: 'minor' }), 'core');
+  assert.equal(ensembleTier('config', { agent: 'core', empirical: 'minor' }), 'minor');
+  assert.equal(ensembleTier('items', { empirical: 'minor' }), 'minor'); // missing source falls back to the other one
+  assert.equal(ensembleTier('tree', { agent: 'major' }), 'major');
+  assert.equal(ensembleTier('unheard_of', { agent: 'major', empirical: 'core' }), 'major'); // unknown kind -> fallback
+  assert.equal(ensembleTier('unheard_of', { agent: 'major', empirical: 'core' }, {}, 'empirical'), 'core');
+  // Learned route: agent wins on items (2 of 3 exact vs 0), empirical on config; a kind under minCells takes the overall winner.
+  const cell = (kind, truth, agent, empirical) => ({ kind, truth, by: { agent, empirical } });
+  const cells = [
+    ...['core', 'core', 'minor'].map((t, i) => cell('items', t, t, 'minor')), cell('items', 'major', 'minor', 'minor'), cell('items', 'core', 'minor', 'minor'),
+    ...['minor', 'minor', 'minor', 'major', 'core'].map(t => cell('config', t, 'core', t)),
+    cell('tree', 'core', 'core', 'minor')];
+  const learned = routeFromCells(cells);
+  assert.equal(learned.route.items, 'agent'); assert.equal(learned.route.config, 'empirical');
+  assert.equal(learned.route.tree, learned.fallback); // 1 cell < minCells: overall winner, not a per-kind choice
+  assert.deepEqual(routeFromCells([]), { route: {}, fallback: 'agent' });
+  assert.deepEqual(parseRoute('items=agent,config=empirical'), { items: 'agent', config: 'empirical' });
+  assert.equal(parseRoute(null), null);
+  assert.throws(() => parseRoute('items=oracle'), /kind=agent\|empirical/);
+});
+
+test('ensemble score of a benchmark uses frozen agent and stored empirical predictions', () => {
+  const comps4 = comps.slice(0, 4); // 2 supports, 1 unique item, 1 flask item
+  const truth = { 'support:1:2': 'core', 'support:1:3': 'minor', 'item:Helmet': 'core', 'item:Flask 2': 'negligible' };
+  const record = { data: {
+    task: { components: comps4 },
+    predictions: { tiers: { 'support:1:2': 'minor', 'support:1:3': 'minor', 'item:Helmet': 'core', 'item:Flask 2': 'negligible' } },
+    score: { truth, input_sha256: 'h', baseline_predictions: { empirical: { 'support:1:2': 'core', 'support:1:3': 'core', 'item:Helmet': 'minor', 'item:Flask 2': 'minor' } } } } };
+  // supports from empirical (1 of 2 right, the miss is two classes off), items from the agent (2 of 2 right) -> 3 of 4.
+  assert.deepEqual(ensembleTaskScore(record), { exact: 0.75, within_one: 0.75, n: 4, from_empirical: true });
+  // Without stored empirical predictions the ensemble falls back to the agent's own numbers (3 of 4 here).
+  const noEmp = { data: { ...record.data, score: { ...record.data.score, baseline_predictions: { kind_prior: {} } } } };
+  assert.equal(ensembleTaskScore(noEmp).exact, 0.75);
+  assert.equal(ensembleTaskScore(noEmp).from_empirical, false);
+  assert.equal(ensembleTaskScore({ data: { task: { components: comps4 } } }), null); // not scored
 });

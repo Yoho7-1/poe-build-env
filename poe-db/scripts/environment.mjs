@@ -14,13 +14,15 @@ export function bootstrap(id = 'main', { buildsDirectory = undefined, ledger = u
   const lock = readJson(path.join(dbRoot, 'environment.lock.json'));
   return { game: lock.game, patch: lock.patch, mode: lock.mode, root: projectRoot, network_required: false,
     versions: lock.versions, snapshots: lock.snapshots, build: briefBuild(loadBuild(id, buildsDirectory)), lab: ledgerBrief(ledger),
-    commands: { query: 'agent.mjs query knowledge gem Fireball --level 20', mechanics: 'agent.mjs mechanic search "урон"',
-      calculate: 'agent.mjs pob run <file.xml> --scenario sustained', references:'agent.mjs example list',prices:'agent.mjs price get <exact name>',state: `agent.mjs build show ${id}`, research: 'agent.mjs lab list | lab stats' },
+    tasks: { design: '.agents/skills/poe-build-design/SKILL.md', audit: '.agents/skills/poe-build-audit/SKILL.md',
+      upgrade: '.agents/skills/poe-upgrade/SKILL.md', research: '.agents/skills/poe-discovery/SKILL.md' },
+    help: 'agent.mjs help -> command groups; agent.mjs <group> [operation] --help -> options',
     rules: ['Reference/client presence does not prove league acquisition.', 'Unknown values remain null; alternatives are not simultaneous.',
       'Gem numeric units are source-native; quality requires explicit handling.', 'Preserve activation conditions and report missing evidence.',
       'A PoB calculation is conditional, not an in-game test.', 'Historical originals and local migrations are separate; quarantined references are invalid.',
-      'Market prices are dated and variant-specific; resolve currency conversion warnings before totaling a budget.'],
-    next: 'Read only the cards relevant to the current design; resolve unknown user requirements before choosing a final build.' };
+      'Market prices are dated and variant-specific; resolve currency conversion warnings before totaling a budget.',
+      'Before trusting a number read engine_warnings, unparsed_* and the scenario config; not_modelled means not calculated.'],
+    next: 'Open the skill for the task in tasks; let commands compute, read only the fields you need; resolve unknown user requirements before a final build.' };
 }
 
 export function doctor({ deep = false } = {}) {
@@ -119,9 +121,14 @@ export function doctor({ deep = false } = {}) {
   if(deep)check('pob-control',()=>{
     const expected=readJson(path.join(dbRoot,'fixtures/fireball-control.expected.json'));
     // noCache: a cached control result must not hide a broken engine.
-    const result=runPob({input:fs.readFileSync(path.join(dbRoot,'fixtures/fireball-control.xml'),'utf8'),noCache:true});
+    const input=fs.readFileSync(path.join(dbRoot,'fixtures/fireball-control.xml'),'utf8');
+    // Single-shot path (one PoB process) and the persistent host pool must give identical numbers.
+    const result=runPob({input,noCache:true,full:true,persistent:false});
     for(const [key,value]of Object.entries(expected.expected))if(!Number.isFinite(result.output[key])||Math.abs(result.output[key]-value)>Math.max(1,Math.abs(value))*expected.relative_tolerance)throw new Error(`Control calculation mismatch: ${key}`);
-    return {engine:result.engine.version,calculation_id:result.calculation_id,checked_stats:Object.keys(expected.expected)};
+    const pooled=runPob({input,noCache:true,full:true,persistent:true});
+    const differing=[...new Set([...Object.keys(result.output),...Object.keys(pooled.output)])].filter(key=>!Object.is(result.output[key],pooled.output[key]));
+    if(differing.length)throw new Error(`Persistent PoB host differs from the single-shot path: ${differing.slice(0,10).join(', ')}`);
+    return {engine:result.engine.version,calculation_id:result.calculation_id,checked_stats:Object.keys(expected.expected),persistent_host:{identical_outputs:Object.keys(result.output).length}};
   });
   return { game: lock.game, patch: lock.patch, ready: checks.every(c => c.status === 'ok'), deep, network_required: false, checks };
 }

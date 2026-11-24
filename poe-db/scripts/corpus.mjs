@@ -27,15 +27,30 @@ export function sourceMap(files = []) {
 }
 
 // One file or share code into the corpus. Standard 3_28/3_29 trees are migrated explicitly (node changes counted).
-export function addToCorpus({ file, source = null, trust = 'unknown', originPatch = null, scenario = 'sustained', directory = corpusDirectory(), cards = cardDirectory() }) {
+// Held-out split (WP7 tests): cards and XML live in their own directory (research/lab/corpus/heldout), so corpus
+// learn/principles/ablate-all, which read the training card directory, never see them. Only native 3_30 trees at
+// level >= minLevel; a build already in the training corpus (same XML hash or structural signature) is refused.
+export const heldOutDirectory = () => path.join(corpusDirectory(), 'heldout');
+export const heldOutCards = () => path.join(heldOutDirectory(), 'cards');
+export function heldOutCheck(card, { minLevel = 90, training = cardDirectory() } = {}) {
+  const level = card.identity?.level;
+  if (!(typeof level === 'number' && level >= minLevel)) return `level ${level ?? 'unknown'} < ${minLevel}`;
+  if (!card.features?.ascendancy || card.features.ascendancy === 'None') return 'no ascendancy';
+  const leak = listCards(training).find(c => c.pob_sha256 === card.identity.pob_sha256 || c.signature === card.signature);
+  return leak ? `already in the training corpus (${leak.file}, ${leak.pob_sha256 === card.identity.pob_sha256 ? 'same XML' : 'same signature'})` : null;
+}
+
+export function addToCorpus({ file, source = null, trust = 'unknown', originPatch = null, scenario = 'sustained', directory = corpusDirectory(), cards = cardDirectory(), heldOut = null }) {
   if (!trusts.includes(trust)) throw new Error(`--trust must be ${trusts.join('|')}`);
   const raw = fs.readFileSync(file);
   const { xml } = decodeBuild(raw);
   const audit = inspectBuild(xml);
   const sha = createHash('sha256').update(xml).digest('hex');
+  if (heldOut && audit.tree_version !== '3_30' && !(heldOut.allowMigrated && ['3_28', '3_29'].includes(audit.tree_version))) throw new Error(`held-out takes native 3_30 trees only (tree ${audit.tree_version}; --allow-migrated takes 3_28/3_29 with explicit migration)`);
   fs.mkdirSync(path.join(directory, 'xml'), { recursive: true });
   let target = path.join(directory, 'xml', `${sha.slice(0, 16)}.xml`), migration = null;
-  if (audit.tree_version === '3_30') { if (!fs.existsSync(target)) fs.writeFileSync(target, xml); }
+  const created = !fs.existsSync(target);
+  if (audit.tree_version === '3_30') { if (created) fs.writeFileSync(target, xml); }
   else if (['3_28', '3_29'].includes(audit.tree_version)) {
     target = path.join(directory, 'xml', `${sha.slice(0, 16)}-to-3_30.xml`);
     if (!fs.existsSync(target)) {
@@ -45,9 +60,15 @@ export function addToCorpus({ file, source = null, trust = 'unknown', originPatc
   } else throw new Error(`Tree ${audit.tree_version} is not supported (3_28/3_29 migrate, 3_30 direct)`);
   const card = buildCard({ file: target, scenario, source: source ?? path.basename(file), trust });
   card.identity.origin = { file: path.basename(file), source_sha256: sha, origin_patch: originPatch ?? (audit.tree_version === '3_30' ? '3.30' : audit.tree_version.replace('_', '.')), migration };
+  if (heldOut) {
+    const why = heldOutCheck(card, heldOut);
+    if (why) { if (created || migration?.trees) fs.rmSync(target, { force: true }); throw new Error(`held-out refused: ${why}`); }
+    card.identity.held_out = { split: 'held_out', min_level: heldOut.minLevel ?? 90, migrated: !!migration, added: new Date().toISOString().slice(0, 10),
+      note: 'Test split for corpus principles (lab gates): stored apart from the training cards; never pass it to corpus learn/principles.' };
+  }
   const stored = saveCard(card, cards);
-  return { name: path.basename(file), signature: card.signature, class: card.features.class, ascendancy: card.features.ascendancy, main_skill: card.features.main_skill,
-    form: card.features.primary_form, type: card.features.primary_type, dps: card.damage.effective_dps, scope: card.damage.scope, migrated: !!migration, same_signature: stored.same_signature, card: stored.saved };
+  return { name: path.basename(file), signature: card.signature, class: card.features.class, ascendancy: card.features.ascendancy, main_skill: card.features.main_skill, level: card.identity.level,
+    form: card.features.primary_form, type: card.features.primary_type, dps: card.damage.effective_dps, scope: card.damage.scope, migrated: !!migration, same_signature: stored.same_signature, card: stored.saved, xml: target, ...(heldOut ? { held_out: true } : {}) };
 }
 
 // Share-code hosts PoB itself imports from. One request per link (cached, conditional), never a crawl: links come from
@@ -60,7 +81,7 @@ export function rawUrl(url) {
   if (u.hostname === 'pastebin.com') return `https://pastebin.com/raw/${u.pathname.replace(/^\/(raw\/)?/, '').replace(/\/$/, '')}`;
   throw new Error(`Unsupported host ${u.hostname}: use a pobb.in, pob.codes or pastebin.com link, or paste the code with --code / a .txt file`);
 }
-export async function addFromUrl({ url, source = null, trust = 'community', originPatch = null, fetchSource = null, directory = corpusDirectory(), cards = cardDirectory() }) {
+export async function addFromUrl({ url, source = null, trust = 'community', originPatch = null, fetchSource = null, directory = corpusDirectory(), cards = cardDirectory(), heldOut = null }) {
   const raw = rawUrl(url);
   const fetcher = fetchSource ?? (await import('./source-cache.mjs')).cachedSource;
   let data;
@@ -70,7 +91,7 @@ export async function addFromUrl({ url, source = null, trust = 'community', orig
   fs.mkdirSync(path.join(directory, 'codes'), { recursive: true });
   const file = path.join(directory, 'codes', `${createHash('sha256').update(code).digest('hex').slice(0, 16)}.txt`);
   if (!fs.existsSync(file)) fs.writeFileSync(file, code);
-  return { url, ...addToCorpus({ file, source: source ?? url, trust, originPatch, directory, cards }) };
+  return { url, ...addToCorpus({ file, source: source ?? url, trust, originPatch, directory, cards, heldOut }) };
 }
 // Links already in the corpus: the URL part of each card's identity.source, normalised to the raw paste address.
 export function corpusSources(cards = cardDirectory()) {
@@ -84,9 +105,11 @@ export function corpusSources(cards = cardDirectory()) {
 }
 // List file: one link per line, optional "<TAB>source note" (guide page, author, tier); '#' comments. Links already in
 // the corpus are skipped, so a rerun resumes; failures go to <list>.failed.txt (itself a list, error as a comment).
-export async function addFromList({ file, trust = 'community', originPatch = null, delayMs = 2000, fetchSource = null, directory, cards = cardDirectory() }) {
+// heldOut {minLevel, training}: links of the training corpus are skipped too (no leakage between the splits).
+export async function addFromList({ file, trust = 'community', originPatch = null, delayMs = 2000, fetchSource = null, directory, cards = cardDirectory(), heldOut = null }) {
   const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/).map(l => l.trim()).filter(l => l && !l.startsWith('#'));
   const known = corpusSources(cards), seen = new Set();
+  if (heldOut) for (const u of corpusSources(heldOut.training ?? cardDirectory())) known.add(u);
   const failedFile = file.replace(/\.txt$/i, '') + '.failed.txt';
   const added = [], failed = [], skipped = [];
   const writeFailed = () => fs.writeFileSync(failedFile, `# corpus add-list failures from ${path.basename(file)} (${new Date().toISOString()}); rerun: corpus add-list <this file>\n`
@@ -99,7 +122,7 @@ export async function addFromList({ file, trust = 'community', originPatch = nul
     if (known.has(key) || seen.has(key)) { skipped.push(url); continue; }
     seen.add(key);
     if (delayMs && fetched++) await new Promise(r => setTimeout(r, delayMs));
-    try { const r = await addFromUrl({ url, source: note ? `${url} (${note})` : url, trust, originPatch, fetchSource, directory, cards }); added.push(r); known.add(key); }
+    try { const r = await addFromUrl({ url, source: note ? `${url} (${note})` : url, trust, originPatch, fetchSource, directory, cards, heldOut }); added.push(r); known.add(key); }
     catch (e) { failed.push({ url, line, error: e.message.slice(0, 300) }); writeFailed(); }
   }
   if (!failed.length && fs.existsSync(failedFile)) fs.rmSync(failedFile);
@@ -127,12 +150,18 @@ export function corpusSummary(cards = cardDirectory()) {
 }
 
 export function corpusCommand(args) {
-  const { positional, options } = flags(args, ['source', 'trust', 'origin-patch', 'scenario', 'sources', 'code', 'delay-ms']);
+  const { positional, options } = flags(args, ['source', 'trust', 'origin-patch', 'scenario', 'sources', 'code', 'delay-ms', 'min-level'], ['held-out', 'allow-migrated']);
   const [op, target] = positional;
   if (op === 'summary') return corpusSummary();
   if (op === 'list') return { cards: listCards() };
   if (op === 'add-url') { if (!target) throw new Error('Use corpus add-url <pobb.in|pob.codes|pastebin link> [--source text] [--trust t] [--origin-patch p]'); return addFromUrl({ url: target, source: options.source ?? null, trust: options.trust ?? 'community', originPatch: options['origin-patch'] ?? null }); }
-  if (op === 'add-list') { if (!target) throw new Error('Use corpus add-list <links.txt> (one link per line, optional TAB note)'); return addFromList({ file: path.resolve(target), trust: options.trust ?? 'community', originPatch: options['origin-patch'] ?? null, delayMs: Number(options['delay-ms'] ?? 2000) }); }
+  if (op === 'add-list') {
+    if (!target) throw new Error('Use corpus add-list <links.txt> [--held-out [--min-level 90]] (one link per line, optional TAB note)');
+    const heldOut = options['held-out'] ? { minLevel: Number(options['min-level'] ?? 90), training: cardDirectory(), allowMigrated: !!options['allow-migrated'] } : null;
+    return addFromList({ file: path.resolve(target), trust: options.trust ?? 'community', originPatch: options['origin-patch'] ?? null, delayMs: Number(options['delay-ms'] ?? 2000),
+      ...(heldOut ? { heldOut, directory: heldOutDirectory(), cards: heldOutCards() } : {}) });
+  }
+  if (op === 'held-out') return { directory: heldOutDirectory(), cards: listCards(heldOutCards()) };
   if (op === 'add' && options.code) {
     const dir = path.join(corpusDirectory(), 'codes'); fs.mkdirSync(dir, { recursive: true });
     const code = options.code.trim(); const file = path.join(dir, `${createHash('sha256').update(code).digest('hex').slice(0, 16)}.txt`);
@@ -150,6 +179,7 @@ export function corpusCommand(args) {
 export const corpusHelp = {
   'corpus add <file.xml|code.txt> [--source url] [--trust own|author|community|generated|unknown] [--origin-patch 3.29] | corpus import-dir <dir> [--sources lists.json,...]':
     'Local corpus without network: explicit PoB migration of 3_28/3_29 trees, BuildCard with provenance (research/lab/corpus, research/lab/cards)',
+  'corpus add-list <links.txt> --held-out [--min-level 90] [--allow-migrated] | corpus held-out': 'Held-out test split (WP7 lab gates): native 3_30 trees (--allow-migrated: also 3_28/3_29 with explicit migration, held_out.migrated) at level >= min, refused if already in the training corpus (link, XML hash or signature); cards and XML in research/lab/corpus/heldout, which learn/principles/ablate-all do not read; corpus held-out lists them',
   'corpus list | corpus summary': 'Corpus cards and coverage by ascendancy, skill, damage form/type, defense pool; structural duplicates',
   'corpus add-url <pobb.in|pob.codes|pastebin link> | corpus add-list <links.txt> | corpus add --code <share code>': 'One cached request per link (no crawling); Maxroll/YouTube/forum pages are read by the user, the system fetches only the PoB paste. add-list skips links already in the corpus (identity.source) and writes failures to <list>.failed.txt (a list again: rerun it to resume). Link lists: corpus discover poebuilds'
 };

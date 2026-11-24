@@ -63,6 +63,18 @@ test('replace_items.active switches a flask on: Granite Flask raises Armour only
   assert.throws(() => runPob({ ...base, changes: { replace_items: [{ slot: 'Helmet', text: 'Rarity: NORMAL\nIron Hat', active: true }] } }), /flask slots/);
 });
 
+test('custom_mods reach the calculation, also when the build already has its own custom mod block', () => {
+  const plain = fixture('fireball-control.xml');
+  // A build saved with custom mods: PoB moves them into a customModsList block on load.
+  const withOwn = plain.replace('<ConfigSet id="1">', '<ConfigSet id="1">\n\t\t\t<Input name="customMods" string="+10 to Strength"/>');
+  for (const input of [plain, withOwn]) {
+    const base = runPob({ input, scenario: 'imported', noCache: true }).output.Life;
+    const r = runPob({ input, scenario: 'imported', noCache: true, changes: { custom_mods: '+1000 to maximum Life' } });
+    assert.ok(r.output.Life > base + 900, `Life ${base} -> ${r.output.Life}`);
+    assert.deepEqual(r.unparsed_custom_mods, []);
+  }
+});
+
 // Host failures, with tiny fake workers instead of PoB (fast) and a stub for the single-shot fallback.
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'poe-pob-pool-'));
 test.after(() => {

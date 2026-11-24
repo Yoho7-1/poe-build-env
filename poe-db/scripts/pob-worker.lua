@@ -82,8 +82,11 @@ if request.config then for key,value in pairs(request.config) do
   end
 end end
 if request.custom_mods then
-  local current = build.configTab.input.customMods or ''
-  build.configTab.input.customMods = current .. '\n' .. request.custom_mods
+  -- PoB 2.68 reads custom modifiers from the active config set's customModsList blocks; input.customMods is only a
+  -- fallback when no block has text, so a build with its own custom mods would silently drop ours. Add a block.
+  local configSet = build.configTab.configSets[build.configTab.activeConfigSetId]
+  configSet.customModsList = configSet.customModsList or {}
+  table.insert(configSet.customModsList, { title = 'Agent', enabled = true, text = request.custom_mods })
 end
 if request.enemy_mods then
   -- Enemy-side modifiers in PoB's own mod vocabulary (the same calls the map affix apply functions make).

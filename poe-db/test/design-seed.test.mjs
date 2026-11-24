@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { cardFamily, seedScore, seedsFor } from '../scripts/design-seed.mjs';
+import { cardFamily, seedScore, seedsFor, weaponClassOf, weaponCompatible, slotItemText } from '../scripts/design-seed.mjs';
 
 const card = (file, { asc = 'Occultist', skill = 'Vortex', tags = ['spell', 'cold', 'area'], form = 'skill_dot', type = 'Cold', level = 95, scope = 'player', group = 2 } = {}) =>
   ({ _card: `${file}.json`, signature: file, identity: { file: `${file}.xml`, level }, features: { ascendancy: asc, main_skill: skill, primary_type: type },
@@ -52,4 +52,14 @@ test('unique cost floor sums the cheapest known variant and demotes seeds over b
   const s = seedsFor(row, gem, { cards: [rich, poor], directory: dir, budgetDivine: 10, lookup: n => prices[n] ?? null, top: 2 });
   assert.equal(s[0].file, 'poor');
   assert.ok(s[1].reasons.some(r => r.startsWith('over_budget')));
+});
+
+test('seed weapon must satisfy the skill weapon restrictions', () => {
+  const xml = '<Slot itemId="0" name="Weapon 1 Swap"/><Slot itemId="18" itemPbURL="" name="Weapon 1"/><Item id="18">\n\tRarity: RARE\nArmageddon Slicer\nReaver Sword\nQuality: 0\n</Item>';
+  const t = slotItemText(xml);
+  assert.equal(weaponClassOf(t), 'Sword');
+  assert.equal(weaponCompatible(t, ['One Hand Mace', 'Staff']).ok, false);
+  assert.equal(weaponCompatible(t, ['One Hand Sword']).ok, true);
+  assert.equal(weaponCompatible(t, []).ok, true);
+  assert.equal(slotItemText('<Slot itemId="0" name="Weapon 1"/>'), null);
 });

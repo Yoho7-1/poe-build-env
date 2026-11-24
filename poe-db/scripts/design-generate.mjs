@@ -19,7 +19,7 @@ import { loadTree, rootsFor, distances, connectOne } from './tree-graph.mjs';
 import { itemKit, KIT_TIER, ELDRITCH_SLOTS } from './design-kit.mjs';
 import { clusterCandidates, clusterText, outerClusterSockets, innerClusterSockets, nestedCandidates } from './design-cluster.mjs';
 import { pobGems, supportCompatible, readBuild, anointOptions, withAnoint, currentAnoint } from './analysis-candidates.mjs';
-import { seedsFor, neutralConfig } from './design-seed.mjs';
+import { seedsFor, neutralConfig, weaponCompatible, slotItemText } from './design-seed.mjs';
 import { readCards } from './corpus-learn.mjs';
 import { buttonEstimate, buildCard } from './build-card.mjs';
 import { noveltyScore, loadNoveltyCorpus } from './novelty.mjs';
@@ -679,6 +679,8 @@ function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, s
   if (!grp) return { id, status: 'not_evaluated', reason: `seed ${seed.file}: main group ${idx} not found` };
   if (grp.source) return { id, status: 'not_evaluated', reason: `seed ${seed.file}: main group is granted by an item` };
   const g = gems.get(row.gem);
+  const wc = weaponCompatible(slotItemText(fs.readFileSync(file, 'utf8')), g?.weapon_restrictions ?? []);
+  if (!wc.ok) return { id, status: 'not_evaluated', reason: `seed ${seed.file}: the author's ${wc.weapon} cannot use ${row.skill} (weapon restrictions: ${g.weapon_restrictions.join(', ')})` };
   // Links: the seed group's own socket count (gems it held), capped by the request.
   const seedLinks = Math.max(2, Math.min(links, grp.gems.length));
   // WP11: the author's Configuration tab (charges, "been hit recently", enemy conditions, Pantheon) belongs to the

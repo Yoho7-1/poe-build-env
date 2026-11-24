@@ -99,3 +99,26 @@ export function neutralConfig(author = {}, defaults = {}, scenarioKeys = []) {
   }
   return { config, reset: Object.keys(config).sort(), kept };
 }
+
+// Weapon class of an author's weapon from its base-type line (coarse: Sword/Axe/Mace/Staff/...). null when unknown.
+const WEAPON_WORDS = [[/\b(Sword|Rapier)\b/, 'Sword'], [/\b(Axe)\b/, 'Axe'], [/\b(Mace|Maul|Hammer|Club|Sledgehammer)\b/, 'Mace'], [/\bSceptre\b/, 'Sceptre'],
+  [/\b(Staff|Stave)\b/, 'Staff'], [/\bBow\b/, 'Bow'], [/\bClaw\b/, 'Claw'], [/\bDagger\b/, 'Dagger'], [/\bWand\b/, 'Wand']];
+export function weaponClassOf(itemText = '') {
+  const lines = String(itemText).split('\n').map(s => s.trim()).filter(Boolean);
+  const rarity = /^Rarity:\s*(\w+)/i.exec(lines[0] ?? '')?.[1]?.toUpperCase();
+  const base = rarity === 'NORMAL' || rarity === 'MAGIC' ? lines.slice(1, 3).join(' ') : (lines[2] ?? '');
+  return WEAPON_WORDS.find(([re]) => re.test(base))?.[1] ?? null;
+}
+// A seed keeps the author's weapon; a skill that restricts weapons (gem weapon_restrictions: "One Hand Sword", ...)
+// cannot be used with a weapon of another class (PoB: "No usable weapon equipped"). Unknown class is compatible.
+export function weaponCompatible(itemText, restrictions = []) {
+  const cls = weaponClassOf(itemText);
+  if (!restrictions.length || !cls) return { ok: true, weapon: cls };
+  return { ok: restrictions.some(r => r.includes(cls)), weapon: cls };
+}
+// Text of the item in a PoB XML slot ("Weapon 1"), or null.
+export function slotItemText(xml, slot = 'Weapon 1') {
+  const id = new RegExp(`<Slot [^>]*itemId="(\\d+)"[^>]*name="${slot}"`).exec(xml)?.[1];
+  if (!id || id === '0') return null;
+  return new RegExp(`<Item id="${id}">([\\s\\S]*?)</Item>`).exec(xml)?.[1] ?? null;
+}

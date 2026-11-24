@@ -23,3 +23,4 @@ exile-atlas.tar.gz
 # --- Transient ---
 *.tmp
 *.write-lock
+personal/

@@ -356,6 +356,19 @@ export function generateUniqueCandidates({ file, slot, search = null, limit = nu
       'Requirements beyond level are not filtered: check new_warnings for attributes.'] };
 }
 
+// Anoint options for an amulet text and a set of allocated tree node ids (also used by design generate: WP11).
+export function anointOptions({ amulet = null, allocated = new Set(), search = null } = {}) {
+  const existing = currentAnoint(amulet);
+  const text = search?.toLowerCase();
+  const options = [], excluded = [];
+  for (const a of knowledge().anoints) {
+    if (text && !a.name.toLowerCase().includes(text) && !(a.stats ?? []).join(' ').toLowerCase().includes(text)) continue;
+    if (a.name === existing) { excluded.push({ name: a.name, reason: 'current_anoint' }); continue; }
+    if (allocated.has(String(a.node_id))) { excluded.push({ name: a.name, reason: 'allocated_on_tree' }); continue; }
+    options.push(a);
+  }
+  return { existing, options, excluded };
+}
 export function generateAnointCandidates({ file, search = null, limit = null } = {}) {
   const build = readBuild(file);
   const amulet = build.slots.get('Amulet') ?? null;

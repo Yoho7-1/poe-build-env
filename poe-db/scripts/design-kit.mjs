@@ -31,7 +31,9 @@ export const INTENTS = {
   minion_damage: [/^MinionDamageOnWeapon$/], minion_gem: [/^GlobalIncreaseMinionSpellSkillGemLevel$/], minion_speed: [/^MinionAttackSpeedAndCastSpeed$/], minion_crit: [/^MinionCriticalStrikeMultiplier$/], minion_life: [/^MinionLife$/],
   phys_pct: [/^LocalPhysicalDamagePercent$/, /^LocalIncreasedPhysicalDamagePercentAndAccuracyRating$/], phys_added: [/^LocalPhysicalDamage(TwoHand(ed)?)?$/],
   type_added: c => c.T === 'Physical' ? [] : [exact('Local' + c.T + 'Damage(TwoHand(ed)?)?')],
-  attack_speed: [/^LocalIncreasedAttackSpeed$/], attack_crit: [/^LocalCriticalStrikeChance$/], mana_regen: [/^ManaRegeneration$/]
+  attack_speed: [/^LocalIncreasedAttackSpeed$/], attack_crit: [/^LocalCriticalStrikeChance$/], mana_regen: [/^ManaRegeneration$/],
+  // Mana leech (WP11 mana repair when the corpus norm group sustains mana by leech): local leech on the weapon, global on jewellery.
+  mana_leech_local: [/^ManaLeechLocalPermyriad$/, /^ManaLeechLocal$/], mana_leech: [/^ManaLeechPermyriad$/]
 };
 
 // Pure: choose one mod per intent from pool types [{type, side, groups, tiers:[{id,text}]}].
@@ -61,11 +63,11 @@ function resolveBase(cat, name) {
 
 // Pure: slot plan [slot, base name, intents, sockets?] for a kit. needAttrs (attributes PoB reported as unmet)
 // take the attribute suffixes of the jewellery.
-export function kitPlan({ attr, family, form, needAttrs = [], manaRegen = false }) {
+export function kitPlan({ attr, family, form, needAttrs = [], manaRegen = false, manaLeech = false }) {
   // Unmet attributes: armour of the first missing attribute, each armour piece adds that attribute as a suffix.
   const armour = ARMOUR[needAttrs[0] ?? attr] ?? ARMOUR.int;
   const na = needAttrs[0] ? ['attr_' + needAttrs[0]] : [];
-  const mr = manaRegen ? ['mana_regen'] : [];
+  const mr = [...(manaRegen ? ['mana_regen'] : []), ...(manaLeech ? ['mana_leech'] : [])];
   const dot = form === 'damage_over_time';
   const spec = [
     ['Helmet', form === 'minion' ? 'Bone Helmet' : armour.Helmet, ['life', 'res_fire', 'res_cold', ...na, ...(form === 'minion' ? ['minion_gem'] : [])]],
@@ -76,7 +78,7 @@ export function kitPlan({ attr, family, form, needAttrs = [], manaRegen = false 
     // manaRegen (flask-free mana constraint): mana regeneration replaces chaos resistance on the amulet and a ring resistance.
     ['Amulet', 'Onyx Amulet', ['life', needAttrs.length ? 'attr_all' : 'attr', manaRegen ? 'mana_regen' : 'res_chaos']],
     ['Ring 1', 'Amethyst Ring', ['life', 'res_lightning', needAttrs[1] ? 'attr_' + needAttrs[1] : needAttrs[0] ? 'attr_' + needAttrs[0] : 'attr', ...mr]],
-    ['Ring 2', 'Amethyst Ring', ['life', 'res_fire', needAttrs[1] ? 'attr_' + needAttrs[1] : 'res_cold', ...(manaRegen ? ['mana_regen'] : [])]]
+    ['Ring 2', 'Amethyst Ring', ['life', 'res_fire', needAttrs[1] ? 'attr_' + needAttrs[1] : 'res_cold', ...mr]]
   ];
   if (family === 'caster') {
     spec.push(['Weapon 1', 'Imbued Wand', dot ? ['spell_type', 'spell_gem', 'dot_type', 'dot_global', 'cast_speed'] : ['spell_type', 'spell_gem', 'spell_added', 'cast_speed', ...(manaRegen ? ['mana_regen'] : []), 'spell_crit', 'crit_multi']]);
@@ -87,7 +89,7 @@ export function kitPlan({ attr, family, form, needAttrs = [], manaRegen = false 
   } else {
     const base = WEAPON_BASES[family];
     if (!base) throw new Error(`No weapon kit for ${family}`);
-    spec.push(['Weapon 1', base, ['phys_pct', 'type_added', 'phys_added', 'attack_speed', 'attack_crit', 'crit_multi']]);
+    spec.push(['Weapon 1', base, ['phys_pct', 'type_added', 'phys_added', 'attack_speed', 'attack_crit', manaLeech ? 'mana_leech_local' : 'crit_multi']]);
     if (family === 'Bow') spec.push(['Weapon 2', 'Spike-Point Arrow Quiver', ['life', 'res_fire', 'res_cold', 'crit_multi']]);
     else if (!/^(Two Hand|Staff)/.test(family)) spec.push(['Weapon 2', attr === 'int' ? 'Titanium Spirit Shield' : attr === 'dex' ? 'Imperial Buckler' : 'Pinnacle Tower Shield', ['life', 'res_fire', 'res_cold', 'res_lightning']]);
   }
@@ -160,13 +162,13 @@ export function eldritchValue(text, axes, family) {
 
 const kitCache = new Map();
 // axes: generator scaling axes [{axis, pattern, weight}] (eldritch implicit choice); without axes no eldritch implicits.
-export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaRegen = false, axes = null }) {
-  const key = JSON.stringify({ attr, family, damageTypes, form, needAttrs, manaRegen, axes: axes?.map(a => [a.axis, a.weight]) ?? null });
+export function itemKit({ attr, family, damageTypes, form, needAttrs = [], manaRegen = false, manaLeech = false, axes = null }) {
+  const key = JSON.stringify({ attr, family, damageTypes, form, needAttrs, manaRegen, manaLeech, axes: axes?.map(a => [a.axis, a.weight]) ?? null });
   if (kitCache.has(key)) return kitCache.get(key);
   const cat = itemCatalog(), notes = [];
   const ctx = { T: damageTypes[0] ?? 'Physical', attr: ATTR_TYPE[attr] ?? 'Intelligence' };
   const replace_items = [], bases = [];
-  for (const [slot, name, intents, sockets] of kitPlan({ attr, family, form, needAttrs, manaRegen })) {
+  for (const [slot, name, intents, sockets] of kitPlan({ attr, family, form, needAttrs, manaRegen, manaLeech })) {
     const base = resolveBase(cat, name);
     let types = itemPool({ base, item_level: 84, tiers: 20, limit: 500 }, cat).types;
     let mods, missing, r, implicits;

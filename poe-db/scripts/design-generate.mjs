@@ -12,14 +12,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { dbRoot, projectRoot, flags, readJson, atomicJson } from './workspace.mjs';
-import { runPob, newPob, inspectBuild } from './pob.mjs';
+import { runPob, newPob, inspectBuild, scenarios } from './pob.mjs';
 import { validatePrototype, specFromInspect } from './mechanic-validate.mjs';
-import { foundationReport, chooseNormGroup } from './corpus-norms.mjs';
+import { foundationReport, chooseNormGroup, sustainComponents, corpusNorms } from './corpus-norms.mjs';
 import { loadTree, rootsFor, distances, connectOne } from './tree-graph.mjs';
-import { itemKit, KIT_TIER } from './design-kit.mjs';
+import { itemKit, KIT_TIER, ELDRITCH_SLOTS } from './design-kit.mjs';
 import { clusterCandidates, clusterText, outerClusterSockets, innerClusterSockets, nestedCandidates } from './design-cluster.mjs';
-import { pobGems, supportCompatible, readBuild } from './analysis-candidates.mjs';
-import { seedsFor } from './design-seed.mjs';
+import { pobGems, supportCompatible, readBuild, anointOptions, withAnoint, currentAnoint } from './analysis-candidates.mjs';
+import { seedsFor, neutralConfig } from './design-seed.mjs';
 import { buttonEstimate, buildCard } from './build-card.mjs';
 import { noveltyScore, loadNoveltyCorpus } from './novelty.mjs';
 import { optimizeCommand, optimizeHelp } from './design-optimize.mjs';
@@ -31,6 +31,7 @@ import { createRecord } from './lab.mjs';
 import { referenceDb, exampleQuery } from './reference-store.mjs';
 import { loadBuild } from './build-store.mjs';
 import * as B from './design-blueprint.mjs';
+import { valueOf, layerGain, layerRecord, decideLayer, probeKitLayers, repairManaFromCorpus } from './design-layers.mjs';
 
 const disclaimer = 'Generated prototypes are engine sketches with generic rare items and a greedy tree; numbers compare architectures under one item/tree policy, they are not optimised builds and not game tests.';
 const round = (v, d = 0) => (v == null || !Number.isFinite(v) ? null : Math.round(v * 10 ** d) / 10 ** d);
@@ -92,12 +93,17 @@ export function growTree(t, cls, { ascendancy = null, valueOf, budget, start = n
   return { allocate: added, picks, unspent: left };
 }
 
-function treeFor(t, gem, clsName, ascendancy, request, points, treeAttrs = [], family = null) {
+function treeFor(t, gem, clsName, ascendancy, request, points, treeAttrs = [], family = null, force = []) {
   const cls = t.classes.find(c => c.name === clsName);
+  // WP11: forced nodes (a keystone or mastery group a repair probes): their paths are allocated first and the greedy
+  // tree grows around them on the remaining points, so a forced node always costs the same point budget.
+  const forced = new Set([cls.start]);
+  for (const id of force) { const step = connectOne(t, cls, forced, Number(id), null); if (step) step.added.forEach(x => forced.add(x)); }
+  const forcedPath = [...forced].filter(id => id !== cls.start);
   // Flask-free mana: self-cast/attack skills also value mana regeneration/cost nodes (resource axis).
   const axes = [...B.axesFor(gem), ...(request.constraints?.no_mana_flask && B.damageFormOf(gem) !== 'minion' ? [B.RESOURCE_AXIS] : []), ...treeAttrs.map(B.attributeAxis)];
   const themes = B.skillThemes(gem);
-  const main = growTree(t, cls, { budget: points, valueOf: n => { const v = B.nodeValue(n.stats, axes, { family }); return { ...v, value: v.value * (n.type === 'normal' ? 0.3 : 1) }; } });
+  const main = growTree(t, cls, { budget: points - forcedPath.length, start: [...forced], valueOf: n => { const v = B.nodeValue(n.stats, axes, { family }); return { ...v, value: v.value * (n.type === 'normal' ? 0.3 : 1) }; } });
   // Ascendancy: axis value + 2 per requested theme the node provides; nodes whose condition the skill cannot meet
   // (and no generator enabler exists) are worth nothing. Remaining points go to the nearest notable (filler).
   const ascValue = n => {
@@ -111,14 +117,17 @@ function treeFor(t, gem, clsName, ascendancy, request, points, treeAttrs = [], f
   };
   const asc = growTree(t, cls, { ascendancy, budget: 8, valueOf: ascValue });
   const enablers = [...new Set(asc.picks.flatMap(p => B.requirementsMet(p.reqs, themes).enablers))];
-  return { allocate: [...main.allocate, ...asc.allocate], main_picks: main.picks, ascendancy_picks: asc.picks, unspent: main.unspent + asc.unspent, enablers, axes };
+  return { allocate: [...forcedPath, ...main.allocate, ...asc.allocate], forced: forcedPath, main_picks: main.picks, ascendancy_picks: asc.picks, unspent: main.unspent + asc.unspent, enablers, axes };
 }
 
 // ---------- engine helpers ----------
+// Calculation budget. sub(n) gives a step or a prototype its own cap: it takes from the parent as it goes, and what a
+// step leaves unused stays with the parent (later prototypes get it), so early steps cannot starve later ones (WP11).
 class Budget {
-  constructor(max) { this.max = max; this.used = 0; }
-  left() { return this.max - this.used; }
-  take(n) { this.used += n; }
+  constructor(max, parent = null) { this.max = max; this.used = 0; this.parent = parent; }
+  left() { return Math.max(0, Math.min(this.max - this.used, this.parent ? this.parent.left() : Infinity)); }
+  take(n) { this.used += n; this.parent?.take(n); }
+  sub(n) { return new Budget(Math.max(0, Math.min(Math.floor(n), this.left())), this); }
 }
 function bestDps(r) { return r && !r.error ? damageOf(r.output ?? {}, null, r.minion_output).best_dps ?? 0 : 0; }
 function batch(file, changesList, budget, concurrency) {
@@ -165,18 +174,20 @@ export function candidates(request, { gems = loadGems(), t = loadTree() } = {}) 
 }
 
 // Prototype changes for one architecture (without supports/auras/enablers).
-function prototypeChanges(row, request, t, gems, { needAttrs = [], treeAttrs = [], reserve = 0 } = {}) {
+function prototypeChanges(row, request, t, gems, { needAttrs = [], treeAttrs = [], reserve = 0, force = [], mana = {} } = {}) {
   const g = gems.get(row.gem);
   // PoB: level-1 + quest points (23 incl. bandits off); exact budget re-read from the engine. `reserve` points are
   // left for masteries (WP5b: corpus norm median), spent by probeMasteries.
   const points = request.level - 1 + 22 + 1 - reserve;
-  const tree = treeFor(t, g, row.class, row.ascendancy, request, points, treeAttrs, row.family);
+  const tree = treeFor(t, g, row.class, row.ascendancy, request, points, treeAttrs, row.family, force);
   // Armour/jewellery attribute follows the class; gem attribute deficits are covered by the attribute repair.
   const attr = B.CLASS_ATTRIBUTES[row.class][0];
-  const kit = itemKit({ attr, family: row.family, damageTypes: row.damage_types, form: row.form, needAttrs, manaRegen: !!request.constraints?.no_mana_flask && row.form !== 'minion', axes: tree.axes });
+  // mana: kit mana affixes chosen by the WP11 mana repair ({regen, leech}); the flask-free constraint keeps regen on.
+  const kitArgs = { attr, family: row.family, damageTypes: row.damage_types, form: row.form, needAttrs, manaRegen: (!!request.constraints?.no_mana_flask && row.form !== 'minion') || !!mana.regen, manaLeech: !!mana.leech, axes: tree.axes };
+  const kit = itemKit(kitArgs);
   const changes = { tree: { allocate: tree.allocate, ascendancy_points: 8 }, replace_items: kit.replace_items,
     skills: { add_groups: [{ label: 'Main', slot: 'Body Armour', main: true, gems: [gemSpec(g)] }] } };
-  return { changes, tree, kit, gem: g };
+  return { changes, tree, kit, kitArgs, gem: g, force, mana };
 }
 
 // WP5b: masteries. Candidates are mastery nodes of tree groups the prototype already allocated; every effect option is
@@ -251,8 +262,12 @@ const notableStats = (t, name) => {
 export const withCluster = (changes, c) => ({ ...changes, tree: { ...changes.tree, allocate: [...changes.tree.allocate, c.socket] },
   jewels: [...(changes.jewels ?? []), { node: c.socket, text: clusterText(c), allocate: c.notables.map(n => n.name) },
     ...(c.nested ? [{ node: c.inner_socket, text: clusterText(c.nested), allocate: c.nested.notables.map(n => n.name) }] : [])] });
-function probeClusters({ file, base, t, row, axes, budget, concurrency, reserve, sockets = 2 }) {
-  if (reserve <= 0) return { chosen: null, probes: 0, reason: 'no cluster reserve (corpus norm below 50% or no norms)' };
+// WP11: the alternative to a cluster is the same reserve spent on ordinary tree nodes (alt = tree grown without the
+// cluster reserve). Gains are measured against it; a cluster is taken only when it beats the tree.
+function probeClusters({ file, base, alt, t, row, axes, budget, concurrency, reserve, sockets = 2 }) {
+  const altText = `the same ${reserve} points on ordinary tree nodes (greedy axis tree)`;
+  if (reserve <= 0) return { chosen: null, probes: 0, reason: 'no cluster reserve (corpus norm below 50% or no norms)',
+    layer: layerRecord('cluster', false, null, 'points stay on the tree', 'corpus norm group uses cluster jewels in < 50% of builds (or no norms): no points reserved') };
   const cls = t.classes.find(c => c.name === row.class);
   const allocated = new Set(base.tree.allocate.map(Number).filter(id => !t.nodes.get(id)?.ascendancy));
   allocated.add(cls.start);
@@ -264,19 +279,23 @@ function probeClusters({ file, base, t, row, axes, budget, concurrency, reserve,
   const nested = nestedCandidates(cands).flatMap(c => near.filter(s => s.path.cost + c.points <= reserve).map(s => ({ ...c, socket: s.id, socket_cost: s.path.cost, inner_socket: innerClusterSockets(t, s.id, c.size)[0] })))
     .filter(v => v.inner_socket != null);
   const variants = [...single, ...nested];
-  if (!variants.length) return { chosen: null, probes: 0, reason: `no outer cluster socket within ${reserve} points` };
-  const res = batch(file, [base, ...variants.map(v => withCluster(base, v))], budget, concurrency);
-  if (!res.get) return { chosen: null, probes: 0, reason: 'budget' };
-  const r0 = res.get(base), d0 = bestDps(r0), e0 = r0?.output?.TotalEHP ?? 0;
+  if (!variants.length) return { chosen: null, probes: 0, reason: `no outer cluster socket within ${reserve} points`, layer: layerRecord('cluster', false, null, altText, `no outer cluster socket within ${reserve} points`) };
+  const res = batch(file, [alt, ...variants.map(v => withCluster(base, v))], budget, concurrency);
+  const r0 = res.get?.(alt);
+  if (!r0 || r0.error) return { chosen: null, probes: 0, reason: 'budget', layer: layerRecord('cluster', false, null, altText, 'not probed: calculation budget') };
+  const v0 = valueOf(r0);
   const rows = variants.map(v => {
     const r = res.get(withCluster(base, v));
     if (!r || r.error) return null;
-    const dg = d0 > 0 ? (bestDps(r) / d0 - 1) * 100 : 0, eg = e0 > 0 ? ((r.output?.TotalEHP ?? 0) / e0 - 1) * 100 : 0;
-    return { ...v, dps_gain_pct: round(dg, 1), ehp_gain_pct: round(eg, 1), gain: round(dg + eg, 2) };
+    const g = layerGain(valueOf(r), v0);
+    return { ...v, dps_gain_pct: g.dps_pct, ehp_gain_pct: g.ehp_pct, gain: g.total };
   }).filter(Boolean).sort((a, b) => b.gain - a.gain || a.socket_cost - b.socket_cost);
   const brief = v => `${v.size} ${v.name} @${v.socket} [${v.notables.map(n => n.name).join(', ')}]${v.nested ? ` + ${v.nested.size} ${v.nested.name} @${v.inner_socket} [${v.nested.notables.map(n => n.name).join(', ')}]` : ''} (${v.gain})`;
   const best = rows[0]?.gain > 0 ? rows[0] : null;
-  return { chosen: best, probes: rows.length, reserve, top: rows.slice(0, 6).map(brief), reason: best ? null : 'no candidate improved DPS + EHP' };
+  const top = rows[0] ? { dps_pct: rows[0].dps_gain_pct, ehp_pct: rows[0].ehp_gain_pct, total: rows[0].gain } : null;
+  const layer = layerRecord('cluster', !!best, top, altText, best ? `best of ${rows.length} cluster variants beats the tree: ${brief(best)}`
+    : rows.length ? `best of ${rows.length} cluster variants (${brief(rows[0])}) does not beat the same points on the tree` : 'no cluster variant ran');
+  return { chosen: best, probes: rows.length, reserve, top: rows.slice(0, 6).map(brief), reason: best ? null : 'no cluster variant beat the same points on the tree', layer };
 }
 const withMasteries = (changes, chosen) => chosen.length ? { ...changes, tree: { ...changes.tree, masteries: chosen.map(c => ({ node: c.node, effect: c.effect })) } } : changes;
 
@@ -418,12 +437,19 @@ function blueprintOf({ row, request, proto, sup, util, finalGroups, m }) {
 const unmetAttrs = r => [...new Set((r?.engine_warnings ?? []).map(w => /do not meet the (Strength|Dexterity|Intelligence) requirement/i.exec(w)?.[1]).filter(Boolean))].map(a => a.slice(0, 3).toLowerCase());
 const sustainOf = r => coreMetrics.mana_sustain.read(r?.output ?? {});
 const cannotPay = r => { const o = r?.output ?? {}; return o.ManaUnreserved != null && o.ManaCost != null && o.ManaUnreserved < o.ManaCost; };
-function repairPrototype({ file, row, request, t, gems, budget, concurrency, state }) {
+function repairPrototype({ file, row, request, t, gems, budget, concurrency, state, cards = null, ctx = null, manaBudget = null }) {
   let { final, finalChanges, proto, sup, util } = state;
   const steps = [];
+  let anoint = null;
   const run1 = c => { budget.take(1); return runPob({ input: fs.readFileSync(file), scenario: 'sustained', changes: c }); };
   // Mana first: a repair aura can add attribute requirements, which the attribute repair then covers.
   const minion = proto.gem.types.includes('Minion') || proto.gem.types.includes('CreatesMinion');
+  // WP11: any self-cast/attack deficit -> corpus-derived candidates probed by PoB (design-layers.mjs).
+  if (ctx && !minion && (sustainOf(final) ?? 0) < 0 && budget.left() > 0) {
+    const m = repairManaFromCorpus({ ctx, file, row, request, t, gems, budget: manaBudget ?? budget, state: { final, finalChanges, proto }, cards });
+    steps.push(...m.steps); ({ final, finalChanges } = m.state); anoint = m.anoint;
+    sup.chosen = finalChanges.skills.add_groups[0].gems.slice(1).map(x => x.name);
+  }
   if (request.constraints?.no_mana_flask && !minion && sustainOf(final) < 0 && budget.left() > 0) {
     // Loop (at most 4 rounds): probe a mana aura in either aura slot; if none makes mana sustained, probe removing
     // each support and keep the best variant (most DPS among sustained, else best balance), then try again.
@@ -457,16 +483,19 @@ function repairPrototype({ file, row, request, t, gems, budget, concurrency, sta
   }
   const need = unmetAttrs(final);
   if (need.length && budget.left() > 0) {
-    const p2 = prototypeChanges(row, request, t, gems, { needAttrs: need });
-    const c2 = { ...finalChanges, replace_items: p2.changes.replace_items };
+    const p2 = prototypeChanges(row, request, t, gems, { needAttrs: need, mana: proto.mana ?? {} });
+    // The amulet keeps an anoint a repair put on it.
+    const oldAm = finalChanges.replace_items.find(i => i.slot === 'Amulet'), an = currentAnoint(oldAm?.text);
+    const items = p2.changes.replace_items.map(i => i.slot === 'Amulet' && an ? { ...i, text: withAnoint(i.text, an) ?? i.text } : i);
+    const c2 = { ...finalChanges, replace_items: items };
     const r2 = run1(c2);
     steps.push({ step: 'attributes', need, resolved: !unmetAttrs(r2).length });
-    finalChanges = c2; final = r2; proto.kit = p2.kit;
+    finalChanges = c2; final = r2; proto.kit = p2.kit; proto.kitArgs = p2.kitArgs;
     // Second step: still unmet -> regrow the tree with an attribute axis for the missing attributes.
     const still = unmetAttrs(r2);
     if (still.length && budget.left() > 0) {
       const cl = proto.cluster?.chosen;
-      const p3 = prototypeChanges(row, request, t, gems, { needAttrs: need, treeAttrs: still, reserve: (finalChanges.tree?.masteries ?? []).length + (cl ? CLUSTER_RESERVE : 0) });
+      const p3 = prototypeChanges(row, request, t, gems, { needAttrs: need, treeAttrs: still, reserve: (finalChanges.tree?.masteries ?? []).length + (cl ? CLUSTER_RESERVE : 0), force: proto.force ?? [], mana: proto.mana ?? {} });
       // Keep chosen masteries whose tree group is still allocated in the regrown tree, and the cluster socket.
       const groups = new Set(p3.changes.tree.allocate.map(id => t.nodes.get(Number(id))?.group));
       const keep = (finalChanges.tree?.masteries ?? []).filter(m => groups.has(t.nodes.get(Number(m.node))?.group));
@@ -476,22 +505,28 @@ function repairPrototype({ file, row, request, t, gems, budget, concurrency, sta
       finalChanges = c3; final = r3; proto.tree = p3.tree;
     }
   }
-  return { steps, state: { final, finalChanges } };
+  return { steps, state: { final, finalChanges }, anoint };
 }
 
-function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency, links, masteryReserve = 0 }) {
+function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency, links, masteryReserve = 0, cards = null }) {
+  // WP11: the prototype's budget share is split into step caps; what a step leaves stays for the next steps/prototypes.
+  const S = budget.max;
+  const part = f => budget.sub(Math.max(4, Math.floor(S * f)));
+  const ctx = { batch: (f, l, b) => batch(f, l, b, concurrency), prototypeChanges, gemSpec, withGroup, CLUSTER_RESERVE };
   const file = classBase(dir, row.class, row.ascendancy, request.level);
-  const clusterReserve = clusterReserveFor(row, gems.get(row.gem));
-  let proto = prototypeChanges(row, request, t, gems, { reserve: masteryReserve + clusterReserve });
-  // WP5b item 5: a cluster jewel on the reserved points; without a gain the tree is regrown without the reserve.
-  const cluster = probeClusters({ file, base: proto.changes, t, row, axes: proto.tree.axes, budget, concurrency, reserve: clusterReserve });
+  const clusterReserve = clusterReserveFor(row, gems.get(row.gem), cards);
+  // Cluster layer: the reserve tree + cluster against the same points spent on ordinary nodes (altProto).
+  const altProto = prototypeChanges(row, request, t, gems, { reserve: masteryReserve });
+  let proto = clusterReserve ? prototypeChanges(row, request, t, gems, { reserve: masteryReserve + clusterReserve }) : altProto;
+  const cluster = probeClusters({ file, base: proto.changes, alt: altProto.changes, t, row, axes: proto.tree.axes, budget: part(0.12), concurrency, reserve: clusterReserve });
   if (cluster.chosen) proto.changes = withCluster(proto.changes, cluster.chosen);
-  else if (clusterReserve) proto = prototypeChanges(row, request, t, gems, { reserve: masteryReserve });
+  else proto = altProto;
   proto.cluster = cluster;
-  const sup = probeSupports({ file, base: proto.changes, g: proto.gem, request, gems, budget, concurrency, links });
+  const layers = [cluster.layer];
+  const sup = probeSupports({ file, base: proto.changes, g: proto.gem, request, gems, budget: part(0.22), concurrency, links });
   const withSup = { ...proto.changes, skills: { add_groups: [{ ...proto.changes.skills.add_groups[0], gems: [gemSpec(proto.gem), ...sup.chosen.map(n => gemSpec([...gems.values()].find(x => x.name === n && x.is_support)))] }] } };
   const needCurse = proto.tree.enablers.includes('curse');
-  const util = probeUtility({ file, base: withSup, request, gems, budget, concurrency, needCurse });
+  const util = probeUtility({ file, base: withSup, request, gems, budget: part(0.15), concurrency, needCurse });
   // Final: add utilities; drop the defensive then the offensive aura if the main skill can no longer be paid for.
   const groupsFor = (useOff, useDef) => [
     ...(util.curse ? [{ label: 'Curse aura', slot: 'Helmet', gems: [{ name: util.curse.name, level: 20, quality: 20 }, ...(util.curse.with ? [{ name: util.curse.with, level: 20, quality: 20 }] : [])] }] : []),
@@ -509,20 +544,46 @@ function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency,
   }
   if (!final) return { id: row.id, status: 'not_evaluated', reason: 'calculation budget exhausted' };
   // WP5b: spend the mastery reserve on PoB-probed mastery effects (after auras: mana sustain depends on them).
-  const masteries = probeMasteries({ file, base: finalChanges, t, budget, concurrency, count: masteryReserve });
+  const masteries = probeMasteries({ file, base: finalChanges, t, budget: part(0.15), concurrency, count: masteryReserve });
   if (masteries.chosen.length && budget.left() > 0) {
     const c = withMasteries(finalChanges, masteries.chosen);
     const r = runPob({ input: fs.readFileSync(file), scenario: 'sustained', changes: c });
     budget.take(1);
-    if (!r.error) { finalChanges = c; final = r; }
+    if (!r.error) { finalChanges = c; final = r; } else masteries.chosen = [];
   }
+  // WP11 masteries layer: the chosen effects against the same points on ordinary tree nodes (tree regrown without
+  // the mastery reserve, cluster kept). Without chosen masteries the reserve goes back to the tree.
+  if (masteryReserve > 0 && budget.left() > 0) {
+    const p = prototypeChanges(row, request, t, gems, { reserve: cluster.chosen ? CLUSTER_RESERVE : 0 });
+    const { masteries: _m, ...tree } = { ...finalChanges.tree, ...p.changes.tree, allocate: [...p.changes.tree.allocate, ...(cluster.chosen ? [cluster.chosen.socket] : [])] };
+    const altC = { ...finalChanges, tree };
+    budget.take(1);
+    const altR = runPob({ input: fs.readFileSync(file), scenario: 'sustained', changes: altC });
+    const altText = `the same ${masteryReserve} points on ordinary tree nodes`;
+    if (altR.error) layers.push(layerRecord('masteries', masteries.chosen.length > 0, null, altText, `alternative failed in PoB: ${String(altR.error).slice(0, 120)}`));
+    else if (!masteries.chosen.length) {
+      finalChanges = altC; final = altR; proto.tree = p.tree;
+      layers.push(layerRecord('masteries', false, null, altText, `${masteries.reason ?? 'no mastery effect improved the prototype'}; reserve returned to the tree`));
+    } else {
+      const d = decideLayer(valueOf(final), valueOf(altR));
+      layers.push(layerRecord('masteries', d.taken, d.gain, altText, d.taken ? `${masteries.chosen.length} effects beat the tree${d.guard ? ` (${d.guard})` : ''}` : `${masteries.chosen.length} effects do not beat the tree: points returned to ordinary nodes`,
+        { effects: masteries.chosen.map(m => `${m.name}: ${m.text}`) }));
+      if (!d.taken) { finalChanges = altC; final = altR; proto.tree = p.tree; masteries.chosen = []; }
+    }
+  } else layers.push(layerRecord('masteries', false, null, 'points on the tree', masteryReserve > 0 ? 'not probed (calculation budget)' : 'corpus norm median masteries is 0: no reserve'));
   proto.masteries = masteries;
-  const repairs = repairPrototype({ file, row, request, t, gems, budget, concurrency, state: { final, finalChanges, proto, sup, util } });
+  const repairs = repairPrototype({ file, row, request, t, gems, budget, concurrency, state: { final, finalChanges, proto, sup, util }, cards, ctx, manaBudget: part(0.12) });
   ({ final, finalChanges } = repairs.state);
+  // WP11 kit layers on the finished kit: eldritch implicits, automatic flasks, anoint.
+  let normAnoints = [];
+  try { normAnoints = chooseNormGroup({ cards: cards ?? undefined, ascendancy: row.ascendancy, family: B.damageFormOf(proto.gem) === 'minion' ? 'minion' : proto.gem.types.includes('Attack') ? 'attack' : 'spell' }).norms.anoint.top.map(x => x.value); } catch { normAnoints = []; }
+  const kit = probeKitLayers({ ctx, file, final, finalChanges, proto, row, budget: part(0.12), normAnoints, anointTaken: repairs.anoint });
+  ({ final, finalChanges } = kit);
+  layers.push(...kit.layers);
   const finalGroups = finalChanges.skills.add_groups.map(gr => typedGroup(gr, gems));
   const done = finishPrototype({ id: row.id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups });
   const blueprint = blueprintOf({ row, request, proto, sup, util, finalGroups, m: done.metrics });
-  return { ...done, blueprint, tree: { main_notables: proto.tree.main_picks.map(p => p.name), ascendancy: proto.tree.ascendancy_picks.map(p => p.name), unspent: proto.tree.unspent, enablers: proto.tree.enablers,
+  return { ...done, blueprint, layers, tree: { main_notables: proto.tree.main_picks.map(p => p.name), ascendancy: proto.tree.ascendancy_picks.map(p => p.name), unspent: proto.tree.unspent, enablers: proto.tree.enablers, forced: proto.tree.forced ?? [],
       cluster: proto.cluster?.chosen ? `${proto.cluster.chosen.size} ${proto.cluster.chosen.name} in socket ${proto.cluster.chosen.socket}: ${proto.cluster.chosen.notables.map(n => n.name).join(', ')}${proto.cluster.chosen.nested ? `; ${proto.cluster.chosen.nested.size} ${proto.cluster.chosen.nested.name} in inner socket ${proto.cluster.chosen.inner_socket}: ${proto.cluster.chosen.nested.notables.map(n => n.name).join(', ')}` : ''}` : null,
       cluster_probe: proto.cluster ? { probes: proto.cluster.probes, reserve: proto.cluster.reserve ?? 0, reason: proto.cluster.reason, top: proto.cluster.top } : null,
       masteries: proto.masteries?.chosen?.map(m => `${m.name}: ${m.text}`) ?? [], mastery_probe: proto.masteries ? { probes: proto.masteries.probes, reserve: proto.masteries.reserve, reason: proto.masteries.reason, top: proto.masteries.top } : null },
@@ -564,6 +625,16 @@ function finishPrototype({ id, dir, file, final, finalChanges, request, row, bud
 // WP5b item 3: seeded prototype. The closest corpus build of the ascendancy (design-seed.mjs) keeps its tree, items,
 // jewels, flasks, masteries and utility groups; its main group is replaced by the candidate skill with supports probed
 // by PoB in the same socket group. No tree growth, no generic kit, no generator repairs: the basics are the author's.
+export function groupRoles(groups, gems) {
+  const byName = new Map([...gems.values()].map(x => [`${x.is_support ? 's' : 'a'}:${x.name}`, x]));
+  const reservation = [], utility = [];
+  for (const gr of groups) {
+    const actives = gr.gems.map(y => byName.get(`a:${y.name}`)).filter(Boolean);
+    const reserving = gr.gems.some(y => (byName.get(`s:${y.name}`)?.support_gem?.added_types ?? []).includes('HasReservation'));
+    for (const a of actives) (reserving || a.types.includes('HasReservation') ? reservation : utility).push(a.name);
+  }
+  return { reservation, utility };
+}
 function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, seed }) {
   const id = `${row.id}--seed`;
   const file = seed.xml;
@@ -575,16 +646,24 @@ function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, s
   const g = gems.get(row.gem);
   // Links: the seed group's own socket count (gems it held), capped by the request.
   const seedLinks = Math.max(2, Math.min(links, grp.gems.length));
-  let base = { skills: { remove_groups: [idx], add_groups: [{ label: 'Main', slot: grp.slot ?? 'Body Armour', main: true, gems: [gemSpec(g)] }] } };
+  // WP11: the author's Configuration tab (charges, "been hit recently", enemy conditions, Pantheon) belongs to the
+  // author's skill and play; the seed runs on PoB's new-build configuration like scratch prototypes (design-seed).
+  if (budget.left() < 2) return { id, status: 'not_evaluated', reason: 'calculation budget exhausted' };
+  const defaults = runPob({ input: fs.readFileSync(classBase(dir, row.class, row.ascendancy, request.level)), scenario: 'sustained', full: true }).config ?? {};
+  const author = runPob({ input: fs.readFileSync(file), scenario: 'sustained', full: true }).config ?? {};
+  budget.take(1);
+  const nc = neutralConfig(author, defaults, Object.keys(scenarios.sustained.config));
+  const config = nc.config;
+  let base = { config, skills: { remove_groups: [idx], add_groups: [{ label: 'Main', slot: grp.slot ?? 'Body Armour', main: true, gems: [gemSpec(g)] }] } };
   let sup = probeSupports({ file, base, g, request, gems, budget, concurrency, links: seedLinks });
   // The seed slot can block linked supports (an item that grants its own support or forbids others). Then probe the
   // group without a slot: PoB applies the gems' supports, the item's socketed-gem modifiers are lost (reported).
   if (!sup.chosen.length && (sup.probes?.length ?? 0) <= 1 && grp.slot) {
-    const free = { skills: { remove_groups: [idx], add_groups: [{ label: 'Main', main: true, gems: [gemSpec(g)] }] } };
+    const free = { config, skills: { remove_groups: [idx], add_groups: [{ label: 'Main', main: true, gems: [gemSpec(g)] }] } };
     const sup2 = probeSupports({ file, base: free, g, request, gems, budget, concurrency, links: seedLinks });
     if (sup2.chosen.length) { base = free; sup = { ...sup2, slot_note: `supports did not apply in ${grp.slot} (item-granted/blocked); group moved off the item, its socketed-gem bonuses no longer count` }; }
   }
-  const finalChanges = { skills: { ...base.skills, add_groups: [{ ...base.skills.add_groups[0], gems: [gemSpec(g), ...sup.chosen.map(n => gemSpec([...gems.values()].find(x => x.name === n && x.is_support)))] }] } };
+  const finalChanges = { config, skills: { ...base.skills, add_groups: [{ ...base.skills.add_groups[0], gems: [gemSpec(g), ...sup.chosen.map(n => gemSpec([...gems.values()].find(x => x.name === n && x.is_support)))] }] } };
   if (budget.left() <= 0) return { id, status: 'not_evaluated', reason: 'calculation budget exhausted' };
   const final = runPob({ input: fs.readFileSync(file), scenario: 'sustained', changes: finalChanges });
   budget.take(1);
@@ -601,10 +680,20 @@ function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, s
     const be = buttonEstimate(full.active_skills, flasks, { mageblood: (full.equipped_items ?? []).some(i => /^Mageblood/.test(i.name ?? '')) });
     if (be.estimate != null) { done.metrics.buttons = be.minimum + be.skills.utility.filter(s => s.reason !== 'vaal').length; done.metrics.buttons_detail = { source: 'pob_active_skill_flags', pressed: be.skills.pressed.map(s => s.name), utility: be.skills.utility.map(s => s.name), estimate: be.estimate, minimum: be.minimum, maximum: be.maximum }; }
   } catch { /* keep the type-rule count */ }
+  // Kept groups: reservation (an active gem with the HasReservation type, or a support adding it, e.g. Blasphemy) vs
+  // other utility (movement, guard, minions, triggered skills): only the former is "auras".
+  const split = groupRoles(kept, gems);
   const blueprint = { schema: B.BLUEPRINT_SCHEMA, id, class: row.class, ascendancy: row.ascendancy, damage_chain: { source: { skill: g.name, gem_id: g.id, types: g.types, minion_types: g.minion_types }, form: row.form, damage_types: row.damage_types, delivery_supports: sup.chosen },
-    resources: { reservation: kept.map(x => x.gems.find(y => { const k = [...gems.values()].find(z => z.name === y.name); return k && !k.is_support; })?.name).filter(Boolean) }, seed,
-    assumptions: [`seeded from corpus build ${seed.file} (${seed.main_skill}, level ${seed.level}); its tree, items, jewels, flasks, masteries and utility groups are kept unchanged`, 'only the main group is replaced; tree/items are not re-optimised for the new skill (WP6)'] };
-  return { ...done, blueprint, seed, tree: { main_notables: [], ascendancy: [], unspent: null, enablers: [], source: 'corpus_seed' }, supports: sup, utility: { kept_groups: kept.map(x => x.label || x.gems[0]?.name).filter(Boolean) }, repairs: [], kit_notes: [`seed: ${seed.file}`] };
+    resources: { reservation: split.reservation, utility: split.utility }, seed,
+    assumptions: [`seeded from corpus build ${seed.file} (${seed.main_skill}, level ${seed.level}); its tree, items, jewels, flasks, masteries and utility groups are kept unchanged`, 'only the main group is replaced; tree/items are not re-optimised for the new skill (WP6)',
+      `configuration: PoB new-build defaults (author inputs reset: ${nc.reset.join(', ') || '-'}${nc.kept.length ? `; not reset: ${nc.kept.join(', ')}` : ''}); author custom modifier blocks are kept`] };
+  // Seed layers are the author's: reported as kept (present in the author build) or absent, not re-probed.
+  const fp = done.foundation?.profile ?? {};
+  const authorLayer = (layer, present, detail) => layerRecord(layer, !!present, null, 'not compared: the seed is evaluated as the author built it', present ? `author build: ${detail}` : 'absent in the author build');
+  const layers = [layerRecord('configuration', true, null, "author's Configuration tab", `reset to PoB new-build defaults: ${nc.reset.length} inputs${nc.reset.length ? ` (${nc.reset.slice(0, 12).join(', ')}${nc.reset.length > 12 ? ', ...' : ''})` : ''}`),
+    authorLayer('cluster', fp.clusters?.total, `${fp.clusters?.total} cluster jewels`), authorLayer('masteries', fp.masteries?.count, `${fp.masteries?.count} masteries`),
+    authorLayer('eldritch', fp.eldritch?.items, `${fp.eldritch?.items} items with eldritch implicits`), authorLayer('flasks', fp.flasks?.auto, `${fp.flasks?.auto} automatic flasks`), authorLayer('anoint', fp.anoint, fp.anoint)];
+  return { ...done, blueprint, seed, layers, config_reset: nc, tree: { main_notables: [], ascendancy: [], unspent: null, enablers: [], source: 'corpus_seed' }, supports: sup, utility: { kept_groups: kept.map(x => x.label || x.gems[0]?.name).filter(Boolean), ...split }, repairs: [], kit_notes: [`seed: ${seed.file}`] };
 }
 
 // ---------- run ----------

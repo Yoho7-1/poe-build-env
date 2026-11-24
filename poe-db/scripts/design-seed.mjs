@@ -81,3 +81,21 @@ export function seedsFor(row, gem, { cards = null, minLevel = 80, top = 1, direc
       main_group: x.card.skills?.main_selection?.chosen_group ?? null, level: x.card.identity?.level ?? null, source: x.card.identity?.source ?? null, score: x.score, reasons: x.reasons, unique_cost_floor: x.cost ?? null }))
     .filter(s => fs.existsSync(s.xml));
 }
+
+// Seed configuration (WP11 stage 1): the author's Configuration tab describes the author's skill and play (charges,
+// "been hit recently", enemy conditions, Pantheon) and is not part of the architecture. A seeded prototype replaces the
+// main skill, so it runs on the configuration of a new PoB build (defaults of PoB's ConfigTab:NewConfigSet, read from
+// the class base run) like scratch prototypes do. Pure: author/defaults = runPob `config` tables; scenario keys stay
+// with the scenario. Keys without a default (nil in PoB) reset to false/0: PoB applies a check only when true and a
+// count only when non-zero. Custom modifier blocks are not inputs and are reported, not reset.
+export function neutralConfig(author = {}, defaults = {}, scenarioKeys = []) {
+  const skip = new Set(scenarioKeys), config = {}, kept = [];
+  for (const [k, v] of Object.entries(author)) {
+    if (skip.has(k) || k === 'customMods' || JSON.stringify(defaults[k]) === JSON.stringify(v)) continue;
+    if (k in defaults) config[k] = defaults[k];
+    else if (typeof v === 'boolean') config[k] = false;
+    else if (typeof v === 'number') config[k] = 0;
+    else kept.push(k);
+  }
+  return { config, reset: Object.keys(config).sort(), kept };
+}

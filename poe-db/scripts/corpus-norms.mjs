@@ -170,3 +170,37 @@ export const normsHelp = {
   'corpus norms [--ascendancy A,B] [--skill-tag spell] [--form hit|dot|poison|...] [--backfill [--refresh] [--limit N]] [--members] [--all] [--out f.json]':
     'corpus norms --check <xml> [--ascendancy A] checks one build (prototype or own) against the norms of its ascendancy (warnings, not failures). Norms of build basics over quality-filtered corpus cards:mana/life sustain sources (leech vs regen, deficit), attribute headroom, masteries, eldritch implicits, cluster jewels, anoint, automatic flasks, keystones. --backfill adds BuildCard.foundation to older cards (cached PoB run). Small groups (< --min-group 8) also get corpus-wide norms. Descriptive, not optimal.'
 };
+
+// WP11 stage 1: mana repair candidates from the corpus. Members of the norm group (chooseNormGroup order) with a mana
+// cost are split into builds PoB shows sustained (sustain >= 0) and in deficit; every component they use (mastery effect,
+// keystone, anoint, non-main active gem, main-group support) gets lift = share among sustained - share among deficit
+// builds. Components with positive lift used by >= minUses builds are candidates; which one repairs a prototype is
+// decided by a PoB probe in the generator, not here. No mana-specific rule: the corpus split picks the components.
+export function sustainComponents({ cards = null, ascendancy = null, family = null, minGroup = 8, minUses = 2, top = 6 } = {}) {
+  const list = cards ?? readCards();
+  const { group } = chooseNormGroup({ cards: list, ascendancy, family, minGroup });
+  const members = new Set(corpusNorms({ cards: list, ascendancy: group.ascendancy, skillTag: group.skill_tag, minGroup }).members.map(m => m.file));
+  const rows = list.filter(c => members.has(cardStem(c)) && c.foundation?.mana?.applies);
+  const ok = rows.filter(c => (c.foundation.mana.sustain_per_s ?? 0) >= 0), bad = rows.filter(c => (c.foundation.mana.sustain_per_s ?? 0) < 0);
+  const comps = c => {
+    const main = c.skills?.main?.name;
+    return [
+      ...(c.foundation.masteries?.effects ?? []).filter(e => e.mastery && e.effect != null).map(e => ({ kind: 'mastery', key: `${e.mastery}|${e.effect}`, mastery: e.mastery, effect: e.effect, text: e.text })),
+      ...(c.features?.keystones ?? []).map(k => ({ kind: 'keystone', key: k, name: k })),
+      ...(c.foundation.anoint ? [{ kind: 'anoint', key: c.foundation.anoint, name: c.foundation.anoint }] : []),
+      ...(c.skills?.active ?? []).filter(a => !a.item_granted && a.name !== main).map(a => ({ kind: 'active', key: a.name, name: a.name })),
+      ...(c.skills?.main?.supports ?? []).map(s => ({ kind: 'support', key: s, name: s }))];
+  };
+  const stat = new Map();
+  for (const [side, set] of [['ok', ok], ['bad', bad]]) for (const c of set) {
+    const seen = new Set();
+    for (const x of comps(c)) { const id = `${x.kind}:${x.key}`; if (seen.has(id)) continue; seen.add(id); const s = stat.get(id) ?? { ...x, ok: 0, bad: 0 }; s[side]++; stat.set(id, s); }
+  }
+  const share = (n, d) => d ? n / d : 0;
+  const scored = [...stat.values()].map(s => ({ ...s, uses: s.ok + s.bad, lift: Math.round((share(s.ok, ok.length) - share(s.bad, bad.length)) * 1000) / 1000 }))
+    .filter(s => s.uses >= minUses && s.lift > 0).sort((a, b) => b.lift - a.lift || b.uses - a.uses || a.key.localeCompare(b.key));
+  const byKind = {};
+  for (const s of scored) if ((byKind[s.kind] ??= []).length < top) byKind[s.kind].push(s);
+  return { group: { ...group, with_mana_cost: rows.length, sustained: ok.length, deficit: bad.length }, candidates: Object.values(byKind).flat(),
+    rule: 'lift = share among PoB-sustained builds - share among deficit builds of the norm group; positive lift and >= minUses builds; a PoB probe decides' };
+}

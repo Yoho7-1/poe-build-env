@@ -5,7 +5,7 @@
 // 'hypothesis'); status only moves through lab gates after a test (ablation on a held-out build or transfer).
 import fs from 'node:fs';
 import path from 'node:path';
-import { readJson, atomicJson, flags } from './workspace.mjs';
+import { readJson, atomicJson, flags, dbRoot } from './workspace.mjs';
 import { readCards, qualityFilter, componentKeys, ablationDirectory } from './corpus-learn.mjs';
 import { corpusDirectory } from './corpus.mjs';
 
@@ -65,7 +65,90 @@ export function principleCandidates({ table, contexts, minIn = 3, minOut = 3, mi
 }
 const r2 = v => Math.round(v * 100) / 100;
 
-export function corpusPrinciples({ minLevel = 80, minIn = 3, minShare = 0.6, minLift = 0.4, top = 30, cards = null, ablations = ablationDirectory() } = {}) {
+// Config tautologies. A config flag is a calculation setting (the guide author's assumption), not a build component.
+// Some flags are tied by definition to a context value: "enemy is Shocked" only adds damage to builds that shock
+// (Lightning), "Withered stacks" scale Chaos, "Leeching" is true when mana comes from leech, an ascendancy whose own
+// notables read the condition (Gladiator: "if you've Blocked Recently") carries it because the ascendancy defines it.
+// Such a candidate restates the configuration or the context definition, so it is moved out of the ranked list with
+// the reason. Domains: damage type / form / mana / family are fixed below; ascendancies come from the tree (nodes
+// whose stats match the flag's text). Kinds: definitional (carries in a linked value), complement (weak in another
+// value of a linked dimension: Shocked is weak in Cold builds), ascendancy_defines (an ascendancy's nodes read it).
+export const CONFIG_DOMAINS = [
+  { flags: /^(conditionEnemyShocked|conditionShockEffect|conditionShockedEnemyRecently|conditionEnemyLightningExposure)$/, type: ['Lightning'], text: /\bShock|Lightning Exposure/i },
+  { flags: /^(conditionEnemyIgnited|conditionEnemyBurning)$/, type: ['Fire'], form: ['dot'], text: /Ignit|Burning/i },
+  { flags: /^conditionEnemyFireExposure$/, type: ['Fire'], text: /Fire Exposure/i },
+  { flags: /^(conditionEnemyChilled|conditionEnemyChilledEffect|conditionEnemyFrozen|conditionEnemyBrittle)$/, type: ['Cold'], text: /Chill|Frozen|Freez|Cold Ailment/i },
+  { flags: /^conditionEnemyColdExposure$/, type: ['Cold'], text: /Cold Exposure/i },
+  { flags: /^(conditionEnemyPoisoned|multiplierPoisonOnEnemy)$/, type: ['Chaos'], form: ['dot'], text: /Poison/i },
+  { flags: /^multiplierWitheredStackCount$/, type: ['Chaos'], text: /Wither/i },
+  { flags: /^conditionEnemyBleeding$/, type: ['Physical'], form: ['dot'], text: /Bleed/i },
+  { flags: /^conditionLeeching$/, mana: ['leech'], text: /while Leeching/i },
+  { flags: /^conditionBlockedRecently$/, text: /Blocked Recently/i },
+  { flags: /^conditionStationary$/, text: /Stationary/i },
+  { flags: /^conditionCritRecently$/, text: /Critical Strike Recently/i },
+  { flags: /^multiplierRage$/, text: /\bRage\b/i },
+  { flags: /^(conditionOnConsecratedGround|conditionEnemyOnConsecratedGround)$/, text: /Consecrated Ground/i },
+  { flags: /^buffFortification$/, text: /Fortif/i },
+  { flags: /^conditionEnemyUnnerved$/, text: /Unnerve/i },
+  { flags: /^conditionEnemyIntimidated$/, text: /Intimidat/i },
+  { flags: /^useEnduranceCharges$/, text: /Endurance Charge/i },
+  { flags: /^useFrenzyCharges$/, text: /Frenzy Charge/i },
+  { flags: /^usePowerCharges$/, text: /Power Charge/i },
+  { flags: /^(conditionUsedWarcryRecently|multiplierWarcryUsedRecently)$/, text: /Warcry/i },
+  { flags: /^(multiplierSummonedMinion|conditionUsedMinionSkillRecently)$/, family: ['minion'], text: /Minion/i },
+];
+
+let ascCache = null;
+// ascendancy -> stat lines of its nodes (passive_nodes.jsonl, GGG tree). Missing data: no ascendancy links (no claim).
+export function ascendancyStats(file = path.join(dbRoot, 'data', 'knowledge', 'passive_nodes.jsonl')) {
+  if (ascCache?.file === file) return ascCache.map;
+  const map = new Map();
+  if (fs.existsSync(file)) for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
+    if (!line) continue;
+    const d = JSON.parse(line).data;
+    if (!d?.ascendancyName) continue;
+    if (!map.has(d.ascendancyName)) map.set(d.ascendancyName, []);
+    map.get(d.ascendancyName).push(...(d.stats ?? []));
+  }
+  ascCache = { file, map };
+  return map;
+}
+
+// null, or {kind, reason} for a config tautology. asc: Map ascendancy -> stat lines.
+export function configTautology(c, asc = ascendancyStats()) {
+  const m = /^config:(.+)$/.exec(c.key);
+  if (!m) return null;
+  const flag = m[1], dom = CONFIG_DOMAINS.find(d => d.flags.test(flag));
+  if (!dom) return null;
+  const [d, v] = Object.entries(c.context)[0];
+  const linked = dom[d];
+  if (linked && c.direction === 'carries_in_context' && linked.includes(v))
+    return { kind: 'definitional', reason: `config flag ${flag} only affects ${d}=${linked.join('/')} builds by definition; carrying there restates the calculation setting` };
+  if (linked && c.direction === 'weak_in_context' && !linked.includes(v))
+    return { kind: 'complement', reason: `config flag ${flag} is tied to ${d}=${linked.join('/')}; being weak in ${d}=${v} is the complement of that definition` };
+  if (d === 'ascendancy' && c.direction === 'carries_in_context' && dom.text) {
+    const hit = (asc.get(v) ?? []).find(t => dom.text.test(t));
+    if (hit) return { kind: 'ascendancy_defines', reason: `${v} ascendancy nodes read the condition ("${hit}"); the flag carries because the context grants it` };
+  }
+  return null;
+}
+
+// Splits candidates into kept and filtered (each filtered one keeps 'filtered' {kind, reason}). keepTautologies leaves
+// them ranked with a 'tautology' field; noConfig also filters every other config flag (a calculation assumption). Other
+// config candidates stay ranked with config_assumption: true.
+export function filterCandidates(cands, { keepTautologies = false, noConfig = false, asc } = {}) {
+  const kept = [], filtered = [];
+  for (const c of cands) {
+    const t = configTautology(c, asc);
+    if (t && keepTautologies) { kept.push({ ...c, tautology: t }); continue; }
+    if (t) { filtered.push({ ...c, filtered: t }); continue; }
+    if (noConfig && c.key.startsWith('config:')) { filtered.push({ ...c, filtered: { kind: 'config_assumption', reason: 'config flag: a calculation setting of the source build, not a component (--no-config)' } }); continue; }
+    kept.push(c.key.startsWith('config:') ? { ...c, config_assumption: true } : c);
+  }
+  return { kept, filtered };
+}
+
+export function corpusPrinciples({ minLevel = 80, minIn = 3, minShare = 0.6, minLift = 0.4, top = 30, cards = null, ablations = ablationDirectory(), keepTautologies = false, noConfig = false, asc } = {}) {
   const list = cards ?? readCards();
   const q = qualityFilter(list, { minLevel });
   const contexts = new Map(list.filter(c => q.keep.has(stem(c.identity?.file ?? c._card))).map(c => [stem(c.identity.file), contextsOf(c)]));
@@ -76,9 +159,14 @@ export function corpusPrinciples({ minLevel = 80, minIn = 3, minShare = 0.6, min
     for (const r of readJson(path.join(ablations, f)).rows ?? []) if (!r.error && r.tier) rows.push({ build: b, keys: componentKeys(r).filter(k => k.includes(':')), tier: r.tier });
   }
   const builds = new Set(rows.map(r => r.build));
-  const cands = principleCandidates({ table: buildKeyTable(rows), contexts, minIn, minShare, minLift });
+  const all = principleCandidates({ table: buildKeyTable(rows), contexts, minIn, minShare, minLift });
+  const { kept: cands, filtered } = filterCandidates(all, { keepTautologies, noConfig, asc });
+  const byKind = {};
+  for (const f of filtered) byKind[f.filtered.kind] = (byKind[f.filtered.kind] ?? 0) + 1;
   return { schema: 'corpus-principles/1', builds: builds.size, components: rows.length, thresholds: { min_level: minLevel, min_in: minIn, min_share: minShare, min_lift: minLift },
     candidates: cands.slice(0, top), total_candidates: cands.length,
+    filtered: { total: filtered.length, by_kind: byKind, note: 'config tautologies: restate the calculation setting or the context definition; --keep-tautologies keeps them ranked with a tautology field',
+      items: filtered.map(f => ({ key: f.key, context: f.context, direction: f.direction, score: f.score, ...f.filtered })) },
     caveat: 'Conditional frequencies over a small corpus biased to popular guides; PoB numbers only. Each candidate is a hypothesis: test by ablation of a held-out build in the context and of one outside it (lab gates), not a rule.' };
 }
 
@@ -109,13 +197,13 @@ export async function recordPrinciples(result, { limit = 10, ledger } = {}) {
 }
 
 export function principlesCommand(args) {
-  const { positional, options } = flags(args, ['min-level', 'min-in', 'min-share', 'min-lift', 'top', 'out', 'record'], []);
-  if (positional[0] !== 'principles') throw new Error('Use corpus principles [--min-in 3] [--min-share 0.6] [--min-lift 0.4] [--top 30] [--record N] [--out f.json]');
-  const r = corpusPrinciples({ minLevel: Number(options['min-level'] ?? 80), minIn: Number(options['min-in'] ?? 3), minShare: Number(options['min-share'] ?? 0.6), minLift: Number(options['min-lift'] ?? 0.4), top: Number(options.top ?? 30) });
+  const { positional, options } = flags(args, ['min-level', 'min-in', 'min-share', 'min-lift', 'top', 'out', 'record'], ['keep-tautologies', 'no-config']);
+  if (positional[0] !== 'principles') throw new Error('Use corpus principles [--min-in 3] [--min-share 0.6] [--min-lift 0.4] [--top 30] [--keep-tautologies] [--no-config] [--record N] [--out f.json]');
+  const r = corpusPrinciples({ minLevel: Number(options['min-level'] ?? 80), minIn: Number(options['min-in'] ?? 3), minShare: Number(options['min-share'] ?? 0.6), minLift: Number(options['min-lift'] ?? 0.4), top: Number(options.top ?? 30), keepTautologies: !!options['keep-tautologies'], noConfig: !!options['no-config'] });
   if (options.out) atomicJson(path.resolve(options.out), r);
   if (options.record) return recordPrinciples(r, { limit: Number(options.record) }).then(rec => ({ ...r, lab: rec }));
   return r;
 }
 export const principlesHelp = {
-  'corpus principles [--min-in 3] [--min-share 0.6] [--min-lift 0.4] [--top 30] [--record N] [--out f.json]': 'WP7: conditional principle candidates from corpus ablations x BuildCard contexts (skill family, hit/DoT, damage type, defense pool, mana source, ascendancy): component carries builds in a context and rarely outside it (or the reverse), with supporting builds and counterexamples; --record N writes the top N as lab hypotheses (verification hypothesis)'
+  'corpus principles [--min-in 3] [--min-share 0.6] [--min-lift 0.4] [--top 30] [--keep-tautologies] [--no-config] [--record N] [--out f.json]': 'WP7: conditional principle candidates from corpus ablations x BuildCard contexts (skill family, hit/DoT, damage type, defense pool, mana source, ascendancy): component carries builds in a context and rarely outside it (or the reverse), with supporting builds and counterexamples; config tautologies (flag tied by definition to the context: Shocked x Lightning, Withered x Chaos, an ascendancy whose nodes read the condition) move to filtered with kind and reason, --keep-tautologies keeps them ranked and flagged, --no-config filters every config flag; --record N writes the top N as lab hypotheses (verification hypothesis)'
 };

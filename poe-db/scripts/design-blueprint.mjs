@@ -148,7 +148,7 @@ export function requestFromProfile(build, { level = null, mapTier = null } = {})
     assumptions
   };
   if (!req.classes.length) assumptions.push('no ascendancy named: generator considers every ascendancy (slow); pass --ascendancy');
-  if (req.budget && req.platform == null) assumptions.push('platform unknown: budget is not checked against prices (rare prices are not in local data anyway)');
+  if (req.budget && req.platform == null) assumptions.push('platform not given: prices use the project market platform pc (dated local snapshots); rare items are band estimates');
   return validateRequest(req);
 }
 

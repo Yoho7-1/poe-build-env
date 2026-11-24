@@ -15,6 +15,7 @@ import { analyzeUpgrades } from './analysis-run.mjs';
 import { runBatch, batchRunner, defaultConcurrency } from './analysis-engine.mjs';
 import { readMetric, metrics } from './analysis-core.mjs';
 import { planAblation, isSupportGem } from './analysis-ablation.mjs';
+import { parseBudget, upgradeVariants, priceVariant, withPriceContext } from './design-variants.mjs';
 
 const pobSrc = rel => path.join(dbRoot, 'vendor/pob/src', rel);
 const asArray = v => v == null ? [] : Array.isArray(v) ? v : [v];
@@ -435,7 +436,7 @@ function verifyRow(file, scenario, base, candidate) {
   return { status: unparsed.length ? 'unparsed_lines' : 'parsed', equipped, unparsed: unparsed.length ? unparsed : undefined };
 }
 
-export function analyzeAutoUpgrades({ file, kind, slot = null, group = null, replace = 'auto', metric = 'dps', top = 20, concurrency = defaultConcurrency, scenario = 'sustained', base = {}, search = null, limit = null, quality = 20, excludeAwakened = false } = {}) {
+export function analyzeAutoUpgrades({ file, kind, slot = null, group = null, replace = 'auto', metric = 'dps', top = 20, concurrency = defaultConcurrency, scenario = 'sustained', base = {}, search = null, limit = null, quality = 20, excludeAwakened = false, budget = null } = {}) {
   if (!metrics[metric]) throw new Error(`Unknown metric ${metric}`);
   const started = Date.now();
   let probe = null, runBase = base;
@@ -460,7 +461,7 @@ export function analyzeAutoUpgrades({ file, kind, slot = null, group = null, rep
   }
   if (!gen.candidates.length) return { ...gen, analysis: 'auto_upgrades', ranking: [], existing_supports_not_applied: existingNotApplied, note: 'No candidates generated' };
   const expanded = expandCandidates({ candidates: gen.candidates });
-  const result = analyzeUpgrades({ file, scenario, metric, candidates: expanded, base: runBase, top: expanded.length, concurrency });
+  const result = analyzeUpgrades({ file, scenario, metric, candidates: expanded, base: runBase, top: expanded.length, concurrency, budget });
   const byId = new Map(gen.candidates.map(c => [c.id, c]));
   const verification = new Map(result.ranking.map(r => [r.id, verifyRow(file, scenario, runBase, byId.get(r.id))]));
   const rejected = new Set([...verification].filter(([, v]) => v.status === 'not_applied').map(([id]) => id));
@@ -481,11 +482,11 @@ export function autoUpgradeOptions(file, options) {
   return { file: path.resolve(file), kind: options.auto ?? options.kind, slot: options.slot ?? null, group: intOpt(options.group, 'group', 1, 100), replace: options.replace ?? 'auto',
     metric: options.metric ?? 'dps', top: intOpt(options.top, 'top', 1, 500) ?? 20, concurrency: intOpt(options.concurrency, 'concurrency', 1, 16) ?? defaultConcurrency,
     scenario: options.scenario ?? 'sustained', base: options.changes ? readJson(path.resolve(options.changes)) : {}, search: options.search ?? null,
-    limit: intOpt(options.limit, 'limit', 1, 2000), quality: intOpt(options.quality, 'quality', 0, 23) ?? 20, excludeAwakened: !!options['exclude-awakened'] };
+    limit: intOpt(options.limit, 'limit', 1, 2000), quality: intOpt(options.quality, 'quality', 0, 23) ?? 20, excludeAwakened: !!options['exclude-awakened'], budget: parseBudget(options.budget) };
 }
 
 export function candidatesCommand(rest) {
-  const { positional, options } = flags(rest, ['kind', 'slot', 'group', 'replace', 'search', 'limit', 'out', 'metric', 'top', 'concurrency', 'scenario', 'changes', 'quality'], ['plan', 'exclude-awakened']);
+  const { positional, options } = flags(rest, ['kind', 'slot', 'group', 'replace', 'search', 'limit', 'out', 'metric', 'top', 'concurrency', 'scenario', 'changes', 'quality', 'budget'], ['plan', 'exclude-awakened']);
   const file = positional[0];
   if (!file) throw new Error('Build file required: analyze candidates <xml> --kind supports|uniques|anoints [--slot Helmet] [--plan]');
   if (!options.kind) throw new Error('--kind supports|uniques|anoints required');
@@ -493,7 +494,10 @@ export function candidatesCommand(rest) {
   if (options.plan) {
     const gen = generateCandidates({ kind: o.kind, file: o.file, slot: o.slot, group: o.group, replace: o.replace, search: o.search, limit: o.limit, quality: o.quality, excludeAwakened: o.excludeAwakened });
     if (options.out) { atomicJson(path.resolve(options.out), { candidates: gen.candidates }); gen.candidates_file = path.resolve(options.out); }
-    return { ...gen, candidates: gen.candidates.map(c => ({ id: c.id, label: c.label, price: c.price, price_match: c.generated.price_match })),
+    // Shared variant model without engine gains (gain null = not probed): resource and exact/estimated/unknown price.
+    const variants = withPriceContext(ctx => upgradeVariants(gen.candidates.map(c => ({ id: c.id, label: c.label })), new Map(gen.candidates.map(c => [c.id, c])), { source: 'analyze_candidates' }).map(v => priceVariant(v, ctx)));
+    const vById = new Map(variants.map(v => [v.id, v]));
+    return { ...gen, candidates: gen.candidates.map(c => ({ id: c.id, label: c.label, price: c.price, price_match: c.generated.price_match, resource: vById.get(c.id)?.resource.key, cost_class: vById.get(c.id)?.price.cost_class, exact_chaos: vById.get(c.id)?.price.exact_chaos ?? null })),
       excluded: gen.excluded.length, excluded_reasons: countBy(gen.excluded, 'reason'),
       usage: 'Full changes: --out file.json (usable as analyze upgrades --candidates). Engine run: drop --plan.' };
   }
@@ -506,5 +510,5 @@ export const candidatesHelp = {
   'analyze candidates <xml> --kind supports [--group N] [--replace auto|add|weakest|<gem index>] [--search text] [--exclude-awakened] [--plan] [--out f.json]': 'Auto candidates: every type-compatible support for the main (or chosen) group, replacing the weakest support (removal probes) or added to a free linked socket; engine checks applied_supports',
   'analyze candidates <xml> --kind uniques --slot <Helmet|Body Armour|Gloves|Boots|Amulet|Ring 1|Ring 2|Belt|Weapon 1|Weapon 2|Flask N> [--search text] [--limit N] [--plan]': 'Obtainable uniques (Wiki flag) for the slot with PoB item text, one candidate per current variant, dated price when the variant matches',
   'analyze candidates <xml> --kind anoints [--search text] [--limit N] [--plan]': 'Amulet anointment notables (replaces the current anoint; anoint-control measures re-import drift)',
-  'analyze upgrades <xml> --auto supports|uniques|anoints [--slot S] [--metric dps] [--top N]': 'Same as analyze candidates without --plan: generation plus ranking with prices in one call'
+  'analyze upgrades <xml> --auto supports|uniques|anoints [--slot S] [--metric dps] [--top N] [--budget 5div|300c]': 'Same as analyze candidates without --plan: generation plus ranking with prices in one call; variant_model: each candidate as a variant (resource, gain vs the current build, exact/estimated/unknown price) and a selection by gain per chaos inside --budget (without it: explicitly unpriced comparison)'
 };

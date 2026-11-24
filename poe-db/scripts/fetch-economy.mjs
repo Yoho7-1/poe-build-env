@@ -52,4 +52,5 @@ async function main() {
   atomicJson(path.join(dbRoot,'reports/economy-summary.json'),report);
 }
 
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await main();
+// No top-level await: price-refresh imports this module, and agent.mjs loads command modules with require(esm).
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(e?.stack??e);process.exitCode=1;});

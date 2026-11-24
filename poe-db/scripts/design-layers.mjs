@@ -45,7 +45,8 @@ export function decideLayer(withV, without, opts = {}) {
 //   budget             - not probed for want of calculation budget: nothing was compared;
 //   alternative_failed - the alternative itself errored in PoB;
 //   author_build       - a corpus seed: the layer is the author's, not re-probed.
-export const DECIDED_BY = ['pob_probe', 'no_option', 'budget', 'alternative_failed', 'author_build'];
+//   prior              - pruned by a confirmed lab principle (design-priors.mjs) without a probe; the record id is kept.
+export const DECIDED_BY = ['pob_probe', 'no_option', 'budget', 'alternative_failed', 'author_build', 'prior'];
 export function layerRecord(layer, taken, gain, alternative, reason, extra = {}) {
   const { decided_by = 'pob_probe', ...rest } = extra;
   return { layer, taken, gain_vs_alternative: gain, alternative, reason, decided_by, ...rest };
@@ -147,8 +148,66 @@ export function manaCondition(sustain, rounds = 0) {
   return { code: 'mana_deficit_unresolved', detail: `mana deficit ${round(sustain, 1)}/s (${how}): the reported DPS is not sustained by mana (PoB sustained scenario, no mana flask); it holds in bursts only, or with a mana flask` };
 }
 
+// The tree regrown on the same point budget with `force` nodes (cluster socket and reachable masteries kept): the
+// alternative of a forced node is the same procedure without it.
+export function regrowWith({ ctx, row, request, t, gems, proto, finalChanges }, force, extra = []) {
+  const cl = proto.cluster?.chosen;
+  const ms = [...(finalChanges.tree?.masteries ?? []), ...extra];
+  const p = ctx.prototypeChanges(row, request, t, gems, { reserve: ms.length + (cl ? ctx.CLUSTER_RESERVE : 0), force: [...(proto.force ?? []), ...force], mana: proto.mana ?? {} });
+  const groups = new Set(p.changes.tree.allocate.map(id => t.nodes.get(Number(id))?.group));
+  const keep = ms.filter(m => groups.has(t.nodes.get(Number(m.node))?.group));
+  return { p, c: { ...finalChanges, tree: { ...p.changes.tree, allocate: [...p.changes.tree.allocate, ...(cl ? [cl.socket] : [])], ...(keep.length ? { masteries: keep } : {}) } } };
+}
+
+// ---------- WP11 item 4: keystone priors ----------
+// Confirmed principles (design-priors.mjs) choose which keystones are worth a probe and prune the rest with the record
+// as the reason. Each let-through keystone is decided by PoB: tree regrown with it vs the same regrowth without it.
+export function priorContext(proto, final) {
+  const form = B.damageFormOf(proto.gem), o = final?.output ?? {};
+  return { family: manaFamily(proto.gem), form, hit: !['damage_over_time', 'minion'].includes(form), minion: form === 'minion', str: o.Str ?? null, unreservedMana: o.ManaUnreserved ?? null,
+    leech: !!proto.mana?.leech || (proto.gem.types ?? []).includes('Attack') };
+}
+export function probePriorKeystones({ ctx, file, row, request, t, gems, budget, state, plan }) {
+  let { final, finalChanges, proto } = state;
+  const layers = [], alt = 'the same points on ordinary tree nodes (tree regrown without it)';
+  const allocated = new Set((finalChanges.tree?.allocate ?? []).map(Number));
+  const probes = [];
+  for (const k of plan) {
+    const n = [...t.nodes.values()].find(y => y.type === 'keystone' && y.name === k.node && !y.ascendancy && y.eligibility === 'tree_defined');
+    if (k.action === 'prune') { layers.push(layerRecord(`keystone:${k.node}`, false, null, alt, `pruned by prior: ${k.reason}`, { decided_by: 'prior', prior: k.prior })); continue; }
+    if (!n || allocated.has(n.id)) continue;
+    probes.push({ ...k, id: n.id, g: regrowWith({ ctx, row, request, t, gems, proto, finalChanges }, [n.id]) });
+  }
+  if (!probes.length) return { state: { final, finalChanges }, layers };
+  const base = regrowWith({ ctx, row, request, t, gems, proto, finalChanges }, []);
+  const res = ctx.batch(file, [base.c, ...probes.map(p => p.g.c)], budget);
+  const r0 = res.get?.(base.c);
+  if (!r0 || r0.error) {
+    for (const p of probes) layers.push(layerRecord(`keystone:${p.node}`, false, null, alt, `prior let it through (${p.reason}); not probed: ${r0?.error ? 'alternative failed in PoB' : 'calculation budget'}`, { decided_by: r0?.error ? 'alternative_failed' : 'budget', prior: p.prior }));
+    return { state: { final, finalChanges }, layers };
+  }
+  const v0 = valueOf(r0);
+  const rows = probes.map(p => { const r = res.get(p.g.c); return r && !r.error ? { ...p, r, ...decideLayer(valueOf(r), v0) } : { ...p, r: null, taken: false, gain: null, guard: null }; });
+  // Single best keystone by total gain; a second one only if the pair, probed together, beats the single best.
+  const pos = rows.filter(x => x.r && x.taken && x.gain.total > 0).sort((a, b) => b.gain.total - a.gain.total);
+  let pick = pos.slice(0, 1), pickR = pos[0]?.r ?? null, pickG = pos[0]?.g ?? null;
+  if (pos.length > 1 && budget.left() > 0) {
+    const both = regrowWith({ ctx, row, request, t, gems, proto, finalChanges }, pos.slice(0, 2).map(x => x.id));
+    const rb = ctx.batch(file, [both.c], budget).get?.(both.c);
+    if (rb && !rb.error && layerGain(valueOf(rb), v0).total > pos[0].gain.total) { pick = pos.slice(0, 2); pickR = rb; pickG = both; }
+  }
+  // The keystone tree replaces the prototype only when it also beats the prototype as built (not just the regrowth).
+  if (pick.length && layerGain(valueOf(pickR), valueOf(final)).total > 0) {
+    finalChanges = pickG.c; final = pickR; proto.force = [...(proto.force ?? []), ...pick.map(x => x.id)]; proto.tree = pickG.p.tree;
+  } else pick = [];
+  for (const x of rows) layers.push(layerRecord(`keystone:${x.node}`, pick.includes(x), x.gain, alt,
+    `prior let it through (${x.reason}); ${!x.r ? 'probe failed in PoB' : pick.includes(x) ? 'beats the regrown tree and the prototype' : x.gain?.total > 0 ? 'gains on the regrown tree but not over the prototype as built' : 'does not beat the same points on the tree'}`,
+    { decided_by: x.r ? 'pob_probe' : 'alternative_failed', prior: x.prior }));
+  return { state: { final, finalChanges }, layers };
+}
+
 export function repairManaFromCorpus({ ctx, file, row, request, t, gems, budget, state, cards = null, rounds = 3 }) {
-  const { batch, prototypeChanges, gemSpec, withGroup, CLUSTER_RESERVE } = ctx;
+  const { batch, prototypeChanges, gemSpec, withGroup } = ctx;
   let { final, finalChanges, proto } = state;
   const steps = [], applied = new Set();
   let anoint = null;
@@ -158,14 +217,7 @@ export function repairManaFromCorpus({ ctx, file, row, request, t, gems, budget,
   try { comps = sustainComponents({ cards: cards ?? undefined, family }); manaNorm = chooseNormGroup({ cards: cards ?? undefined, family }).norms.mana; }
   catch (e) { return { steps: [{ step: 'mana_corpus', error: e.message.slice(0, 200) }], state: { final, finalChanges }, anoint, rounds_run: 0 }; }
   const cls = t.classes.find(c => c.name === row.class);
-  const cl = proto.cluster?.chosen;
-  const regrow = (force, extra = []) => {
-    const ms = [...(finalChanges.tree?.masteries ?? []), ...extra];
-    const p = prototypeChanges(row, request, t, gems, { reserve: ms.length + (cl ? CLUSTER_RESERVE : 0), force: [...(proto.force ?? []), ...force], mana: proto.mana ?? {} });
-    const groups = new Set(p.changes.tree.allocate.map(id => t.nodes.get(Number(id))?.group));
-    const keep = ms.filter(m => groups.has(t.nodes.get(Number(m.node))?.group));
-    return { p, c: { ...finalChanges, tree: { ...p.changes.tree, allocate: [...p.changes.tree.allocate, ...(cl ? [cl.socket] : [])], ...(keep.length ? { masteries: keep } : {}) } } };
-  };
+  const regrow = (force, extra = []) => regrowWith({ ctx, row, request, t, gems, proto, finalChanges }, force, extra);
   const gemByName = (n, support) => [...gems.values()].find(x => x.name === n && x.is_support === support && x.pob_known);
   const variantsFor = () => {
     const out = [];

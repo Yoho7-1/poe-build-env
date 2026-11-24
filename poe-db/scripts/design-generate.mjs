@@ -32,7 +32,9 @@ import { createRecord } from './lab.mjs';
 import { referenceDb, exampleQuery } from './reference-store.mjs';
 import { loadBuild } from './build-store.mjs';
 import * as B from './design-blueprint.mjs';
-import { valueOf, layerGain, layerRecord, decideLayer, probeKitLayers, repairManaFromCorpus, manaCondition } from './design-layers.mjs';
+import { valueOf, layerGain, layerRecord, decideLayer, probeKitLayers, repairManaFromCorpus, manaCondition, priorContext, probePriorKeystones } from './design-layers.mjs';
+import { loadPriors, keystonePlan, trimOrder } from './design-priors.mjs';
+import { prototypeVariants, priceVariant, selectInBudget, withPriceContext, priceSummary, clusterParts } from './design-variants.mjs';
 
 const disclaimer = 'Generated prototypes are engine sketches with generic rare items and a greedy tree; numbers compare architectures under one item/tree policy, they are not optimised builds and not game tests.';
 const round = (v, d = 0) => (v == null || !Number.isFinite(v) ? null : Math.round(v * 10 ** d) / 10 ** d);
@@ -426,7 +428,7 @@ function blueprintOf({ row, request, proto, sup, util, finalGroups, m }) {
     },
     success_criteria: B.successCriteria(request),
     assumptions: [...request.assumptions, `generic rare kit (tier ${KIT_TIER} mods from each base legal pool, ilvl 84, mid rolls), gems 20/20, no uniques; eldritch implicits (Exarch + Eater, tier 4 of 6, no Presence variants) on helmet/body/gloves/boots chosen by axis value; 5 kit flasks (utility automatic: Used when Charges reach full, charge sustain not modelled); masteries and one cluster jewel (PoB data enchant + legal notables), optionally with a smaller cluster in its inner socket, only where the corpus norm uses them and PoB shows a gain`, 'tree: greedy notable allocation by axis value per point, not optimised (WP6)', 'core/implementation split is the generator plan, not an ablation result (run analyze ablate on the XML)'],
-    not_modelled: ['clear speed (clear_score is a documented heuristic)', ...(m.explosions.length ? ['on-kill explosion damage is reported by PoB but not part of DPS'] : []), 'boss life per boss (TTK uses enemy database estimates)', 'prices of rare items (no offline rare prices)'],
+    not_modelled: ['clear speed (clear_score is a documented heuristic)', ...(m.explosions.length ? ['on-kill explosion damage is reported by PoB but not part of DPS'] : []), 'boss life per boss (TTK uses enemy database estimates)', 'rare item prices are band estimates over dated base prices (prices-model RARE_BANDS), not observations'],
     groups: finalGroups.map(gr => ({ label: gr.label, slot: gr.slot, gems: gr.gems.map(x => x.name) }))
   });
 }
@@ -512,7 +514,7 @@ function repairPrototype({ file, row, request, t, gems, budget, concurrency, sta
   return { steps, state: { final, finalChanges }, anoint, conditions };
 }
 
-function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency, links, masteryReserve = 0, cards = null }) {
+function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency, links, masteryReserve = 0, cards = null, priors = [] }) {
   // WP11: the prototype's budget share is split into step caps; what a step leaves stays for the next steps/prototypes.
   const S = budget.max;
   const part = (f, min = 4) => budget.sub(Math.max(min, Math.floor(S * f)));
@@ -587,10 +589,18 @@ function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency,
   const kit = probeKitLayers({ ctx, file, final, finalChanges, proto, row, budget: part(0.12), normAnoints, anointTaken: repairs.anoint });
   ({ final, finalChanges } = kit);
   layers.push(...kit.layers);
+  // WP11 item 4: keystones named by confirmed lab principles; the prior prunes or lets through, PoB decides.
+  const pctx = priorContext(proto, final);
+  const plan = keystonePlan(priors, pctx, { allocated: (finalChanges.tree?.allocate ?? []).map(id => t.nodes.get(Number(id))?.name).filter(Boolean) });
+  if (plan.length) {
+    const pk = probePriorKeystones({ ctx, file, row, request, t, gems, budget: part(0.06, 3), state: { final, finalChanges, proto }, plan });
+    ({ final, finalChanges } = pk.state);
+    layers.push(...pk.layers);
+  }
   const finalGroups = finalChanges.skills.add_groups.map(gr => typedGroup(gr, gems));
   const done = finishPrototype({ id: row.id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups, layers });
   const blueprint = blueprintOf({ row, request, proto, sup, util, finalGroups, m: done.metrics });
-  return { ...done, blueprint, layers, tree: { main_notables: proto.tree.main_picks.map(p => p.name), ascendancy: proto.tree.ascendancy_picks.map(p => p.name), unspent: proto.tree.unspent, enablers: proto.tree.enablers, forced: proto.tree.forced ?? [],
+  return { ...done, blueprint, layers, prior_context: pctx, cluster_parts: clusterParts(proto.cluster?.chosen, clusterText), tree: { main_notables: proto.tree.main_picks.map(p => p.name), ascendancy: proto.tree.ascendancy_picks.map(p => p.name), unspent: proto.tree.unspent, enablers: proto.tree.enablers, forced: proto.tree.forced ?? [],
       cluster: proto.cluster?.chosen ? `${proto.cluster.chosen.size} ${proto.cluster.chosen.name} in socket ${proto.cluster.chosen.socket}: ${proto.cluster.chosen.notables.map(n => n.name).join(', ')}${proto.cluster.chosen.nested ? `; ${proto.cluster.chosen.nested.size} ${proto.cluster.chosen.nested.name} in inner socket ${proto.cluster.chosen.inner_socket}: ${proto.cluster.chosen.nested.notables.map(n => n.name).join(', ')}` : ''}` : null,
       cluster_probe: proto.cluster ? { probes: proto.cluster.probes, reserve: proto.cluster.reserve ?? 0, reason: proto.cluster.reason, top: proto.cluster.top } : null,
       masteries: proto.masteries?.chosen?.map(m => `${m.name}: ${m.text}`) ?? [], mastery_probe: proto.masteries ? { probes: proto.masteries.probes, reserve: proto.masteries.reserve, reason: proto.masteries.reason, top: proto.masteries.top } : null },
@@ -801,6 +811,8 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
   const results = [];
   // Corpus cards are read once (norms, seeds, mana candidates).
   const cards = seedCards() ?? (() => { try { return readCards(); } catch { return null; } })();
+  // Confirmed WP7 principles as priors (read-only ledger; an inactive or missing record switches its rule off).
+  const priors = (() => { try { return loadPriors(); } catch { return []; } })();
   const jobs = [];
   for (const row of chosen) {
     const candidate = { score: row.score, themes_met: row.themes_met, reasons: row.reasons };
@@ -818,7 +830,7 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
     const { row, candidate } = job;
     if (job.kind === 'scratch') {
       const masteryReserve = masteryReserveFor(row, gems.get(row.gem), cards);
-      try { results.push({ ...evaluateArchitecture({ dir, row, request, t, gems, budget: share, concurrency, links, masteryReserve, cards }), candidate, budget_share: { cap: share.max, used: share.used } }); }
+      try { results.push({ ...evaluateArchitecture({ dir, row, request, t, gems, budget: share, concurrency, links, masteryReserve, cards, priors }), candidate, budget_share: { cap: share.max, used: share.used } }); }
       catch (e) { results.push({ id: row.id, status: 'error', error: e.message.slice(0, 500) }); }
     } else {
       try { results.push({ ...evaluateSeeded({ dir, row, request, gems, budget: share, concurrency, links, seed: job.seed }), candidate, budget_share: { cap: share.max, used: share.used } }); }
@@ -839,6 +851,24 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
       } catch (e) { r.novelty = { error: e.message.slice(0, 300) }; }
     }
   }
+  // 3c. WP11 items 2, 4: variant model and budget. Every evaluated prototype gets its variants (layers, supports, items,
+  // gems) priced from the dated local snapshots, then a selection inside the request budget (or an explicitly unpriced
+  // comparison) and the next investment tier. No network; rare items stay `estimated`.
+  const budgetReq = Number.isFinite(request.budget?.amount) ? request.budget : null;
+  withPriceContext(pctx => {
+    for (const r of results.filter(x => x.xml && x.metrics)) {
+      try {
+        const build = readBuild(path.join(projectRoot, r.xml));
+        const variants = prototypeVariants({ id: r.id, layers: r.layers, build, supports: r.supports, cluster: r.cluster_parts, isSupport: x => /^Support/.test(x.skill_id ?? '') })
+          .map(v => priceVariant(v, pctx));
+        const rareSlots = variants.filter(v => v.required && v.components.some(c => c.kind === 'rare' && c.rarity === 'rare')).map(v => v.label);
+        const order = trimOrder(priors, rareSlots, r.prior_context ?? { leech: false });
+        const selection = selectInBudget(variants, { budget: budgetReq, ctx: pctx, archetype: `${r.blueprint.damage_chain.source.skill} / ${r.blueprint.ascendancy}`, order });
+        r.variants = variants;
+        r.budget = { ...priceSummary(selection), selection, platform: pctx?.platform ?? null, price_db: !!pctx };
+      } catch (e) { r.budget = { error: e.message.slice(0, 300) }; }
+    }
+  }, { platform: request.platform ?? undefined });
   // 4. front over passing prototypes
   const passed = results.filter(r => r.status === 'passed').map(r => ({ id: r.id, ...r.metrics }));
   const objectives = novelty ? [...B.DEFAULT_OBJECTIVES, { key: 'novelty', dir: 'max' }] : B.DEFAULT_OBJECTIVES;
@@ -866,17 +896,19 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
       origin: r.seed ? 'corpus_seed' : 'scratch', novelty: r.novelty ?? null, seed: r.seed ? { file: r.seed.file, main_skill: r.seed.main_skill, score: r.seed.score, reasons: r.seed.reasons, source: r.seed.source } : undefined,
       foundation: r.foundation?.error ? r.foundation : r.foundation ? { status: r.foundation.status, counts: r.foundation.counts, warnings: r.foundation.warnings?.map(w => `${w.code}: ${w.detail}`),
         layer_decisions: r.foundation.layer_decisions?.map(d => `${d.code} (${d.detail}): ${d.decision}`) } : null,
-      supports: r.supports.chosen, auras: r.blueprint.resources.reservation, utility_groups: r.blueprint.resources.utility ?? [], layers: r.layers ?? [], flags: prototypeFlags(r.metrics), conditions: r.conditions?.length ? r.conditions : undefined, config_reset: r.config_reset ? { reset: r.config_reset.reset, kept: r.config_reset.kept } : undefined, budget_share: r.budget_share, ascendancy_nodes: r.tree.ascendancy, repairs: r.repairs, mechanics: r.mechanics, xml: r.xml,
+      supports: r.supports.chosen, auras: r.blueprint.resources.reservation, utility_groups: r.blueprint.resources.utility ?? [], layers: r.layers ?? [], flags: prototypeFlags(r.metrics), conditions: r.conditions?.length ? r.conditions : undefined, config_reset: r.config_reset ? { reset: r.config_reset.reset, kept: r.config_reset.kept } : undefined, budget_share: r.budget_share, budget: r.budget, ascendancy_nodes: r.tree.ascendancy, repairs: r.repairs, mechanics: r.mechanics, xml: r.xml,
       metrics: { boss_dps: r.metrics.boss_dps, rare_dps: r.metrics.rare_dps, dps_scope: r.metrics.dps_scope, boss_ttk_s: r.metrics.boss_ttk_s ?? r.metrics.boss_ttk_range_s, weakest_max_hit: r.metrics.weakest_max_hit, weakest_type: r.metrics.weakest_type, ehp: r.metrics.ehp, hits_to_die_rare: r.metrics.hits_to_die_rare,
         life: r.metrics.life, resists: r.metrics.resists, mana_sustain: r.metrics.mana_sustain, buttons: r.metrics.buttons, clear_score: r.metrics.clear_score, explosions: r.metrics.explosions.map(e => `${e.source} ${Math.round((e.chance ?? 0) * 100)}% x ${e.pct_life}% life ${e.type}`) } } : r),
     coverage: request.classes.map(c => ({ ascendancy: c.ascendancy, screened: screened.filter(r => r.ascendancy === c.ascendancy).length, viable: viable.filter(r => r.ascendancy === c.ascendancy).length,
       evaluated: results.filter(r => r.metrics && r.blueprint?.ascendancy === c.ascendancy).length, not_evaluated: results.filter(r => !r.metrics && r.id.includes('--' + slug(c.ascendancy))).length })),
     front: front.front.map(r => r.id), dominated: front.dominated, objectives, lab_failures: labRecords,
+    priors: priors.map(p => ({ id: p.id, kind: p.kind, status: p.status, active: p.active, node: p.node ?? p.slot ?? null })),
+    pricing: { budget: budgetReq, mode: budgetReq ? 'budget' : 'unpriced_comparison', note: budgetReq ? 'Selection by gain per chaos inside the request budget; exact and estimated costs kept apart; unknown prices listed, never free.' : 'Request without budget: variants compared by gain only, prices attached for information (explicitly unpriced).' },
     calculations: { used: budget.used, budget: budget.max }, timing_s: round((Date.now() - started) / 1000),
     disclaimer
   };
   atomicJson(path.join(dir, 'candidates.json'), { rows: cand.rows.slice(0, 200), excluded: cand.excluded, screened });
-  for (const r of results) if (r.blueprint) atomicJson(path.join(dir, 'blueprints', `${r.id}.json`), { blueprint: r.blueprint, metrics: r.metrics, supports: r.supports, utility: r.utility, tree: r.tree, kit_notes: r.kit_notes, failures: r.failures });
+  for (const r of results) if (r.blueprint) atomicJson(path.join(dir, 'blueprints', `${r.id}.json`), { blueprint: r.blueprint, metrics: r.metrics, supports: r.supports, utility: r.utility, tree: r.tree, kit_notes: r.kit_notes, failures: r.failures, variants: r.variants });
   atomicJson(path.join(dir, 'report.json'), report);
   fs.writeFileSync(path.join(dir, 'report.md'), markdown(report), 'utf8');
   return report;
@@ -893,6 +925,27 @@ export function layerMarkdown(r) {
     for (const l of p.layers) lines.push('  - ' + l.layer + ': ' + (l.taken ? 'taken' : 'not taken') + g(l.gain_vs_alternative) + '; alternative: ' + l.alternative + '; ' + l.reason);
     for (const fl of p.flags ?? []) lines.push('  - flag: ' + fl);
     for (const st of (p.repairs ?? []).filter(x => x.step === 'mana_corpus')) lines.push('  - mana repair round ' + st.round + ': ' + (st.change ?? st.result) + ' (' + (st.sustain_before ?? st.sustain) + ' -> ' + (st.sustain_after ?? '-') + '/s)');
+  }
+  return lines;
+}
+// WP11 items 2, 4: per prototype - budget used (exact vs estimated apart), unknown-price components, next tier.
+export function budgetMarkdown(r) {
+  const withB = (r.prototypes ?? []).filter(p => p.budget);
+  if (!withB.length) return [];
+  const c = v => v == null ? '-' : `${Math.round(v).toLocaleString('en-US')}c`;
+  const lines = ['', '## Budget', '', r.pricing?.note ?? ''];
+  if (r.priors?.length) lines.push('', `Priors (lab, read-only): ${r.priors.map(p => `${p.id} ${p.node ?? ''} ${p.active ? 'active' : `off (${p.status})`}`).join('; ')}`);
+  for (const p of withB) {
+    const b = p.budget, s = b.selection;
+    if (b.error) { lines.push(`- **${p.id}**: pricing failed: ${b.error}`); continue; }
+    const est = b.estimated_range ? `${c(b.estimated_chaos)} (range ${c(b.estimated_range[0])}-${c(b.estimated_range[1])})` : '-';
+    const head = s.mode === 'budget' ? `budget ${s.budget.amount} ${s.budget.currency} = ${c(s.budget.chaos)}${s.budget.conversion ? ' (inconsistent_currency_conversion: lower rate)' : ''}; used exact ${c(b.exact_chaos)}, estimated ${est}; left ${c(s.left_chaos)}${s.over_budget_base ? '; **base kit alone exceeds the budget**' : ''}`
+      : `${s.mode}: base exact ${c(b.exact_chaos)}, estimated ${est}`;
+    lines.push(`- **${p.id}**: ${head}`);
+    if (s.chosen?.length) lines.push(`  - chosen: ${s.chosen.map(x => `${x.label}${x.gain_total != null ? ` +${x.gain_total}%` : ''}${x.chaos ? ` ${c(x.chaos)}` : ''}`).join('; ')}`);
+    if (s.not_in_budget?.length) lines.push(`  - outside the budget: ${s.not_in_budget.map(x => `${x.label} ${c(x.chaos)}`).join('; ')}`);
+    if (b.unknown?.length) lines.push(`  - unknown price (not counted, not free): ${b.unknown.join('; ')}`);
+    if (b.next_tier) lines.push(`  - next tier: ${b.next_tier.reason ?? `+${(b.next_tier.adds ?? []).map(x => x.label).join(', ')}`} at ${c(b.next_tier.budget_chaos)}${b.next_tier.budget_divine != null ? ` (~${b.next_tier.budget_divine} div)` : ''}${b.next_tier.trim_order ? `; trim order ${b.next_tier.trim_order.order.join(' > ')}` : ''}`);
   }
   return lines;
 }
@@ -913,6 +966,7 @@ export function markdown(r) {
   for (const p of r.prototypes.filter(x => x.foundation?.layer_decisions?.length)) lines.push(`  - basics of ${p.id} decided by calculation: ${p.foundation.layer_decisions.join('; ')}`);
   for (const p of r.prototypes.filter(x => x.conditions?.length)) lines.push(`  - **condition** on ${p.id}: ${p.conditions.map(c => `${c.code}: ${c.detail}`).join('; ')}`);
   lines.push(...layerMarkdown(r));
+  lines.push(...budgetMarkdown(r));
   lines.push('', `Lab failures:${r.lab_failures.join(', ') || '-'}`, '', r.disclaimer);
   return lines.join('\n') + '\n';
 }

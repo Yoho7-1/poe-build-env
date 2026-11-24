@@ -21,6 +21,7 @@ import { readBuild, analyzeAutoUpgrades, generateCandidates, slotClasses, normal
 import { expandCandidates } from './analysis-upgrades.mjs';
 import { loadTree } from './tree-graph.mjs';
 import { createRecord, loadLedger, defaultLedger } from './lab.mjs';
+import { optimizeVariants, priceVariant, selectInBudget, withPriceContext } from './design-variants.mjs';
 
 const round = (v, d = 1) => v == null || !Number.isFinite(v) ? null : Math.round(v * 10 ** d) / 10 ** d;
 export function valuesOf(o = {}, minion = null) {
@@ -224,8 +225,11 @@ function upgradeStep(st, o, kind, slot = null) {
   const pick = chooseUpgrade(res.ranking, { base: st.base, start: st.start, metric: o.metric, keep: o.keep, minGain: o.minGain, maxChaos: o.maxChaos, requirePrice: kind === 'uniques', changesById, blockedSupports });
   if (!pick.best) return { phase, kind, slot, result: 'no_improving_feasible_upgrade', evaluated: pick.evaluated, top_blocked: pick.top_blocked };
   const r = pick.best.row;
+  // WP11 variant model: what the step buys (the candidate's price spec), priced once at the end of the run.
+  const spec = gen.candidates.find(c => c.id === r.id)?.price ?? null;
+  const component = spec ? { kind: 'any', name: spec.name, variant: spec.variant ?? null } : kind === 'anoints' ? { kind: 'anoint', name: r.label, unpriced: 'oil combinations are not in the allowed poe.ninja categories' } : { kind: 'unpriced', name: r.label, unpriced: 'no price variant matched in the dated snapshot' };
   return applyStep(st, o, { phase, label: r.label, changes: pick.best.changes,
-    extra: { kind, ...(slot ? { slot } : {}), candidate: r.id, predicted_gain_pct: round(pick.best.gain, 2), price_chaos: round(r.price?.chaos ?? null), verification: r.verification?.status, evaluated: pick.evaluated } });
+    extra: { kind, component, ...(slot ? { slot } : {}), candidate: r.id, predicted_gain_pct: round(pick.best.gain, 2), price_chaos: round(r.price?.chaos ?? null), verification: r.verification?.status, evaluated: pick.evaluated } });
 }
 
 function itemSteps(st, o) {
@@ -268,7 +272,9 @@ export function optimizeBuild({ file, scenario = 'sustained', metric = 'balanced
     start: { dps: round(start.dps, 0), ehp: round(start.ehp, 0), maxhit: round(start.maxhit, 0), mana: round(start.mana) },
     end: { dps: round(st.base.dps, 0), ehp: round(st.base.ehp, 0), maxhit: round(st.base.maxhit, 0), mana: round(st.base.mana) },
     change: { dps_pct: round(pct(st.base.dps, start.dps)), ehp_pct: round(pct(st.base.ehp, start.ehp)), maxhit_pct: round(pct(st.base.maxhit, start.maxhit)) },
-    applied: applied.length, steps, timing_s: round((Date.now() - started) / 1000),
+    applied: applied.length, steps,
+    variant_model: withPriceContext(ctx => { const vs = optimizeVariants(steps).map(v => priceVariant(v, ctx)); return { variants: vs.map(v => ({ id: v.id, label: v.label, resource: v.resource.key, gain: v.gain, cost_class: v.price.cost_class, exact_chaos: v.price.exact_chaos, estimated_chaos: v.price.estimated_chaos, unknown: v.price.unknown.length ? v.price.unknown : undefined })), selection: selectInBudget(vs, { budget: maxChaos != null ? { amount: maxChaos, currency: 'chaos' } : null, ctx }) }; }),
+    timing_s: round((Date.now() - started) / 1000),
     assumptions: [`Tree: up to ${maxSwaps} disjoint swaps per step (removal with its dependents for a reachable notable/keystone with its PoB path), checked together as one PoB variant; otherwise the best single swap.`,
       'Supports and items: candidates and ranking from analyze upgrades --auto (supports of the main group, trigger-tagged supports only if the group already has one, exceptional/awakened gems only with --max-chaos, uniques per slot only with --max-chaos and an observed price, amulet anoint); one candidate per step.',
       `Constraints after every applied edit (normal PoB run): EHP and weakest max hit >= ${keep} x start, mana sustain not newly negative, no new unmet requirement, within the passive budget.`,

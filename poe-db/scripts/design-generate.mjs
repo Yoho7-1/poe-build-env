@@ -20,6 +20,7 @@ import { itemKit, KIT_TIER, ELDRITCH_SLOTS } from './design-kit.mjs';
 import { clusterCandidates, clusterText, outerClusterSockets, innerClusterSockets, nestedCandidates } from './design-cluster.mjs';
 import { pobGems, supportCompatible, readBuild, anointOptions, withAnoint, currentAnoint } from './analysis-candidates.mjs';
 import { seedsFor, neutralConfig } from './design-seed.mjs';
+import { readCards } from './corpus-learn.mjs';
 import { buttonEstimate, buildCard } from './build-card.mjs';
 import { noveltyScore, loadNoveltyCorpus } from './novelty.mjs';
 import { optimizeCommand, optimizeHelp } from './design-optimize.mjs';
@@ -697,6 +698,23 @@ function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, s
 }
 
 // ---------- run ----------
+// WP11 coverage: every requested ascendancy gets an equal screening quota (diversity key inside it); slots an
+// ascendancy cannot fill go to the best remaining rows of any ascendancy.
+export function screenQuota(pool, ascendancies, screen, keyOf) {
+  const quota = Math.max(1, Math.floor(screen / Math.max(1, ascendancies.length)));
+  const picked = ascendancies.flatMap(a => B.diversify(pool.filter(r => r.ascendancy === a), quota, keyOf));
+  const ids = new Set(picked.map(r => r.id));
+  return [...picked, ...B.diversify(pool.filter(r => !ids.has(r.id)), Math.max(0, screen - picked.length), keyOf)];
+}
+export const JOB_WEIGHT = { scratch: 4, seed: 1 };
+// EHP note: PoB TotalEHP averages hits over avoidance (block, evasion, suppression); when it exceeds the weakest
+// max hit by far, the pool against one big hit is what the weakest max hit says, not EHP.
+export function prototypeFlags(m) {
+  const flags = [];
+  if (m?.ehp != null && m?.weakest_max_hit > 0 && m.ehp / m.weakest_max_hit > 20)
+    flags.push('ehp_avoidance_dominated: EHP ' + Math.round(m.ehp) + ' is ' + Math.round(m.ehp / m.weakest_max_hit) + 'x the weakest max hit (block/evasion/suppression averaged); compare weakest max hit');
+  return flags;
+}
 export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, concurrency = defaultConcurrency, out = null, links = 6, lab = true, onlyGems = null, seed = 'both', seedCards = () => null, novelty = true } = {}) {
   B.validateRequest(request);
   if (!['both', 'only', 'none'].includes(seed)) throw new Error('--seed must be both|only|none');
@@ -714,7 +732,7 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
   const themeFilter = request.themes.length ? (full.length >= limit ? 'all_themes_met' : 'relaxed') : 'none';
   if (request.themes.length && full.length >= limit) pool = full;
   const key = r => `${r.ascendancy}|${r.form}|${r.damage_types[0] ?? '-'}`;
-  const toScreen = B.diversify(pool, screen, key);
+  const toScreen = screenQuota(pool, request.classes.map(c => c.ascendancy), screen, key);
   // 2. screen: bare prototypes grouped by class base
   const screened = [];
   for (const asc of [...new Set(toScreen.map(r => r.ascendancy))]) {
@@ -736,23 +754,33 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
   const perAsc = request.classes.map(c => B.diversify(ranked.filter(r => r.ascendancy === c.ascendancy), limit, key));
   const chosen = [];
   for (let i = 0; chosen.length < limit && perAsc.some(l => l.length > i); i++) for (const l of perAsc) if (l[i] && chosen.length < limit) chosen.push(l[i]);
-  // 3. architectures
+  // 3. architectures. WP11 coverage: jobs in round-robin order over ascendancies; each job gets a share of what is
+  // left, weighted by its kind (a scratch prototype probes ~4x more than a seed), so every chosen row is evaluated.
   const results = [];
-  let cards = null;
+  // Corpus cards are read once (norms, seeds, mana candidates).
+  const cards = seedCards() ?? (() => { try { return readCards(); } catch { return null; } })();
+  const jobs = [];
   for (const row of chosen) {
     const candidate = { score: row.score, themes_met: row.themes_met, reasons: row.reasons };
-    if (seed !== 'only') {
-      cards ??= seedCards();
-      const masteryReserve = masteryReserveFor(row, gems.get(row.gem), cards);
-      try { results.push({ ...evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency, links, masteryReserve }), candidate }); }
-      catch (e) { results.push({ id: row.id, status: 'error', error: e.message.slice(0, 500) }); }
-    }
+    if (seed !== 'only') jobs.push({ kind: 'scratch', row, candidate, weight: JOB_WEIGHT.scratch });
     if (seed !== 'none') {
-      cards ??= seedCards();
-      const s = seedsFor(row, gems.get(row.gem), { cards, budgetDivine: /^div/i.test(request.budget?.currency ?? '') ? request.budget.amount : null })[0];
-      if (!s) { results.push({ id: `${row.id}--seed`, status: 'not_evaluated', reason: `no corpus build of ${row.ascendancy} similar to ${row.skill}` }); continue; }
-      try { results.push({ ...evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, seed: s }), candidate }); }
-      catch (e) { results.push({ id: `${row.id}--seed`, status: 'error', error: e.message.slice(0, 500), seed: s.file }); }
+      const s = seedsFor(row, gems.get(row.gem), { cards: cards ?? undefined, budgetDivine: /^div/i.test(request.budget?.currency ?? '') ? request.budget.amount : null })[0];
+      if (!s) results.push({ id: row.id + '--seed', status: 'not_evaluated', reason: 'no corpus build of ' + row.ascendancy + ' similar to ' + row.skill });
+      else jobs.push({ kind: 'seed', row, candidate, seed: s, weight: JOB_WEIGHT.seed });
+    }
+  }
+  let weightLeft = jobs.reduce((x, j) => x + j.weight, 0);
+  for (const job of jobs) {
+    const share = budget.sub(budget.left() * job.weight / weightLeft);
+    weightLeft -= job.weight;
+    const { row, candidate } = job;
+    if (job.kind === 'scratch') {
+      const masteryReserve = masteryReserveFor(row, gems.get(row.gem), cards);
+      try { results.push({ ...evaluateArchitecture({ dir, row, request, t, gems, budget: share, concurrency, links, masteryReserve, cards }), candidate, budget_share: { cap: share.max, used: share.used } }); }
+      catch (e) { results.push({ id: row.id, status: 'error', error: e.message.slice(0, 500) }); }
+    } else {
+      try { results.push({ ...evaluateSeeded({ dir, row, request, gems, budget: share, concurrency, links, seed: job.seed }), candidate, budget_share: { cap: share.max, used: share.used } }); }
+      catch (e) { results.push({ id: row.id + '--seed', status: 'error', error: e.message.slice(0, 500), seed: job.seed.file }); }
     }
   }
   // 3b. WP8: structural novelty of every evaluated prototype against the quality-filtered corpus (BuildCard of the
@@ -795,9 +823,11 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
       id: r.id, status: r.status, failures: r.failures, skill: r.blueprint.damage_chain.source.skill, ascendancy: r.blueprint.ascendancy, form: r.blueprint.damage_chain.form, damage: r.blueprint.damage_chain.damage_types,
       origin: r.seed ? 'corpus_seed' : 'scratch', novelty: r.novelty ?? null, seed: r.seed ? { file: r.seed.file, main_skill: r.seed.main_skill, score: r.seed.score, reasons: r.seed.reasons, source: r.seed.source } : undefined,
       foundation: r.foundation?.error ? r.foundation : r.foundation ? { status: r.foundation.status, counts: r.foundation.counts, warnings: r.foundation.warnings?.map(w => `${w.code}: ${w.detail}`) } : null,
-      supports: r.supports.chosen, auras: r.blueprint.resources.reservation, ascendancy_nodes: r.tree.ascendancy, repairs: r.repairs, mechanics: r.mechanics, xml: r.xml,
+      supports: r.supports.chosen, auras: r.blueprint.resources.reservation, utility_groups: r.blueprint.resources.utility ?? [], layers: r.layers ?? [], flags: prototypeFlags(r.metrics), config_reset: r.config_reset ? { reset: r.config_reset.reset, kept: r.config_reset.kept } : undefined, budget_share: r.budget_share, ascendancy_nodes: r.tree.ascendancy, repairs: r.repairs, mechanics: r.mechanics, xml: r.xml,
       metrics: { boss_dps: r.metrics.boss_dps, rare_dps: r.metrics.rare_dps, dps_scope: r.metrics.dps_scope, boss_ttk_s: r.metrics.boss_ttk_s ?? r.metrics.boss_ttk_range_s, weakest_max_hit: r.metrics.weakest_max_hit, weakest_type: r.metrics.weakest_type, ehp: r.metrics.ehp, hits_to_die_rare: r.metrics.hits_to_die_rare,
         life: r.metrics.life, resists: r.metrics.resists, mana_sustain: r.metrics.mana_sustain, buttons: r.metrics.buttons, clear_score: r.metrics.clear_score, explosions: r.metrics.explosions.map(e => `${e.source} ${Math.round((e.chance ?? 0) * 100)}% x ${e.pct_life}% life ${e.type}`) } } : r),
+    coverage: request.classes.map(c => ({ ascendancy: c.ascendancy, screened: screened.filter(r => r.ascendancy === c.ascendancy).length, viable: viable.filter(r => r.ascendancy === c.ascendancy).length,
+      evaluated: results.filter(r => r.metrics && r.blueprint?.ascendancy === c.ascendancy).length, not_evaluated: results.filter(r => !r.metrics && r.id.includes('--' + slug(c.ascendancy))).length })),
     front: front.front.map(r => r.id), dominated: front.dominated, objectives, lab_failures: labRecords,
     calculations: { used: budget.used, budget: budget.max }, timing_s: round((Date.now() - started) / 1000),
     disclaimer
@@ -809,6 +839,20 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
   return report;
 }
 
+export function layerMarkdown(r) {
+  const lines = [];
+  if (r.coverage) lines.push('', '## Coverage', '', ...r.coverage.map(c => '- ' + c.ascendancy + ': screened ' + c.screened + ', with damage ' + c.viable + ', evaluated ' + c.evaluated + ', not evaluated ' + c.not_evaluated));
+  const g = x => x ? ' (' + (x.total >= 0 ? '+' : '') + x.total + '% vs alternative: DPS ' + x.dps_pct + '%, EHP ' + x.ehp_pct + '%' + (x.ms_pct != null ? ', MS ' + x.ms_pct + '%' : '') + ')' : '';
+  const withLayers = r.prototypes.filter(x => x.layers?.length);
+  if (withLayers.length) lines.push('', '## Layer decisions', '');
+  for (const p of withLayers) {
+    lines.push('- **' + p.id + '**');
+    for (const l of p.layers) lines.push('  - ' + l.layer + ': ' + (l.taken ? 'taken' : 'not taken') + g(l.gain_vs_alternative) + '; alternative: ' + l.alternative + '; ' + l.reason);
+    for (const fl of p.flags ?? []) lines.push('  - flag: ' + fl);
+    for (const st of (p.repairs ?? []).filter(x => x.step === 'mana_corpus')) lines.push('  - mana repair round ' + st.round + ': ' + (st.change ?? st.result) + ' (' + (st.sustain_before ?? st.sustain) + ' -> ' + (st.sustain_after ?? '-') + '/s)');
+  }
+  return lines;
+}
 export function markdown(r) {
   const n = v => v == null ? '-' : Math.round(v).toLocaleString('en-US');
   const lines = [`# Design run ${r.run}`, '', `Request: ${r.request.classes.map(c => c.ascendancy).join(', ')}; themes: ${r.request.themes.join(', ') || '-'}; level ${r.request.level}; T${r.request.map_tier}; buttons max ${r.request.buttons?.max ?? '-'}`, '',
@@ -821,8 +865,9 @@ export function markdown(r) {
     lines.push(`| ${p.skill} / ${p.ascendancy} | ${p.origin === 'corpus_seed' ? `seed ${p.seed.file}` : 'scratch'} | ${p.status}${p.failures?.length ? ` (${p.failures.map(f => f.code).join(', ')})` : ''} | ${n(m.boss_dps)} | ${n(m.rare_dps)} | ${n(m.weakest_max_hit)} ${m.weakest_type ?? ''} | ${n(m.ehp)} | ${m.buttons} | ${m.clear_score} | ${m.mana_sustain ?? '-'} | ${basics} | ${p.novelty?.novelty != null ? `${p.novelty.novelty} ${p.novelty.band}` : '-'} | ${r.front.includes(p.id) ? 'yes' : ''} |`);
   }
   lines.push('', '## Prototypes');
-  for (const p of r.prototypes.filter(x => x.metrics)) lines.push(`- **${p.skill} / ${p.ascendancy}** (${p.form}, ${p.damage.join('/')}): supports ${p.supports.join(', ') || '-'}; auras ${p.auras.join(', ') || '-'}; ascendancy ${p.ascendancy_nodes.join(', ')}; explosions ${p.metrics.explosions.join('; ') || '-'}; \`${p.xml}\``);
+  for (const p of r.prototypes.filter(x => x.metrics)) lines.push(`- **${p.skill} / ${p.ascendancy}** (${p.form}, ${p.damage.join('/')}): supports ${p.supports.join(', ') || '-'}; auras ${p.auras.join(', ') || '-'}${p.utility_groups?.length ? '; utility ' + p.utility_groups.join(', ') : ''}; ascendancy ${p.ascendancy_nodes.join(', ')}; explosions ${p.metrics.explosions.join('; ') || '-'}; \`${p.xml}\``);
   for (const p of r.prototypes.filter(x => x.foundation?.warnings?.length)) lines.push(`  - basics of ${p.id}: ${p.foundation.warnings.join('; ')}`);
+  lines.push(...layerMarkdown(r));
   lines.push('', `Lab failures:${r.lab_failures.join(', ') || '-'}`, '', r.disclaimer);
   return lines.join('\n') + '\n';
 }

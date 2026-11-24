@@ -1,29 +1,26 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import { projectRoot, readJson, atomicJson, flags } from './workspace.mjs';
-import { compactQuery } from './compact-query.mjs';
-import { bootstrap, doctor, backup } from './environment.mjs';
-import { queryMechanics, buildMechanics, mechanicGaps, mechanicValidate } from './mechanics.mjs';
-import { loadBuild, createBuild, updateBuild, appendBuildEvent, briefBuild } from './build-store.mjs';
-import { inspectBuild, runPob, compareResults, scenarios, decodeBuild } from './pob.mjs';
-import { pobBuildCommand, pobHelp } from './pob-cli.mjs';
-import { analyze, evaluate, analysisHelp } from './analysis-cli.mjs';
-import { referenceDb,importExample,exampleQuery,importPrices,priceQuery,importCraftPlan,craftQuery } from './reference-store.mjs';
-import { dataCommands, dataCommand, dataHelp } from './data-cli.mjs';
-import { cli as craftSim } from '../experiments/craft-lab/v2/cli.mjs';
-import { itemCommand, itemHelp } from './item-builder.mjs';
-import { appraiseCommand, appraiseHelp } from './item-appraise.mjs';
+// Static: fetch-economy.mjs (imported by price-refresh) has top-level await, which require(esm) cannot load.
 import { priceCommand, priceHelp, priceOperations } from './price-refresh.mjs';
-import { observeCommand, observeHelp } from './observations.mjs';
-import { labCommand, labHelp } from './lab.mjs';
-import { benchCommand, benchHelp } from './lab-bench.mjs';
-import { cardCommand, cardHelp } from './build-card.mjs';
-import { corpusCommand, corpusHelp } from './corpus.mjs';
-import { learnCommand, learnHelp } from './corpus-learn.mjs';
-import { discoverCommand, discoverHelp } from './corpus-discover.mjs';
-import { noveltyCommand, noveltyHelp } from './novelty.mjs';
-import { designCommand, designHelp } from './design-generate.mjs';
+
+// Command modules load on first use (synchronous require of ES modules, Node 22.12+), so a call pays only for the
+// modules of its own command group instead of the whole tool (~0.5 s per process; analysis batches start one
+// process per calculation). agent() stays synchronous. A lazily loaded module must not use top-level await.
+const require = createRequire(import.meta.url);
+const lazy = file => { let m; return () => (m ??= require(file)); };
+const mod = {
+  query: lazy('./compact-query.mjs'), environment: lazy('./environment.mjs'), mechanics: lazy('./mechanics.mjs'),
+  store: lazy('./build-store.mjs'), pob: lazy('./pob.mjs'), pobPool: lazy('./pob-pool.mjs'), pobCli: lazy('./pob-cli.mjs'), analysis: lazy('./analysis-cli.mjs'),
+  reference: lazy('./reference-store.mjs'), data: lazy('./data-cli.mjs'), craftSim: lazy('../experiments/craft-lab/v2/cli.mjs'),
+  item: lazy('./item-builder.mjs'), appraise: lazy('./item-appraise.mjs'), observe: lazy('./observations.mjs'), lab: lazy('./lab.mjs'),
+  bench: lazy('./lab-bench.mjs'), card: lazy('./build-card.mjs'), corpus: lazy('./corpus.mjs'), learn: lazy('./corpus-learn.mjs'),
+  discover: lazy('./corpus-discover.mjs'), novelty: lazy('./novelty.mjs'), norms: lazy('./corpus-norms.mjs'), design: lazy('./design-generate.mjs'),
+  taxonomy: lazy('./mechanic-taxonomy.mjs'), principles: lazy('./corpus-principles.mjs')
+};
+export const lazyModules = mod;
 
 // `agent.mjs <group> [operation] --help` (or `-h`): the help entries of that group, narrowed to the operation if given.
 export function groupHelp(command, rest) {
@@ -47,34 +44,37 @@ export function errorCode(message) {
 export function agent(args) {
   const [command,...rest] = args;
   if(command&&command!=='help'&&command!=='craftsim'&&(rest.includes('--help')||rest.includes('-h')))return groupHelp(command,rest.filter(x=>x!=='--help'&&x!=='-h'));
-  if(command==='query') return compactQuery(rest);
-  if(command==='bootstrap') return bootstrap(rest[0] ?? 'main');
-  if(command==='analyze') return analyze(rest);
-  if(command==='eval') return evaluate(rest);
-  if(dataCommands.has(command)) return dataCommand(command,rest);
-  if(command==='item'&&rest[0]==='appraise') return appraiseCommand(rest.slice(1));
-  if(command==='item') return itemCommand(rest);
-  if(command==='observe') return observeCommand(rest);
-  if(command==='corpus'&&['ablate-all','learn','insights'].includes(rest[0])) return learnCommand(rest);
-  if(command==='corpus'&&rest[0]==='discover') return discoverCommand(rest);
-  if(command==='corpus'&&rest[0]==='novelty') return noveltyCommand(rest);
-  if(command==='corpus') return corpusCommand(rest);
-  if(command==='lab'&&rest[0]==='bench') return benchCommand(rest.slice(1));
-  if(command==='lab') return labCommand(rest);
-  if(command==='design') return designCommand(rest);
+  if(command==='query') return mod.query().compactQuery(rest);
+  if(command==='bootstrap') return mod.environment().bootstrap(rest[0] ?? 'main');
+  if(command==='analyze') return mod.analysis().analyze(rest);
+  if(command==='eval') return mod.analysis().evaluate(rest);
+  if(mod.data().dataCommands.has(command)) return mod.data().dataCommand(command,rest);
+  if(command==='item'&&rest[0]==='appraise') return mod.appraise().appraiseCommand(rest.slice(1));
+  if(command==='item') return mod.item().itemCommand(rest);
+  if(command==='observe') return mod.observe().observeCommand(rest);
+  if(command==='corpus'&&['ablate-all','learn','insights'].includes(rest[0])) return mod.learn().learnCommand(rest);
+  if(command==='corpus'&&rest[0]==='discover') return mod.discover().discoverCommand(rest);
+  if(command==='corpus'&&rest[0]==='novelty') return mod.novelty().noveltyCommand(rest);
+  if(command==='corpus'&&rest[0]==='norms') return mod.norms().normsCommand(rest);
+  if(command==='corpus'&&rest[0]==='principles') return mod.principles().principlesCommand(rest);
+  if(command==='corpus') return mod.corpus().corpusCommand(rest);
+  if(command==='lab'&&rest[0]==='bench') return mod.bench().benchCommand(rest.slice(1));
+  if(command==='lab') return mod.lab().labCommand(rest);
+  if(command==='design') return mod.design().designCommand(rest);
   // price status|refresh (freshness, network refresh) live in price-refresh.mjs; list|get|import stay below.
   if(command==='price'&&priceOperations.has(rest[0])) return priceCommand(rest);
   if(command==='doctor') {
     const { options }=flags(rest,['report'],['deep']);
-    const result=doctor({deep:!!options.deep});
+    const result=mod.environment().doctor({deep:!!options.deep});
     if(options.report)atomicJson(path.resolve(options.report),result);
     return result;
   }
-  if(command==='backup')return backup(rest[0] ?? 'manual');
-  if(command==='craftsim')return craftSim(rest.length?rest:['help']);
+  if(command==='backup')return mod.environment().backup(rest[0] ?? 'manual');
+  if(command==='craftsim')return mod.craftSim().cli(rest.length?rest:['help']);
   if(['example','price','craft'].includes(command)) {
     const {positional,options}=flags(rest,['file','platform','limit','variant','links','gem-level','gem-quality','base-type','corrupted'],['history']);
     const [operation='list',...query]=positional;
+    const {referenceDb,importExample,exampleQuery,importPrices,priceQuery,importCraftPlan,craftQuery}=mod.reference();
     const db=referenceDb(undefined,{readOnly:operation!=='import'});
     try {
       if(operation==='import') {
@@ -93,22 +93,26 @@ export function agent(args) {
     } finally {db.close();}
   }
   if(command==='mechanic') {
+    const {queryMechanics,buildMechanics,mechanicGaps,mechanicValidate}=mod.mechanics();
+    if(rest[0]==='taxonomy') return mod.taxonomy().taxonomyCommand(rest);
     if(rest[0]==='gaps'){const o=flags(rest.slice(1),['status','axis'],['full']);return mechanicGaps(o.positional[0]??null,{status:o.options.status??null,axis:o.options.axis??null,full:!!o.options.full});}
     if(rest[0]==='validate'){const o=flags(rest.slice(1),['scenario','rules','out'],['run']);return mechanicValidate(o.positional[0],{run:!!o.options.run,scenario:o.options.scenario??'sustained',rules:o.options.rules?o.options.rules.split(','):null,out:o.options.out??null});}
     const {positional,options}=flags(rest,['limit'],['related']);
     if(positional[0]==='build')return buildMechanics();
     return queryMechanics(positional[0] ?? 'list',positional.slice(1).join(' '),{limit:options.limit==null?5:Number(options.limit),related:!!options.related});
   }
-  if(command==='build'&&rest[0]==='card') return cardCommand(rest.slice(1));
+  if(command==='build'&&rest[0]==='card') return mod.card().cardCommand(rest.slice(1));
   if(command==='build') {
     const {positional,options}=flags(rest,['file','expected-revision','name','scenario','changes'],['full']);
     const [operation,id='main']=positional;
+    const {loadBuild,createBuild,updateBuild,appendBuildEvent,briefBuild}=mod.store();
     if(operation==='init')return briefBuild(createBuild(id,options.name ?? id));
     if(operation==='show') { const state=loadBuild(id); return options.full?state:briefBuild(state); }
     if(operation==='calculate') {
       if(!options.file||options['expected-revision']==null)throw new Error('--file and --expected-revision required');
       const state=loadBuild(id);
       if(state.revision!==Number(options['expected-revision']))throw new Error('Revision conflict; reload state before calculating');
+      const {decodeBuild,runPob}=mod.pob();
       const input=decodeBuild(fs.readFileSync(path.resolve(options.file))).xml;
       const result=runPob({input,scenario:options.scenario??'sustained',changes:options.changes?readJson(path.resolve(options.changes)):{}});
       const folder=path.join(projectRoot,'builds',state.id);
@@ -129,11 +133,14 @@ export function agent(args) {
     return briefBuild(updated);
   }
   if(command==='pob') {
-    const {positional,options}=flags(rest,['scenario','changes','out','save-xml','class','ascendancy','bloodline','level','code','save-code'],['full','raw']);
+    const {positional,options}=flags(rest,['scenario','changes','out','save-xml','class','ascendancy','bloodline','level','code','save-code'],['full','raw','stop']);
     const [operation,file]=positional;
+    const {inspectBuild,runPob,compareResults,scenarios}=mod.pob();
     if(operation==='scenarios')return scenarios;
+    // Persistent PoB hosts (pob-pool.mjs): list them, or ask them to exit once idle.
+    if(operation==='hosts')return options.stop?{stopped:true,hosts:mod.pobPool().stopHosts({wait:15000})}:{enabled:mod.pobPool().persistentEnabled(),max_hosts:mod.pobPool().maxHosts(),hosts:mod.pobPool().listHosts().map(({name,pid,state})=>({name,pid,state}))};
     if(['new','export-code','import-code'].includes(operation)) {
-      const result=pobBuildCommand(operation,file,options);
+      const result=mod.pobCli().pobBuildCommand(operation,file,options);
       if(options.out)atomicJson(path.resolve(options.out),result);
       return result;
     }
@@ -150,7 +157,7 @@ export function agent(args) {
       if(!file||!positional[2])throw new Error('Two calculation JSON files required');
       return compareResults(readJson(path.resolve(file)),readJson(path.resolve(positional[2])));
     }
-    throw new Error('Use pob inspect/run/new/export-code/import-code/migrate/control/compare/scenarios');
+    throw new Error('Use pob inspect/run/new/export-code/import-code/migrate/control/compare/scenarios/hosts');
   }
   if(command==='help'||command==null)return {root:projectRoot,network_required:false,commands:{
     'bootstrap [build-id]':'Small starting context and current build state',
@@ -169,21 +176,24 @@ export function agent(args) {
     'pob migrate <old-file> --save-xml <new-file> [--out report.json]':'Explicit native conversion of standard 3_28/3_29 trees to 3_30; original retained, node changes reported',
     'pob compare <before.json> <after.json>':'Compare equal baselines/scenarios/calculation contracts',
     'pob control':'Synthetic Fireball control, not a playable recommendation',
-    ...pobHelp,
-    ...analysisHelp,
-    ...dataHelp,
-    ...itemHelp,
-    ...appraiseHelp,
+    ...mod.pobCli().pobHelp,
+    ...mod.analysis().analysisHelp,
+    ...mod.data().dataHelp,
+    ...mod.item().itemHelp,
+    ...mod.appraise().appraiseHelp,
     ...priceHelp,
-    ...observeHelp,
-    ...labHelp,
-    ...benchHelp,
-    ...cardHelp,
-    ...corpusHelp,
-    ...learnHelp,
-    ...discoverHelp,
-    ...noveltyHelp,
-    ...designHelp
+    ...mod.observe().observeHelp,
+    ...mod.lab().labHelp,
+    ...mod.bench().benchHelp,
+    ...mod.card().cardHelp,
+    ...mod.corpus().corpusHelp,
+    ...mod.learn().learnHelp,
+    ...mod.discover().discoverHelp,
+    ...mod.novelty().noveltyHelp,
+    ...mod.norms().normsHelp,
+    ...mod.taxonomy().taxonomyHelp,
+    ...mod.principles().principlesHelp,
+    ...mod.design().designHelp
     ,'example list|get <id>|import --file descriptor.json':'Audited reference/synthetic/historical PoB library'
     ,'price list|get <exact name>|import --file snapshot.json':'Offline dated price observations; --variant, --corrupted true|false, --links, --gem-level, --gem-quality, --base-type, --history; platform pc by default'
     ,'craft list|get <id>|import --file plan.json':'Recorded craft plans; identifiers are checked, probabilities are not simulated (simulate with craftsim)'

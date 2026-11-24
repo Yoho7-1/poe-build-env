@@ -119,9 +119,14 @@ export function doctor({ deep = false } = {}) {
   if(deep)check('pob-control',()=>{
     const expected=readJson(path.join(dbRoot,'fixtures/fireball-control.expected.json'));
     // noCache: a cached control result must not hide a broken engine.
-    const result=runPob({input:fs.readFileSync(path.join(dbRoot,'fixtures/fireball-control.xml'),'utf8'),noCache:true});
+    const input=fs.readFileSync(path.join(dbRoot,'fixtures/fireball-control.xml'),'utf8');
+    // Single-shot path (one PoB process) and the persistent host pool must give identical numbers.
+    const result=runPob({input,noCache:true,full:true,persistent:false});
     for(const [key,value]of Object.entries(expected.expected))if(!Number.isFinite(result.output[key])||Math.abs(result.output[key]-value)>Math.max(1,Math.abs(value))*expected.relative_tolerance)throw new Error(`Control calculation mismatch: ${key}`);
-    return {engine:result.engine.version,calculation_id:result.calculation_id,checked_stats:Object.keys(expected.expected)};
+    const pooled=runPob({input,noCache:true,full:true,persistent:true});
+    const differing=[...new Set([...Object.keys(result.output),...Object.keys(pooled.output)])].filter(key=>!Object.is(result.output[key],pooled.output[key]));
+    if(differing.length)throw new Error(`Persistent PoB host differs from the single-shot path: ${differing.slice(0,10).join(', ')}`);
+    return {engine:result.engine.version,calculation_id:result.calculation_id,checked_stats:Object.keys(expected.expected),persistent_host:{identical_outputs:Object.keys(result.output).length}};
   });
   return { game: lock.game, patch: lock.patch, ready: checks.every(c => c.status === 'ok'), deep, network_required: false, checks };
 }

@@ -1,18 +1,19 @@
-// Engine batch runner for analysis: many `pob run` calculations against one baseline in parallel processes.
+// Engine batch runner for analysis: many `pob run` calculations against one baseline in parallel worker threads.
 // Each calculation is an ordinary `agent.mjs pob run` (own job directory, engine cache, calculation contract),
 // so this module does not change the engine; it only schedules runs. agent() stays synchronous: the pool runs
 // in a child Node process and the parent waits for it.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawn, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
+import { Worker } from 'node:worker_threads';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dbRoot, readJson, atomicJson } from './workspace.mjs';
 import { canonicalJson, sha256 } from './analysis-core.mjs';
 
-const agentScript = path.join(dbRoot, 'scripts/agent.mjs');
 const selfScript = fileURLToPath(import.meta.url);
+const workerScript = path.join(dbRoot, 'scripts/analysis-batch-worker.mjs');
 export const defaultConcurrency = Math.max(1, Math.min(8, os.cpus().length - 2));
 
 // Parent side: run every `changes` object against `file`; returns Map(canonical changes -> result | {error}).
@@ -95,25 +96,37 @@ export function batchRunner(batch) {
   };
 }
 
-// Child side: async pool of `node agent.mjs pob run`.
+// Child side: pool of worker threads (analysis-batch-worker.mjs). Each job is the same runPob call and --out JSON
+// as `node agent.mjs pob run`, but pob.mjs loads once per thread: a cached calculation costs milliseconds instead
+// of a Node start. A cold calculation still starts its own PoB process inside its thread, so up to `concurrency`
+// PoB processes run at once, as before. A job over timeoutPerRun terminates its thread (a new one takes its place).
 async function childMain(batchFile) {
   const dir = path.dirname(batchFile);
   const batch = readJson(batchFile);
   const queue = [...batch.jobs];
-  const runOne = id => new Promise(resolve => {
-    const proc = spawn(process.execPath, [agentScript, 'pob', 'run', batch.file, '--scenario', batch.scenario, '--changes', path.join(dir, `${id}.changes.json`), '--out', path.join(dir, `${id}.out.json`), ...(batch.full ? ['--full'] : [])],
-      { stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true });
-    let stderr = '';
-    proc.stderr.on('data', d => { stderr += d; });
-    const timer = setTimeout(() => proc.kill(), batch.timeoutPerRun);
-    proc.on('close', code => {
+  const job = id => ({ id, file: batch.file, scenario: batch.scenario, changesFile: path.join(dir, `${id}.changes.json`), outFile: path.join(dir, `${id}.out.json`), errFile: path.join(dir, `${id}.err.txt`), full: !!batch.full });
+  const lane = () => new Promise(resolve => {
+    let worker = null, current = null, timer = null;
+    const finish = message => {
       clearTimeout(timer);
-      if (code !== 0 || !fs.existsSync(path.join(dir, `${id}.out.json`))) fs.writeFileSync(path.join(dir, `${id}.err.txt`), stderr || `exit ${code}`);
-      resolve();
-    });
+      if (current && message != null && !fs.existsSync(current.outFile) && !fs.existsSync(current.errFile)) fs.writeFileSync(current.errFile, message);
+      current = null;
+    };
+    const next = () => {
+      if (!queue.length) { worker?.terminate(); return resolve(); }
+      if (!worker) {
+        worker = new Worker(workerScript);
+        worker.on('message', () => { finish(`exit 0`); next(); });
+        worker.on('error', error => { finish(String(error?.message ?? error)); worker = null; next(); });
+      }
+      current = job(queue.shift());
+      const w = worker;
+      timer = setTimeout(() => { finish(`timeout after ${batch.timeoutPerRun} ms`); worker = null; w.removeAllListeners('error'); w.removeAllListeners('message'); w.terminate(); next(); }, batch.timeoutPerRun);
+      w.postMessage(current);
+    };
+    next();
   });
-  const worker = async () => { while (queue.length) await runOne(queue.shift()); };
-  await Promise.all(Array.from({ length: Math.min(batch.concurrency, queue.length) }, worker));
+  await Promise.all(Array.from({ length: Math.min(batch.concurrency, queue.length) }, lane));
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === selfScript) {

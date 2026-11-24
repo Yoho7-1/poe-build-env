@@ -32,7 +32,7 @@ import { createRecord } from './lab.mjs';
 import { referenceDb, exampleQuery } from './reference-store.mjs';
 import { loadBuild } from './build-store.mjs';
 import * as B from './design-blueprint.mjs';
-import { valueOf, layerGain, layerRecord, decideLayer, probeKitLayers, repairManaFromCorpus } from './design-layers.mjs';
+import { valueOf, layerGain, layerRecord, decideLayer, probeKitLayers, repairManaFromCorpus, manaCondition } from './design-layers.mjs';
 
 const disclaimer = 'Generated prototypes are engine sketches with generic rare items and a greedy tree; numbers compare architectures under one item/tree policy, they are not optimised builds and not game tests.';
 const round = (v, d = 0) => (v == null || !Number.isFinite(v) ? null : Math.round(v * 10 ** d) / 10 ** d);
@@ -268,7 +268,7 @@ export const withCluster = (changes, c) => ({ ...changes, tree: { ...changes.tre
 function probeClusters({ file, base, alt, t, row, axes, budget, concurrency, reserve, sockets = 2 }) {
   const altText = `the same ${reserve} points on ordinary tree nodes (greedy axis tree)`;
   if (reserve <= 0) return { chosen: null, probes: 0, reason: 'no cluster reserve (corpus norm below 50% or no norms)',
-    layer: layerRecord('cluster', false, null, 'points stay on the tree', 'corpus norm group uses cluster jewels in < 50% of builds (or no norms): no points reserved') };
+    layer: layerRecord('cluster', false, null, 'points stay on the tree', 'corpus norm group uses cluster jewels in < 50% of builds (or no norms): no points reserved', { decided_by: 'no_option' }) };
   const cls = t.classes.find(c => c.name === row.class);
   const allocated = new Set(base.tree.allocate.map(Number).filter(id => !t.nodes.get(id)?.ascendancy));
   allocated.add(cls.start);
@@ -280,10 +280,10 @@ function probeClusters({ file, base, alt, t, row, axes, budget, concurrency, res
   const nested = nestedCandidates(cands).flatMap(c => near.filter(s => s.path.cost + c.points <= reserve).map(s => ({ ...c, socket: s.id, socket_cost: s.path.cost, inner_socket: innerClusterSockets(t, s.id, c.size)[0] })))
     .filter(v => v.inner_socket != null);
   const variants = [...single, ...nested];
-  if (!variants.length) return { chosen: null, probes: 0, reason: `no outer cluster socket within ${reserve} points`, layer: layerRecord('cluster', false, null, altText, `no outer cluster socket within ${reserve} points`) };
+  if (!variants.length) return { chosen: null, probes: 0, reason: `no outer cluster socket within ${reserve} points`, layer: layerRecord('cluster', false, null, altText, `no outer cluster socket within ${reserve} points`, { decided_by: 'no_option' }) };
   const res = batch(file, [alt, ...variants.map(v => withCluster(base, v))], budget, concurrency);
   const r0 = res.get?.(alt);
-  if (!r0 || r0.error) return { chosen: null, probes: 0, reason: 'budget', layer: layerRecord('cluster', false, null, altText, 'not probed: calculation budget') };
+  if (!r0 || r0.error) return { chosen: null, probes: 0, reason: 'budget', layer: layerRecord('cluster', false, null, altText, 'not probed: calculation budget', { decided_by: 'budget' }) };
   const v0 = valueOf(r0);
   const rows = variants.map(v => {
     const r = res.get(withCluster(base, v));
@@ -295,7 +295,7 @@ function probeClusters({ file, base, alt, t, row, axes, budget, concurrency, res
   const best = rows[0]?.gain > 0 ? rows[0] : null;
   const top = rows[0] ? { dps_pct: rows[0].dps_gain_pct, ehp_pct: rows[0].ehp_gain_pct, total: rows[0].gain } : null;
   const layer = layerRecord('cluster', !!best, top, altText, best ? `best of ${rows.length} cluster variants beats the tree: ${brief(best)}`
-    : rows.length ? `best of ${rows.length} cluster variants (${brief(rows[0])}) does not beat the same points on the tree` : 'no cluster variant ran');
+    : rows.length ? `best of ${rows.length} cluster variants (${brief(rows[0])}) does not beat the same points on the tree` : 'no cluster variant ran', { decided_by: rows.length ? 'pob_probe' : 'budget' });
   return { chosen: best, probes: rows.length, reserve, top: rows.slice(0, 6).map(brief), reason: best ? null : 'no cluster variant beat the same points on the tree', layer };
 }
 const withMasteries = (changes, chosen) => chosen.length ? { ...changes, tree: { ...changes.tree, masteries: chosen.map(c => ({ node: c.node, effect: c.effect })) } } : changes;
@@ -441,14 +441,14 @@ const cannotPay = r => { const o = r?.output ?? {}; return o.ManaUnreserved != n
 function repairPrototype({ file, row, request, t, gems, budget, concurrency, state, cards = null, ctx = null, manaBudget = null }) {
   let { final, finalChanges, proto, sup, util } = state;
   const steps = [];
-  let anoint = null;
+  let anoint = null, manaRounds = 0;
   const run1 = c => { budget.take(1); return runPob({ input: fs.readFileSync(file), scenario: 'sustained', changes: c }); };
   // Mana first: a repair aura can add attribute requirements, which the attribute repair then covers.
   const minion = proto.gem.types.includes('Minion') || proto.gem.types.includes('CreatesMinion');
   // WP11: any self-cast/attack deficit -> corpus-derived candidates probed by PoB (design-layers.mjs).
   if (ctx && !minion && (sustainOf(final) ?? 0) < 0 && budget.left() > 0) {
     const m = repairManaFromCorpus({ ctx, file, row, request, t, gems, budget: manaBudget ?? budget, state: { final, finalChanges, proto }, cards });
-    steps.push(...m.steps); ({ final, finalChanges } = m.state); anoint = m.anoint;
+    steps.push(...m.steps); ({ final, finalChanges } = m.state); anoint = m.anoint; manaRounds = m.rounds_run ?? 0;
     sup.chosen = finalChanges.skills.add_groups[0].gems.slice(1).map(x => x.name);
   }
   if (request.constraints?.no_mana_flask && !minion && sustainOf(final) < 0 && budget.left() > 0) {
@@ -506,13 +506,16 @@ function repairPrototype({ file, row, request, t, gems, budget, concurrency, sta
       finalChanges = c3; final = r3; proto.tree = p3.tree;
     }
   }
-  return { steps, state: { final, finalChanges }, anoint };
+  // WP11: a deficit that survives every repair round is an explicit condition of the prototype, not only a norm warning.
+  const conditions = [];
+  if (!minion) { const c = manaCondition(sustainOf(final), manaRounds); if (c) { conditions.push(c); steps.push({ step: 'mana_unresolved', rounds: manaRounds, sustain: round(sustainOf(final), 1), condition: c.code }); } }
+  return { steps, state: { final, finalChanges }, anoint, conditions };
 }
 
 function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency, links, masteryReserve = 0, cards = null }) {
   // WP11: the prototype's budget share is split into step caps; what a step leaves stays for the next steps/prototypes.
   const S = budget.max;
-  const part = f => budget.sub(Math.max(4, Math.floor(S * f)));
+  const part = (f, min = 4) => budget.sub(Math.max(min, Math.floor(S * f)));
   const ctx = { batch: (f, l, b) => batch(f, l, b, concurrency), prototypeChanges, gemSpec, withGroup, CLUSTER_RESERVE };
   const file = classBase(dir, row.class, row.ascendancy, request.level);
   const clusterReserve = clusterReserveFor(row, gems.get(row.gem), cards);
@@ -561,19 +564,22 @@ function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency,
     budget.take(1);
     const altR = runPob({ input: fs.readFileSync(file), scenario: 'sustained', changes: altC });
     const altText = `the same ${masteryReserve} points on ordinary tree nodes`;
-    if (altR.error) layers.push(layerRecord('masteries', masteries.chosen.length > 0, null, altText, `alternative failed in PoB: ${String(altR.error).slice(0, 120)}`));
+    if (altR.error) layers.push(layerRecord('masteries', masteries.chosen.length > 0, null, altText, `alternative failed in PoB: ${String(altR.error).slice(0, 120)}`, { decided_by: 'alternative_failed' }));
     else if (!masteries.chosen.length) {
       finalChanges = altC; final = altR; proto.tree = p.tree;
-      layers.push(layerRecord('masteries', false, null, altText, `${masteries.reason ?? 'no mastery effect improved the prototype'}; reserve returned to the tree`));
+      layers.push(layerRecord('masteries', false, null, altText, `${masteries.reason ?? 'no mastery effect improved the prototype'}; reserve returned to the tree`,
+        { decided_by: masteries.probes > 0 ? 'pob_probe' : masteries.reason === 'budget' ? 'budget' : 'no_option' }));
     } else {
       const d = decideLayer(valueOf(final), valueOf(altR));
       layers.push(layerRecord('masteries', d.taken, d.gain, altText, d.taken ? `${masteries.chosen.length} effects beat the tree${d.guard ? ` (${d.guard})` : ''}` : `${masteries.chosen.length} effects do not beat the tree: points returned to ordinary nodes`,
         { effects: masteries.chosen.map(m => `${m.name}: ${m.text}`) }));
       if (!d.taken) { finalChanges = altC; final = altR; proto.tree = p.tree; masteries.chosen = []; }
     }
-  } else layers.push(layerRecord('masteries', false, null, 'points on the tree', masteryReserve > 0 ? 'not probed (calculation budget)' : 'corpus norm median masteries is 0: no reserve'));
+  } else layers.push(layerRecord('masteries', false, null, 'points on the tree', masteryReserve > 0 ? 'not probed (calculation budget)' : 'corpus norm median masteries is 0: no reserve',
+    { decided_by: masteryReserve > 0 ? 'budget' : 'no_option' }));
   proto.masteries = masteries;
-  const repairs = repairPrototype({ file, row, request, t, gems, budget, concurrency, state: { final, finalChanges, proto, sup, util }, cards, ctx, manaBudget: part(0.12) });
+  // The mana share must hold three repair rounds (design-layers probeCap splits it), hence the floor of 12 calculations.
+  const repairs = repairPrototype({ file, row, request, t, gems, budget, concurrency, state: { final, finalChanges, proto, sup, util }, cards, ctx, manaBudget: part(0.16, 12) });
   ({ final, finalChanges } = repairs.state);
   // WP11 kit layers on the finished kit: eldritch implicits, automatic flasks, anoint.
   let normAnoints = [];
@@ -582,18 +588,40 @@ function evaluateArchitecture({ dir, row, request, t, gems, budget, concurrency,
   ({ final, finalChanges } = kit);
   layers.push(...kit.layers);
   const finalGroups = finalChanges.skills.add_groups.map(gr => typedGroup(gr, gems));
-  const done = finishPrototype({ id: row.id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups });
+  const done = finishPrototype({ id: row.id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups, layers });
   const blueprint = blueprintOf({ row, request, proto, sup, util, finalGroups, m: done.metrics });
   return { ...done, blueprint, layers, tree: { main_notables: proto.tree.main_picks.map(p => p.name), ascendancy: proto.tree.ascendancy_picks.map(p => p.name), unspent: proto.tree.unspent, enablers: proto.tree.enablers, forced: proto.tree.forced ?? [],
       cluster: proto.cluster?.chosen ? `${proto.cluster.chosen.size} ${proto.cluster.chosen.name} in socket ${proto.cluster.chosen.socket}: ${proto.cluster.chosen.notables.map(n => n.name).join(', ')}${proto.cluster.chosen.nested ? `; ${proto.cluster.chosen.nested.size} ${proto.cluster.chosen.nested.name} in inner socket ${proto.cluster.chosen.inner_socket}: ${proto.cluster.chosen.nested.notables.map(n => n.name).join(', ')}` : ''}` : null,
       cluster_probe: proto.cluster ? { probes: proto.cluster.probes, reserve: proto.cluster.reserve ?? 0, reason: proto.cluster.reason, top: proto.cluster.top } : null,
       masteries: proto.masteries?.chosen?.map(m => `${m.name}: ${m.text}`) ?? [], mastery_probe: proto.masteries ? { probes: proto.masteries.probes, reserve: proto.masteries.reserve, reason: proto.masteries.reason, top: proto.masteries.top } : null },
-    supports: sup, utility: { ...util, dropped_for_mana: dropped.filter(Boolean) }, repairs: repairs.steps, kit_notes: proto.kit.notes };
+    supports: sup, utility: { ...util, dropped_for_mana: dropped.filter(Boolean) }, repairs: repairs.steps, conditions: repairs.conditions ?? [], kit_notes: proto.kit.notes };
+}
+
+// WP11 stage 1: a power layer the generator rejected by a PoB comparison must not return as a corpus-norm warning.
+// The basics check only counts layers; the layer decision says why the count is what it is. Such a warning becomes a
+// recorded decision ("rejected by calculation, gain vs alternative X%"). Only a layer whose record says it was
+// decided by PoB probes (decided_by) is reconciled: with no option, no budget, or an author's seed nothing was
+// compared, so the warning stands.
+export const LAYER_OF_WARNING = { masteries_low: 'masteries', no_cluster_jewels: 'cluster', no_eldritch_implicits: 'eldritch', no_auto_flasks: 'flasks', no_anoint: 'anoint' };
+export function reconcileFoundation(check, layers = []) {
+  if (!check || !Array.isArray(check.warnings) || !check.warnings.length || !layers?.length) return check;
+  const byLayer = new Map(layers.filter(l => l?.layer).map(l => [l.layer, l]));
+  const kept = [], decided = [];
+  for (const w of check.warnings) {
+    const l = byLayer.get(LAYER_OF_WARNING[w.code]);
+    if (!(l && l.taken === false && l.decided_by === 'pob_probe')) { kept.push(w); continue; }
+    const total = l.gain_vs_alternative?.total;
+    decided.push({ code: w.code, layer: l.layer, detail: w.detail,
+      decision: `rejected by PoB calculation${total != null ? `: gain vs alternative ${total > 0 ? '+' : ''}${total}%` : ''} (alternative: ${l.alternative}); ${l.reason}` });
+  }
+  if (!decided.length) return check;
+  const counts = { fail: kept.filter(x => x.severity === 'fail').length, warn: kept.filter(x => x.severity === 'warn').length, info: kept.filter(x => x.severity === 'info').length };
+  return { ...check, warnings: kept, layer_decisions: decided, counts, status: counts.fail ? 'fail' : counts.warn ? 'warn' : 'ok' };
 }
 
 const typedGroup = (gr, gems) => ({ ...gr, gems: gr.gems.map(x => { const k = [...gems.values()].find(y => y.name === x.name); return { ...x, types: k && !k.is_support ? k.types : null, role: /Curse/i.test(gr.label ?? '') ? 'enabler_auto' : null }; }) });
 // Shared tail: save the prototype XML, encounters, hard filters, WP9 mechanic rules, WP5b foundation check.
-function finishPrototype({ id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups, authorItems = false }) {
+function finishPrototype({ id, dir, file, final, finalChanges, request, row, budget, concurrency, proto, finalGroups, authorItems = false, layers = [] }) {
   const xml = path.join(dir, 'prototypes', `${id}.xml`);
   fs.mkdirSync(path.dirname(xml), { recursive: true });
   if (fs.existsSync(xml)) fs.rmSync(xml);
@@ -616,7 +644,7 @@ function finishPrototype({ id, dir, file, final, finalChanges, request, row, bud
   } catch (e) { mechanics = { error: e.message.slice(0, 300) }; }
   // WP5b: build basics vs corpus norms of the ascendancy (warnings only; norms describe guides, not the optimum).
   let foundation = null;
-  try { const fr = foundationReport({ file: xml, ascendancy: row.ascendancy ?? null }); foundation = { ...fr.check, norm_group: fr.norm_group, profile: fr.foundation }; }
+  try { const fr = foundationReport({ file: xml, ascendancy: row.ascendancy ?? null }); foundation = { ...reconcileFoundation(fr.check, layers), norm_group: fr.norm_group, profile: fr.foundation }; }
   catch (e) { foundation = { error: e.message.slice(0, 300) }; }
   return { id, status: failures.length ? 'rejected' : 'passed', failures, metrics: m, xml: path.relative(projectRoot, xml),
     calculation_id: final.calculation_id, encounters: { boss: boss?.calculation_id ?? null, rare: rare?.calculation_id ?? null },
@@ -636,6 +664,12 @@ export function groupRoles(groups, gems) {
   }
   return { reservation, utility };
 }
+// WP11 stage 1: the steps after the support probe (final run, encounters, button estimate) must always be paid for,
+// so the probe pool gets a sub-share and what the tail needs stays with the job. A share below the job minimum is
+// reported as such instead of letting the job die half-way with "budget exhausted".
+export const SEED_TAIL_CALCS = 4;                        // final run + boss and rare encounters + headroom
+export const SEED_MIN_CALCS = 1 + SEED_TAIL_CALCS + 4;   // config run + tail + bare group and three support probes
+export const JOB_MIN_CALCS = { scratch: 0, seed: SEED_MIN_CALCS };
 function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, seed }) {
   const id = `${row.id}--seed`;
   const file = seed.xml;
@@ -649,23 +683,24 @@ function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, s
   const seedLinks = Math.max(2, Math.min(links, grp.gems.length));
   // WP11: the author's Configuration tab (charges, "been hit recently", enemy conditions, Pantheon) belongs to the
   // author's skill and play; the seed runs on PoB's new-build configuration like scratch prototypes (design-seed).
-  if (budget.left() < 2) return { id, status: 'not_evaluated', reason: 'calculation budget exhausted' };
+  if (budget.left() < SEED_MIN_CALCS) return { id, status: 'not_evaluated', reason: `budget share ${budget.left()} below the seed minimum of ${SEED_MIN_CALCS} calculations` };
   const defaults = runPob({ input: fs.readFileSync(classBase(dir, row.class, row.ascendancy, request.level)), scenario: 'sustained', full: true }).config ?? {};
   const author = runPob({ input: fs.readFileSync(file), scenario: 'sustained', full: true }).config ?? {};
   budget.take(1);
   const nc = neutralConfig(author, defaults, Object.keys(scenarios.sustained.config));
   const config = nc.config;
   let base = { config, skills: { remove_groups: [idx], add_groups: [{ label: 'Main', slot: grp.slot ?? 'Body Armour', main: true, gems: [gemSpec(g)] }] } };
-  let sup = probeSupports({ file, base, g, request, gems, budget, concurrency, links: seedLinks });
+  const supBudget = budget.sub(budget.left() - SEED_TAIL_CALCS);
+  let sup = probeSupports({ file, base, g, request, gems, budget: supBudget, concurrency, links: seedLinks });
   // The seed slot can block linked supports (an item that grants its own support or forbids others). Then probe the
   // group without a slot: PoB applies the gems' supports, the item's socketed-gem modifiers are lost (reported).
   if (!sup.chosen.length && (sup.probes?.length ?? 0) <= 1 && grp.slot) {
     const free = { config, skills: { remove_groups: [idx], add_groups: [{ label: 'Main', main: true, gems: [gemSpec(g)] }] } };
-    const sup2 = probeSupports({ file, base: free, g, request, gems, budget, concurrency, links: seedLinks });
+    const sup2 = probeSupports({ file, base: free, g, request, gems, budget: supBudget, concurrency, links: seedLinks });
     if (sup2.chosen.length) { base = free; sup = { ...sup2, slot_note: `supports did not apply in ${grp.slot} (item-granted/blocked); group moved off the item, its socketed-gem bonuses no longer count` }; }
   }
   const finalChanges = { config, skills: { ...base.skills, add_groups: [{ ...base.skills.add_groups[0], gems: [gemSpec(g), ...sup.chosen.map(n => gemSpec([...gems.values()].find(x => x.name === n && x.is_support)))] }] } };
-  if (budget.left() <= 0) return { id, status: 'not_evaluated', reason: 'calculation budget exhausted' };
+  if (budget.left() <= 0) return { id, status: 'not_evaluated', reason: 'calculation budget exhausted after the support probe' };
   const final = runPob({ input: fs.readFileSync(file), scenario: 'sustained', changes: finalChanges });
   budget.take(1);
   // Buttons: every enabled group of the seed except its replaced main group, plus the new main group.
@@ -690,11 +725,14 @@ function evaluateSeeded({ dir, row, request, gems, budget, concurrency, links, s
       `configuration: PoB new-build defaults (author inputs reset: ${nc.reset.join(', ') || '-'}${nc.kept.length ? `; not reset: ${nc.kept.join(', ')}` : ''}); author custom modifier blocks are kept`] };
   // Seed layers are the author's: reported as kept (present in the author build) or absent, not re-probed.
   const fp = done.foundation?.profile ?? {};
-  const authorLayer = (layer, present, detail) => layerRecord(layer, !!present, null, 'not compared: the seed is evaluated as the author built it', present ? `author build: ${detail}` : 'absent in the author build');
-  const layers = [layerRecord('configuration', true, null, "author's Configuration tab", `reset to PoB new-build defaults: ${nc.reset.length} inputs${nc.reset.length ? ` (${nc.reset.slice(0, 12).join(', ')}${nc.reset.length > 12 ? ', ...' : ''})` : ''}`),
+  const authorLayer = (layer, present, detail) => layerRecord(layer, !!present, null, 'not compared: the seed is evaluated as the author built it', present ? `author build: ${detail}` : 'absent in the author build', { decided_by: 'author_build' });
+  const layers = [layerRecord('configuration', true, null, "author's Configuration tab", `reset to PoB new-build defaults: ${nc.reset.length} inputs${nc.reset.length ? ` (${nc.reset.slice(0, 12).join(', ')}${nc.reset.length > 12 ? ', ...' : ''})` : ''}`, { decided_by: 'author_build' }),
     authorLayer('cluster', fp.clusters?.total, `${fp.clusters?.total} cluster jewels`), authorLayer('masteries', fp.masteries?.count, `${fp.masteries?.count} masteries`),
     authorLayer('eldritch', fp.eldritch?.items, `${fp.eldritch?.items} items with eldritch implicits`), authorLayer('flasks', fp.flasks?.auto, `${fp.flasks?.auto} automatic flasks`), authorLayer('anoint', fp.anoint, fp.anoint)];
-  return { ...done, blueprint, seed, layers, config_reset: nc, tree: { main_notables: [], ascendancy: [], unspent: null, enablers: [], source: 'corpus_seed' }, supports: sup, utility: { kept_groups: kept.map(x => x.label || x.gems[0]?.name).filter(Boolean), ...split }, repairs: [], kit_notes: [`seed: ${seed.file}`] };
+  // The seed is evaluated as the author built it (no generator repairs), so a mana deficit is stated as a condition.
+  const manaCond = done.metrics?.minion ? null : manaCondition(done.metrics?.mana_sustain, 0);
+  return { ...done, blueprint, seed, layers, config_reset: nc, conditions: manaCond ? [manaCond] : [],
+    budget_steps: { supports: { cap: supBudget.max, used: supBudget.used }, tail_reserved: SEED_TAIL_CALCS }, tree: { main_notables: [], ascendancy: [], unspent: null, enablers: [], source: 'corpus_seed' }, supports: sup, utility: { kept_groups: kept.map(x => x.label || x.gems[0]?.name).filter(Boolean), ...split }, repairs: [], kit_notes: [`seed: ${seed.file}`] };
 }
 
 // ---------- run ----------
@@ -713,6 +751,8 @@ export function prototypeFlags(m) {
   const flags = [];
   if (m?.ehp != null && m?.weakest_max_hit > 0 && m.ehp / m.weakest_max_hit > 20)
     flags.push('ehp_avoidance_dominated: EHP ' + Math.round(m.ehp) + ' is ' + Math.round(m.ehp / m.weakest_max_hit) + 'x the weakest max hit (block/evasion/suppression averaged); compare weakest max hit');
+  if (!m?.minion && m?.mana_sustain != null && m.mana_sustain < 0)
+    flags.push('mana_deficit: ' + m.mana_sustain + '/s; the reported DPS is not sustained by mana (holds in bursts only, or with a mana flask)');
   return flags;
 }
 export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, concurrency = defaultConcurrency, out = null, links = 6, lab = true, onlyGems = null, seed = 'both', seedCards = () => null, novelty = true } = {}) {
@@ -771,7 +811,7 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
   }
   let weightLeft = jobs.reduce((x, j) => x + j.weight, 0);
   for (const job of jobs) {
-    const share = budget.sub(budget.left() * job.weight / weightLeft);
+    const share = budget.sub(Math.max(JOB_MIN_CALCS[job.kind] ?? 0, budget.left() * job.weight / weightLeft));
     weightLeft -= job.weight;
     const { row, candidate } = job;
     if (job.kind === 'scratch') {
@@ -822,8 +862,9 @@ export function generate({ request, limit = 6, screen = 24, budgetCalcs = 1000, 
     prototypes: results.map(r => r.status === 'passed' || r.status === 'rejected' ? {
       id: r.id, status: r.status, failures: r.failures, skill: r.blueprint.damage_chain.source.skill, ascendancy: r.blueprint.ascendancy, form: r.blueprint.damage_chain.form, damage: r.blueprint.damage_chain.damage_types,
       origin: r.seed ? 'corpus_seed' : 'scratch', novelty: r.novelty ?? null, seed: r.seed ? { file: r.seed.file, main_skill: r.seed.main_skill, score: r.seed.score, reasons: r.seed.reasons, source: r.seed.source } : undefined,
-      foundation: r.foundation?.error ? r.foundation : r.foundation ? { status: r.foundation.status, counts: r.foundation.counts, warnings: r.foundation.warnings?.map(w => `${w.code}: ${w.detail}`) } : null,
-      supports: r.supports.chosen, auras: r.blueprint.resources.reservation, utility_groups: r.blueprint.resources.utility ?? [], layers: r.layers ?? [], flags: prototypeFlags(r.metrics), config_reset: r.config_reset ? { reset: r.config_reset.reset, kept: r.config_reset.kept } : undefined, budget_share: r.budget_share, ascendancy_nodes: r.tree.ascendancy, repairs: r.repairs, mechanics: r.mechanics, xml: r.xml,
+      foundation: r.foundation?.error ? r.foundation : r.foundation ? { status: r.foundation.status, counts: r.foundation.counts, warnings: r.foundation.warnings?.map(w => `${w.code}: ${w.detail}`),
+        layer_decisions: r.foundation.layer_decisions?.map(d => `${d.code} (${d.detail}): ${d.decision}`) } : null,
+      supports: r.supports.chosen, auras: r.blueprint.resources.reservation, utility_groups: r.blueprint.resources.utility ?? [], layers: r.layers ?? [], flags: prototypeFlags(r.metrics), conditions: r.conditions?.length ? r.conditions : undefined, config_reset: r.config_reset ? { reset: r.config_reset.reset, kept: r.config_reset.kept } : undefined, budget_share: r.budget_share, ascendancy_nodes: r.tree.ascendancy, repairs: r.repairs, mechanics: r.mechanics, xml: r.xml,
       metrics: { boss_dps: r.metrics.boss_dps, rare_dps: r.metrics.rare_dps, dps_scope: r.metrics.dps_scope, boss_ttk_s: r.metrics.boss_ttk_s ?? r.metrics.boss_ttk_range_s, weakest_max_hit: r.metrics.weakest_max_hit, weakest_type: r.metrics.weakest_type, ehp: r.metrics.ehp, hits_to_die_rare: r.metrics.hits_to_die_rare,
         life: r.metrics.life, resists: r.metrics.resists, mana_sustain: r.metrics.mana_sustain, buttons: r.metrics.buttons, clear_score: r.metrics.clear_score, explosions: r.metrics.explosions.map(e => `${e.source} ${Math.round((e.chance ?? 0) * 100)}% x ${e.pct_life}% life ${e.type}`) } } : r),
     coverage: request.classes.map(c => ({ ascendancy: c.ascendancy, screened: screened.filter(r => r.ascendancy === c.ascendancy).length, viable: viable.filter(r => r.ascendancy === c.ascendancy).length,
@@ -867,6 +908,8 @@ export function markdown(r) {
   lines.push('', '## Prototypes');
   for (const p of r.prototypes.filter(x => x.metrics)) lines.push(`- **${p.skill} / ${p.ascendancy}** (${p.form}, ${p.damage.join('/')}): supports ${p.supports.join(', ') || '-'}; auras ${p.auras.join(', ') || '-'}${p.utility_groups?.length ? '; utility ' + p.utility_groups.join(', ') : ''}; ascendancy ${p.ascendancy_nodes.join(', ')}; explosions ${p.metrics.explosions.join('; ') || '-'}; \`${p.xml}\``);
   for (const p of r.prototypes.filter(x => x.foundation?.warnings?.length)) lines.push(`  - basics of ${p.id}: ${p.foundation.warnings.join('; ')}`);
+  for (const p of r.prototypes.filter(x => x.foundation?.layer_decisions?.length)) lines.push(`  - basics of ${p.id} decided by calculation: ${p.foundation.layer_decisions.join('; ')}`);
+  for (const p of r.prototypes.filter(x => x.conditions?.length)) lines.push(`  - **condition** on ${p.id}: ${p.conditions.map(c => `${c.code}: ${c.detail}`).join('; ')}`);
   lines.push(...layerMarkdown(r));
   lines.push('', `Lab failures:${r.lab_failures.join(', ') || '-'}`, '', r.disclaimer);
   return lines.join('\n') + '\n';

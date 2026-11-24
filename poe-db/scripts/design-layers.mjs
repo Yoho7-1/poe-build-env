@@ -39,8 +39,16 @@ export function decideLayer(withV, without, opts = {}) {
   const gain = layerGain(withV, without, opts), guard = layerGuard(withV, without);
   return { taken: gain.total > 0 || !!guard, gain, guard };
 }
+// decided_by says what settled the layer, so a reader (and the basics check) never has to parse the prose reason:
+//   pob_probe          - compared with the alternative by PoB probes;
+//   no_option          - nothing to compare (no eldritch line, no socket in reach, the norm reserves no points);
+//   budget             - not probed for want of calculation budget: nothing was compared;
+//   alternative_failed - the alternative itself errored in PoB;
+//   author_build       - a corpus seed: the layer is the author's, not re-probed.
+export const DECIDED_BY = ['pob_probe', 'no_option', 'budget', 'alternative_failed', 'author_build'];
 export function layerRecord(layer, taken, gain, alternative, reason, extra = {}) {
-  return { layer, taken, gain_vs_alternative: gain, alternative, reason, ...extra };
+  const { decided_by = 'pob_probe', ...rest } = extra;
+  return { layer, taken, gain_vs_alternative: gain, alternative, reason, decided_by, ...rest };
 }
 
 export const slotItem = (c, slot) => (c.replace_items ?? []).find(i => i.slot === slot);
@@ -57,13 +65,13 @@ export function probeKitLayers({ ctx, file, final, finalChanges, proto, row, bud
   // eldritch implicits: each armour slot with vs without (the same item text otherwise)
   const noEld = itemKit({ ...proto.kitArgs, axes: null });
   const eldSlots = ELDRITCH_SLOTS.filter(s => slotItem(c, s) && slotItem(noEld, s) && slotItem(c, s).text !== slotItem(noEld, s).text);
-  if (!eldSlots.length) layers.push(layerRecord('eldritch', false, null, 'kit without eldritch implicits', 'no eldritch implicit on the kit (no axis line for this skill)'));
+  if (!eldSlots.length) layers.push(layerRecord('eldritch', false, null, 'kit without eldritch implicits', 'no eldritch implicit on the kit (no axis line for this skill)', { decided_by: 'no_option' }));
   else {
     const off = slots => withItems(c, Object.fromEntries(slots.map(s => [s, slotItem(noEld, s)])));
     const variants = [off(eldSlots), ...eldSlots.map(s => off([s]))];
     const res = batch(file, variants, budget);
     const v1 = valueOf(r), all = res.get?.(variants[0]);
-    if (!all || all.error) layers.push(layerRecord('eldritch', true, null, 'kit without eldritch implicits', 'not probed (calculation budget): kept as generated'));
+    if (!all || all.error) layers.push(layerRecord('eldritch', true, null, 'kit without eldritch implicits', 'not probed (calculation budget): kept as generated', { decided_by: 'budget' }));
     else {
       const per = eldSlots.map((s, i) => { const x = res.get(variants[i + 1]); return x && !x.error ? { slot: s, ...decideLayer(v1, valueOf(x)) } : { slot: s, taken: true, gain: null, guard: 'not probed' }; });
       const drop = per.filter(p => !p.taken).map(p => p.slot);
@@ -79,7 +87,7 @@ export function probeKitLayers({ ctx, file, final, finalChanges, proto, row, bud
   }
   // automatic utility flasks: each one against the empty slot
   const auto = (c.replace_items ?? []).filter(i => /^Flask \d/.test(i.slot) && i.active);
-  if (!auto.length) layers.push(layerRecord('flasks', false, null, 'no utility flask', 'kit has no automatic flask'));
+  if (!auto.length) layers.push(layerRecord('flasks', false, null, 'no utility flask', 'kit has no automatic flask', { decided_by: 'no_option' }));
   else {
     const variants = auto.map(f => withItems(c, { [f.slot]: null }));
     const res = batch(file, variants, budget);
@@ -101,14 +109,14 @@ export function probeKitLayers({ ctx, file, final, finalChanges, proto, row, bud
   // anoint: options not on the tree, ranked by axis value (top 12) + the norm group's frequent anoints
   const amulet = slotItem(c, 'Amulet');
   if (anointTaken) layers.push(layerRecord('anoint', true, anointTaken.gain ?? null, 'amulet without anoint', `taken by the mana repair: ${anointTaken.name}`));
-  else if (!amulet || !withAnoint(amulet.text, 'X')) layers.push(layerRecord('anoint', false, null, 'amulet without anoint', 'kit amulet text has no implicit header'));
+  else if (!amulet || !withAnoint(amulet.text, 'X')) layers.push(layerRecord('anoint', false, null, 'amulet without anoint', 'kit amulet text has no implicit header', { decided_by: 'no_option' }));
   else {
     const allocated = new Set((c.tree?.allocate ?? []).map(String));
     const { options } = anointOptions({ amulet: amulet.text, allocated });
     const scored = options.map(a => ({ a, v: B.nodeValue(a.stats ?? [], proto.tree.axes, { family: row.family }).value, norm: normAnoints.includes(a.name) }));
     const pick = [...scored.filter(x => x.v > 0).sort((p, q) => q.v - p.v || p.a.name.localeCompare(q.a.name)).slice(0, 12), ...scored.filter(x => x.norm)];
     const uniq = [...new Map(pick.map(x => [x.a.name, x])).values()];
-    if (!uniq.length) layers.push(layerRecord('anoint', false, null, 'amulet without anoint', 'no anoint option matches the scaling axes or the corpus norm'));
+    if (!uniq.length) layers.push(layerRecord('anoint', false, null, 'amulet without anoint', 'no anoint option matches the scaling axes or the corpus norm', { decided_by: 'no_option' }));
     else {
       const mk = name => withItems(c, { Amulet: { ...amulet, text: withAnoint(amulet.text, name) } });
       const res = batch(file, uniq.map(x => mk(x.a.name)), budget);
@@ -119,7 +127,7 @@ export function probeKitLayers({ ctx, file, final, finalChanges, proto, row, bud
       if (best) { c = mk(best.name); r = best.r; }
       layers.push(layerRecord('anoint', !!best, best?.gain ?? rows[0]?.gain ?? null, 'amulet without anoint',
         best ? `${best.name}: best of ${rows.length} probed${best.norm ? ' (corpus norm anoint)' : ''}` : rows.length ? `best of ${rows.length} probed (${rows[0].name}) gives no gain` : 'not probed (calculation budget)',
-        { top: rows.slice(0, 5).map(x => `${x.name} ${sign(x.gain)}`) }));
+        { decided_by: rows.length ? 'pob_probe' : 'budget', top: rows.slice(0, 5).map(x => `${x.name} ${sign(x.gain)}`) }));
     }
   }
   return { finalChanges: c, final: r, layers };
@@ -127,6 +135,17 @@ export function probeKitLayers({ ctx, file, final, finalChanges, proto, row, bud
 
 // ---------- mana repair ----------
 export function manaFamily(g) { const t = new Set(g?.types ?? []); return t.has('Minion') || t.has('CreatesMinion') ? 'minion' : t.has('Attack') ? 'attack' : 'spell'; }
+
+// Probes a single repair round may spend: the remaining share split over the rounds still to come, so three rounds
+// always fit into the share instead of the first one eating it (WP11 stage 1). Candidates are taken by corpus lift.
+export function probeCap(left, roundsLeft) { return Math.max(1, Math.floor(Math.max(0, left) / Math.max(1, roundsLeft))); }
+// An unresolved mana deficit is an explicit condition on the prototype, not a silent warning: the DPS PoB reports is
+// not paid for by mana recovery in the sustained scenario.
+export function manaCondition(sustain, rounds = 0) {
+  if (sustain == null || !(sustain < 0)) return null;
+  const how = rounds > 0 ? `after ${rounds} repair round(s)` : 'no generator repair was run';
+  return { code: 'mana_deficit_unresolved', detail: `mana deficit ${round(sustain, 1)}/s (${how}): the reported DPS is not sustained by mana (PoB sustained scenario, no mana flask); it holds in bursts only, or with a mana flask` };
+}
 
 export function repairManaFromCorpus({ ctx, file, row, request, t, gems, budget, state, cards = null, rounds = 3 }) {
   const { batch, prototypeChanges, gemSpec, withGroup, CLUSTER_RESERVE } = ctx;
@@ -137,7 +156,7 @@ export function repairManaFromCorpus({ ctx, file, row, request, t, gems, budget,
   let comps, manaNorm = null;
   // Mana is solved by skill family (attacks: leech, spells: regen in the corpus), so the family group is used.
   try { comps = sustainComponents({ cards: cards ?? undefined, family }); manaNorm = chooseNormGroup({ cards: cards ?? undefined, family }).norms.mana; }
-  catch (e) { return { steps: [{ step: 'mana_corpus', error: e.message.slice(0, 200) }], state: { final, finalChanges }, anoint }; }
+  catch (e) { return { steps: [{ step: 'mana_corpus', error: e.message.slice(0, 200) }], state: { final, finalChanges }, anoint, rounds_run: 0 }; }
   const cls = t.classes.find(c => c.name === row.class);
   const cl = proto.cluster?.chosen;
   const regrow = (force, extra = []) => {
@@ -206,21 +225,27 @@ export function repairManaFromCorpus({ ctx, file, row, request, t, gems, budget,
     }
     return out.sort((a, b) => b.lift - a.lift || a.key.localeCompare(b.key));
   };
+  let roundsRun = 0;
   for (let i = 0; i < rounds && (sustainOf(final) ?? 0) < 0 && budget.left() > 0; i++) {
     const s0 = sustainOf(final), v0 = valueOf(final);
     const vars = variantsFor();
     if (!vars.length) break;
-    const res = batch(file, vars.map(v => v.c), budget);
-    const rows = vars.map(v => ({ ...v, r: res.get?.(v.c) })).filter(v => v.r && !v.r.error && (!v.check || (v.r.applied_supports ?? []).some(a => a.name === v.check)))
+    // The round probes only as many of the best candidates (by corpus lift) as its slice of the share allows.
+    const cap = probeCap(budget.left(), rounds - i);
+    const take = vars.slice(0, cap);
+    roundsRun = i + 1;
+    const res = batch(file, take.map(v => v.c), budget);
+    const rows = take.map(v => ({ ...v, r: res.get?.(v.c) })).filter(v => v.r && !v.r.error && (!v.check || (v.r.applied_supports ?? []).some(a => a.name === v.check)))
       .map(v => ({ ...v, s: sustainOf(v.r) ?? s0, gain: layerGain(valueOf(v.r), v0) }));
     const fixed = rows.filter(v => v.s >= 0 && !cannotPay(v.r)).sort((a, b) => b.gain.total - a.gain.total);
     const score = v => (v.s - s0) / Math.abs(s0) * 100 + v.gain.total;
     const pick = fixed[0] ?? rows.filter(v => v.s > s0 + 1 && !cannotPay(v.r)).sort((a, b) => score(b) - score(a))[0];
-    if (!pick) { steps.push({ step: 'mana_corpus', round: i + 1, probes: rows.length, result: 'no candidate improved mana sustain', sustain: round(s0, 1) }); break; }
+    const spend = { probes: rows.length, probed: take.length, probe_cap: cap, candidates: vars.length };
+    if (!pick) { steps.push({ step: 'mana_corpus', round: i + 1, ...spend, result: 'no candidate improved mana sustain', sustain: round(s0, 1) }); break; }
     finalChanges = pick.c; final = pick.r; applied.add(pick.key); pick.after?.();
     if (anoint && pick.key.startsWith('anoint:') && !anoint.gain) anoint.gain = pick.gain;
-    steps.push({ step: 'mana_corpus', round: i + 1, candidate: pick.key, change: pick.label, corpus_lift: pick.lift, probes: rows.length, sustain_before: round(s0, 1), sustain_after: round(pick.s, 1), gain_pct: pick.gain });
+    steps.push({ step: 'mana_corpus', round: i + 1, candidate: pick.key, change: pick.label, corpus_lift: pick.lift, ...spend, sustain_before: round(s0, 1), sustain_after: round(pick.s, 1), gain_pct: pick.gain });
   }
-  if (steps.length) steps.unshift({ step: 'mana_corpus_source', family, group: comps.group, candidates: comps.candidates.length, rule: comps.rule });
-  return { steps, state: { final, finalChanges }, anoint };
+  if (steps.length) steps.unshift({ step: 'mana_corpus_source', family, group: comps.group, candidates: comps.candidates.length, rounds_allowed: rounds, rule: comps.rule });
+  return { steps, state: { final, finalChanges }, anoint, rounds_run: roundsRun };
 }

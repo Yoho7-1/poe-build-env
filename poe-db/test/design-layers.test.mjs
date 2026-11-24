@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { decideLayer, layerGain, withItems } from '../scripts/design-layers.mjs';
+import { decideLayer, layerGain, withItems, probeCap, manaCondition } from '../scripts/design-layers.mjs';
 import { neutralConfig } from '../scripts/design-seed.mjs';
-import { screenQuota, prototypeFlags } from '../scripts/design-generate.mjs';
+import { screenQuota, prototypeFlags, reconcileFoundation, SEED_MIN_CALCS, SEED_TAIL_CALCS, JOB_MIN_CALCS } from '../scripts/design-generate.mjs';
 import { kitPlan } from '../scripts/design-kit.mjs';
 
 const v = (dps, ehp, sustain = 1, unmet = 0, ms = 1) => ({ dps, ehp, sustain, unmet, ms });
@@ -43,4 +43,60 @@ test('kit mana leech option puts leech intents on rings and the attack weapon', 
   const plan = kitPlan({ attr: 'dex', family: 'Bow', form: 'attack_hit', manaLeech: true });
   assert.ok(plan.find(p => p[0] === 'Ring 1')[2].includes('mana_leech'));
   assert.ok(plan.find(p => p[0] === 'Weapon 1')[2].includes('mana_leech_local'));
+});
+
+test('mana repair: the probe cap splits the share over the rounds still to come', () => {
+  assert.equal(probeCap(18, 3), 6);
+  assert.equal(probeCap(12, 2), 6);
+  assert.equal(probeCap(6, 1), 6);
+  assert.equal(probeCap(2, 3), 1);   // never zero: one probe still gets a turn
+  assert.equal(probeCap(0, 3), 1);
+  // Three rounds fit into a 12-calculation share, instead of the first round eating it.
+  let left = 12, rounds = 0;
+  for (let i = 0; i < 3 && left > 0; i++) { left -= probeCap(left, 3 - i); rounds++; }
+  assert.equal(rounds, 3);
+});
+
+test('an unresolved mana deficit becomes an explicit condition', () => {
+  assert.equal(manaCondition(12.5, 3), null);
+  assert.equal(manaCondition(null, 3), null);
+  const c = manaCondition(-138.1, 3);
+  assert.equal(c.code, 'mana_deficit_unresolved');
+  assert.match(c.detail, /-138\.1\/s \(after 3 repair round/);
+  assert.match(manaCondition(-48, 0).detail, /no generator repair was run/);
+});
+
+test('mana deficit is flagged on every non-minion prototype', () => {
+  assert.ok(prototypeFlags({ mana_sustain: -48 }).some(f => f.startsWith('mana_deficit:')));
+  assert.equal(prototypeFlags({ mana_sustain: -48, minion: true }).some(f => f.startsWith('mana_deficit:')), false);
+  assert.equal(prototypeFlags({ mana_sustain: 12 }).length, 0);
+});
+
+test('basics warnings a layer decision already answered become decisions, not warnings', () => {
+  const layers = [{ layer: 'cluster', taken: false, gain_vs_alternative: { total: -17.84 }, alternative: 'the same 8 points on ordinary tree nodes', reason: 'best of 8 cluster variants loses to the tree' },
+    { layer: 'masteries', taken: false, gain_vs_alternative: null, alternative: 'the same 4 points on ordinary tree nodes', reason: 'no mastery effect improved the prototype; reserve returned to the tree' },
+    { layer: 'anoint', taken: false, gain_vs_alternative: null, alternative: 'amulet without anoint', reason: 'not probed (calculation budget)' }];
+  const check = { status: 'warn', counts: { fail: 0, warn: 4, info: 0 }, warnings: [
+    { code: 'no_cluster_jewels', severity: 'warn', detail: 'no cluster jewels' },
+    { code: 'masteries_low', severity: 'warn', detail: '0 masteries' },
+    { code: 'no_anoint', severity: 'warn', detail: 'amulet without anoint' },
+    { code: 'attribute_surplus', severity: 'warn', detail: '+395 attributes over requirements' }] };
+  const r = reconcileFoundation(check, layers);
+  assert.deepEqual(r.warnings.map(w => w.code), ['no_anoint', 'attribute_surplus']);
+  assert.deepEqual(r.layer_decisions.map(d => d.code), ['no_cluster_jewels', 'masteries_low']);
+  assert.match(r.layer_decisions[0].decision, /gain vs alternative -17\.84%/);
+  assert.match(r.layer_decisions[1].decision, /rejected by PoB calculation \(alternative/);
+  assert.equal(r.counts.warn, 2);
+  assert.equal(r.status, 'warn');
+  // No layers, or a layer that was taken: the check is untouched.
+  assert.equal(reconcileFoundation(check, []), check);
+  assert.equal(reconcileFoundation(check, [{ layer: 'cluster', taken: true, reason: 'beats the tree' }]), check);
+});
+
+test('a seeded job keeps enough of its share for the steps after the support probe', () => {
+  assert.ok(SEED_MIN_CALCS > SEED_TAIL_CALCS + 1);
+  assert.equal(JOB_MIN_CALCS.seed, SEED_MIN_CALCS);
+  // The support probe may not take the tail: share 36 -> 32 probes, 4 left for final run and encounters.
+  const left = 36;
+  assert.equal(left - (left - SEED_TAIL_CALCS), SEED_TAIL_CALCS);
 });

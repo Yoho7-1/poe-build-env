@@ -49,6 +49,42 @@ export function empiricalBaseline(excludeSha, rowsLoader = qualityAblationRows) 
 }
 // Loads training rows once for a batch (each task still excludes its own build).
 export const cachedRows = rowsLoader => { let rows = null; return () => (rows ??= rowsLoader({})); };
+// ---------- ensemble predictor (H-017) ----------
+// Routes each component kind to the predictor that was stronger on the WP4 held-out breakdown: the agent reads item
+// mods, the empirical tier model knows how recurring labels (supports, masteries, guards, config flags) usually score.
+// The route was CHOSEN from that same breakdown, so an ensemble score on those tasks is in-sample; `ensemble_lobo`
+// re-derives the route for each build from the other builds only and is the honest estimate of the method.
+export const ENSEMBLE_ROUTE = { items: 'agent', supports: 'empirical', skills: 'empirical', tree: 'empirical', config: 'empirical' };
+// by: {agent, empirical} tiers for one component; a missing source falls back to the other one.
+export function ensembleTier(kind, by, route = ENSEMBLE_ROUTE, fallback = 'agent') {
+  const src = route[kind] ?? fallback;
+  const other = src === 'agent' ? 'empirical' : 'agent';
+  return by[src] ?? by[other] ?? null;
+}
+// Route learned from scored cells: per kind the source with more exact hits (ties -> agent); a kind with too few cells
+// takes the overall winner. Used only on cells of OTHER builds, never on the build being predicted.
+export function routeFromCells(cells, { minCells = 5 } = {}) {
+  const both = cells.filter(c => c.by.agent != null && c.by.empirical != null);
+  const win = list => { const hits = k => list.filter(c => c.by[k] === c.truth).length; return hits('empirical') > hits('agent') ? 'empirical' : 'agent'; };
+  const fallback = both.length ? win(both) : 'agent';
+  const route = {};
+  for (const kind of [...new Set(both.map(c => c.kind))].sort()) {
+    const list = both.filter(c => c.kind === kind);
+    route[kind] = list.length >= minCells ? win(list) : fallback;
+  }
+  return { route, fallback };
+}
+export function parseRoute(text) {
+  if (!text) return null;
+  const route = {};
+  for (const part of String(text).split(',').map(x => x.trim()).filter(Boolean)) {
+    const [kind, src] = part.split('=').map(x => x.trim());
+    if (!kind || !['agent', 'empirical'].includes(src)) throw new Error(`--route expects kind=agent|empirical, got "${part}"`);
+    route[kind] = src;
+  }
+  return route;
+}
+
 function baselineScores(components, truth, excludeSha, rowsLoader) {
   const fns = { ...baselines };
   const emp = empiricalBaseline(excludeSha, rowsLoader);
@@ -56,6 +92,17 @@ function baselineScores(components, truth, excludeSha, rowsLoader) {
   const predictions = Object.fromEntries(Object.entries(fns).map(([k, fn]) => [k, Object.fromEntries(components.map(c => [c.id, fn(c)]))]));
   const scores = Object.fromEntries(Object.entries(predictions).map(([k, p]) => { const v = scoreTiers(components, truth, p); return [k, { exact: v.exact, within_one: v.within_one }]; }));
   return { scores, predictions, empirical: emp?.trained_on ?? null };
+}
+// Per-task ensemble score of an already scored benchmark: the agent's frozen predictions and the stored empirical
+// predictions only, nothing is recomputed from the engine. from_empirical says whether empirical was available at all.
+export function ensembleTaskScore(r, { route = ENSEMBLE_ROUTE, rowsLoader = qualityAblationRows } = {}) {
+  const sc = r.data?.score;
+  if (!sc || !r.data?.predictions) return null;
+  const preds = sc.baseline_predictions ?? baselineScores(r.data.task.components, sc.truth, sc.input_sha256, rowsLoader).predictions;
+  const predicted = Object.fromEntries(r.data.task.components.map(c => [c.id,
+    ensembleTier(c.kind, { agent: r.data.predictions.tiers[c.id], empirical: preds.empirical?.[c.id] }, route)]));
+  const v = scoreTiers(r.data.task.components, sc.truth, predicted);
+  return { exact: v.exact, within_one: v.within_one, n: v.n, from_empirical: !!preds.empirical };
 }
 
 export function scoreTiers(components, truth, predicted) {
@@ -181,7 +228,7 @@ export function rescoreBaselines(id, rev, { ledger = defaultLedger(), rowsLoader
 
 // Pooled accuracy over components (each component counts once): overall, by component kind and by build. Baseline
 // predictions are read from the score; older records without them are recomputed (empirical without that build).
-export function pooledAccuracy(scored, { rowsLoader = qualityAblationRows } = {}) {
+export function pooledAccuracy(scored, { rowsLoader = qualityAblationRows, route = ENSEMBLE_ROUTE } = {}) {
   const rows = cachedRows(rowsLoader), cells = [];
   for (const r of scored) {
     const { task } = r.data, sc = r.data.score;
@@ -193,6 +240,15 @@ export function pooledAccuracy(scored, { rowsLoader = qualityAblationRows } = {}
         by: { agent: r.data.predictions.tiers[c.id], ...Object.fromEntries(Object.entries(preds).map(([k, p]) => [k, p[c.id]])) } });
     }
   }
+  // ensemble: fixed route (in-sample on the tasks the route was chosen from) and leave-one-build-out route (out of sample).
+  for (const c of cells) c.by.ensemble = ensembleTier(c.kind, c.by, route);
+  const buildNames = [...new Set(cells.map(x => x.build))];
+  const loboRoutes = {};
+  if (buildNames.length > 1) for (const b of buildNames) {
+    const learned = routeFromCells(cells.filter(x => x.build !== b));
+    loboRoutes[b] = learned.route;
+    for (const c of cells.filter(x => x.build === b)) c.by.ensemble_lobo = ensembleTier(c.kind, c.by, learned.route, learned.fallback);
+  }
   const names = [...new Set(cells.flatMap(x => Object.keys(x.by)))];
   const acc = list => ({ n: list.length, ...Object.fromEntries(names.map(k => {
     const ok = list.filter(x => x.by[k] != null);
@@ -201,22 +257,28 @@ export function pooledAccuracy(scored, { rowsLoader = qualityAblationRows } = {}
   })) });
   const group = key => Object.fromEntries([...new Set(cells.map(x => x[key]))].sort().map(v => [v, acc(cells.filter(x => x[key] === v))]));
   return { overall: acc(cells), by_kind: group('kind'), by_build: group('build'),
-    truth_distribution: Object.fromEntries(tiers.map(t => [t, cells.filter(x => x.truth === t).length]).filter(([, n]) => n)) };
+    truth_distribution: Object.fromEntries(tiers.map(t => [t, cells.filter(x => x.truth === t).length]).filter(([, n]) => n)),
+    ensemble_route: route, ...(Object.keys(loboRoutes).length ? { ensemble_lobo_routes: loboRoutes } : {}),
+    ensemble_note: 'ensemble = fixed route (chosen from the WP4 breakdown: in-sample there); ensemble_lobo = route re-derived per build from the other builds only.' };
 }
-export function benchmarkStats(ledger = defaultLedger(), { tag = null, ids = null, breakdown = false, rowsLoader = qualityAblationRows } = {}) {
+export function benchmarkStats(ledger = defaultLedger(), { tag = null, ids = null, breakdown = false, rowsLoader = qualityAblationRows, route = ENSEMBLE_ROUTE } = {}) {
   const scored = [...loadLedger(ledger).values()].filter(r => r.type === 'benchmark' && r.data?.score && (!tag || r.tags?.includes(tag)) && (!ids || ids.includes(r.id)));
   const mean = f => scored.length ? Math.round(scored.reduce((s, r) => s + (f(r) ?? 0), 0) / scored.length * 1000) / 1000 : null;
+  const rows = cachedRows(rowsLoader);
+  const ens = new Map(scored.map(r => [r.id, ensembleTaskScore(r, { route, rowsLoader: rows })]));
   return { scored: scored.length, components: scored.reduce((s, r) => s + (r.data.score.agent.n ?? 0), 0), agent_exact: mean(r => r.data.score.agent.exact), agent_within_one: mean(r => r.data.score.agent.within_one),
     baselines: Object.fromEntries([...Object.keys(baselines), 'empirical'].map(k => [k, mean(r => r.data.score.baselines[k]?.exact)])),
+    ensemble: { exact: mean(r => ens.get(r.id)?.exact), within_one: mean(r => ens.get(r.id)?.within_one) },
+    ensemble_route: route, ensemble_from_empirical: scored.filter(r => ens.get(r.id)?.from_empirical).length,
     empirical_scored: scored.filter(r => r.data.score.baselines.empirical).length,
     builds: new Set(scored.map(r => r.data.score.input_sha256 ?? r.data.task.file)).size,
     held_out_builds: new Set(scored.filter(r => r.data.score.empirical_training?.in_training === false).map(r => r.data.score.input_sha256)).size,
-    ...(breakdown ? { pooled: pooledAccuracy(scored, { rowsLoader }) } : {}),
+    ...(breakdown ? { pooled: pooledAccuracy(scored, { rowsLoader, route }) } : {}),
     note: 'Means over scored benchmarks; compare the agent with the best baseline on builds not used to tune the prediction.' };
 }
 
 export function benchCommand(args) {
-  const { positional, options } = flags(args, ['components', 'tasks', 'tag', 'ids', 'build', 'scenario', 'seed', 'expected-revision', 'file', 'ledger'], ['breakdown']);
+  const { positional, options } = flags(args, ['components', 'tasks', 'tag', 'ids', 'build', 'scenario', 'seed', 'expected-revision', 'file', 'ledger', 'route'], ['breakdown']);
   const [op, target] = positional;
   const list = v => String(v).split(',').map(x => x.trim()).filter(Boolean);
   const ledger = options.ledger ? path.resolve(options.ledger) : defaultLedger();
@@ -252,7 +314,7 @@ export function benchCommand(args) {
     const one = r => ({ id: r.id, revision: r.revision, score: { agent: r.data.score.agent, baselines: r.data.score.baselines, misses: r.data.score.misses } });
     return rs.length === 1 ? one(rs[0]) : { scored: rs.map(one) };
   }
-  if (op === 'stats') return benchmarkStats(ledger, { tag: options.tag ?? null, ids: options.ids ? list(options.ids) : null, breakdown: !!options.breakdown });
+  if (op === 'stats') return benchmarkStats(ledger, { tag: options.tag ?? null, ids: options.ids ? list(options.ids) : null, breakdown: !!options.breakdown, route: parseRoute(options.route) ?? ENSEMBLE_ROUTE });
   if (op === 'rescore') { const r = rescoreBaselines(target, rev(), { ledger }); return { id: r.id, revision: r.revision, agent: r.data.score.agent, baselines: r.data.score.baselines, empirical_training: r.data.score.empirical_training }; }
   throw new Error('Use lab bench new|show|predict|score|rescore|stats');
 }
@@ -260,5 +322,5 @@ export const benchHelp = {
   'lab bench new <xml> [--components 12] [--tasks N] [--tag t] [--build id] [--seed s] | lab bench show <B-id>': 'Held-out benchmark: stratified samples of build components; --tasks N creates N disjoint tasks (a component never repeats across benchmarks of the same file); truth is not computed until scoring',
   'lab bench predict <B-id> --expected-revision N --file preds.json | lab bench predict --file batch.json': 'Frozen tier predictions; batch file {"B-id": {"expected_revision": N, "tiers": {...}}}, all validated before any write',
   'lab bench score <B-id[,B-id...]> --expected-revision N[,N...] | lab bench rescore <B-id> --expected-revision N': 'PoB ablation of exactly the predicted components (one run per build for a batch); agent vs baselines (all_minor, kind_prior, empirical = tier model learned from corpus ablations without this build; empirical_training.in_training says whether the build itself was a training build); rescore recomputes baselines from stored truth',
-  'lab bench stats [--tag t] [--ids B-1,B-2] [--breakdown]': 'Mean per-task accuracy; --breakdown adds pooled accuracy over components overall, by kind (supports|skills|items|tree|config) and by build'
+  'lab bench stats [--tag t] [--ids B-1,B-2] [--breakdown] [--route items=agent,...]': 'Mean per-task accuracy of the agent, the baselines and the ensemble (agent for items, empirical elsewhere; --route overrides); --breakdown adds pooled accuracy over components overall, by kind (supports|skills|items|tree|config) and by build, plus ensemble_lobo (route re-derived per build from the other builds only)'
 };

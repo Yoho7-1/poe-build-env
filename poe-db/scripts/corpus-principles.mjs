@@ -7,7 +7,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { readJson, atomicJson, flags, dbRoot } from './workspace.mjs';
 import { readCards, qualityFilter, componentKeys, ablationDirectory } from './corpus-learn.mjs';
-import { corpusDirectory } from './corpus.mjs';
+import { corpusDirectory, heldOutDirectory, heldOutCards } from './corpus.mjs';
+import { analyzeAblation } from './analysis-ablation.mjs';
+import { backfillFoundations } from './corpus-norms.mjs';
 
 const stem = f => String(f ?? '').replace(/\.(xml|json)$/i, '');
 const CARRY = new Set(['core', 'major']);
@@ -170,6 +172,50 @@ export function corpusPrinciples({ minLevel = 80, minIn = 3, minShare = 0.6, min
     caveat: 'Conditional frequencies over a small corpus biased to popular guides; PoB numbers only. Each candidate is a hypothesis: test by ablation of a held-out build in the context and of one outside it (lab gates), not a rule.' };
 }
 
+// ---------- held-out test selection (WP7 gates) ----------
+// A principle is tested on builds the corpus statistics never saw: `corpus principles --match <key> --context d=v`
+// lists held-out builds that actually contain the component, split into inside and outside the context, so a test has
+// both sides. Presence comes from the ablation PLAN (component ids and labels, no engine run), so no tier - and no
+// truth - exists before `analyze ablate` is run on the chosen build. A key with no builds on one side means the
+// principle cannot be tested yet on this split, not that it holds.
+// The mana dimension comes from BuildCard.foundation, which older cards do not carry: without it a build lands in
+// `unknown` and the control side of a mana principle looks empty although the builds exist. Backfilling the held-out
+// cards (one cached PoB run each) fills that side from PoB output instead of a guess.
+export function backfillHeldOut({ cards = heldOutCards(), directory = heldOutDirectory(), limit = null, refresh = false } = {}) {
+  return backfillFoundations({ cards, directory, limit, refresh });
+}
+export function heldOutContexts({ dir = heldOutCards() } = {}) {
+  const out = new Map();
+  if (!fs.existsSync(dir)) return out;
+  for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.json'))) {
+    const card = readJson(path.join(dir, f));
+    out.set(stem(card.identity?.file ?? f), { context: contextsOf(card), level: card.features?.level ?? null, ascendancy: card.features?.ascendancy ?? null, skill: card.skills?.main?.name ?? null, card: f });
+  }
+  return out;
+}
+export function heldOutMatches({ key, context = null, xmlDir = path.join(heldOutDirectory(), 'xml'), cardsDir = heldOutCards(), scenario = 'sustained', planner = analyzeAblation, backfill = false }) {
+  if (!key) throw new Error('--match <component key> required, e.g. "node:Iron Will" or "item:Belt:RARE"');
+  const backfilled = backfill ? backfillHeldOut({ cards: cardsDir }) : null;
+  const contexts = heldOutContexts({ dir: cardsDir });
+  const dim = context ? Object.keys(context)[0] : null, want = context ? Object.values(context)[0] : null;
+  const inside = [], outside = [], unknown = [], failed = [];
+  for (const file of (fs.existsSync(xmlDir) ? fs.readdirSync(xmlDir).filter(f => f.endsWith('.xml')).sort() : [])) {
+    const build = stem(file), info = contexts.get(build);
+    let components;
+    try { components = planner({ file: path.join(xmlDir, file), scenario, plan: true }).components ?? []; }
+    catch (e) { failed.push({ build, error: String(e.message ?? e) }); continue; }
+    const hits = components.filter(c => componentKeys(c).includes(key)).map(c => ({ id: c.id, kind: c.kind, label: c.label }));
+    if (!hits.length) continue;
+    const row = { build, file: path.join(xmlDir, file), components: hits, context: info?.context ?? null, level: info?.level ?? null, ascendancy: info?.ascendancy ?? null, skill: info?.skill ?? null };
+    if (!dim) { inside.push(row); continue; }
+    const v = info?.context?.[dim] ?? null;
+    (v === want ? inside : v == null ? unknown : outside).push(row);
+  }
+  return { key, context, scenario, held_out_builds: contexts.size, ...(backfilled ? { backfilled } : {}),
+    inside, outside, unknown, ...(failed.length ? { failed } : {}),
+    note: 'Presence from the ablation plan only; run analyze ablate --only <component id> on a chosen build to get its tier. Predict the tier in the lab ledger before the run.' };
+}
+
 const describe = c => {
   const [d, v] = Object.entries(c.context)[0];
   const what = c.key.replace(/^(\w+):/, '$1 ');
@@ -197,13 +243,25 @@ export async function recordPrinciples(result, { limit = 10, ledger } = {}) {
 }
 
 export function principlesCommand(args) {
-  const { positional, options } = flags(args, ['min-level', 'min-in', 'min-share', 'min-lift', 'top', 'out', 'record'], ['keep-tautologies', 'no-config']);
-  if (positional[0] !== 'principles') throw new Error('Use corpus principles [--min-in 3] [--min-share 0.6] [--min-lift 0.4] [--top 30] [--keep-tautologies] [--no-config] [--record N] [--out f.json]');
+  const { positional, options } = flags(args, ['min-level', 'min-in', 'min-share', 'min-lift', 'top', 'out', 'record', 'match', 'context', 'scenario'], ['keep-tautologies', 'no-config', 'backfill']);
+  if (positional[0] !== 'principles') throw new Error('Use corpus principles [--min-in 3] [--min-share 0.6] [--min-lift 0.4] [--top 30] [--keep-tautologies] [--no-config] [--record N] [--match key --context d=v] [--out f.json]');
+  if (options.match) {
+    let context = null;
+    if (options.context) {
+      const [d, v] = String(options.context).split('=').map(s => s.trim());
+      if (!d || !v) throw new Error('--context expects dimension=value, e.g. pool=life or family=attack');
+      context = { [d]: v };
+    }
+    const r = heldOutMatches({ key: options.match, context, scenario: options.scenario ?? 'sustained', backfill: !!options.backfill });
+    if (options.out) atomicJson(path.resolve(options.out), r);
+    return r;
+  }
   const r = corpusPrinciples({ minLevel: Number(options['min-level'] ?? 80), minIn: Number(options['min-in'] ?? 3), minShare: Number(options['min-share'] ?? 0.6), minLift: Number(options['min-lift'] ?? 0.4), top: Number(options.top ?? 30), keepTautologies: !!options['keep-tautologies'], noConfig: !!options['no-config'] });
   if (options.out) atomicJson(path.resolve(options.out), r);
   if (options.record) return recordPrinciples(r, { limit: Number(options.record) }).then(rec => ({ ...r, lab: rec }));
   return r;
 }
 export const principlesHelp = {
+  'corpus principles --match <component key> [--context dim=value] [--backfill] [--out f.json]': 'WP7 test selection: held-out builds that contain the component, split into inside / outside the context (dimensions: family, form, type, pool, mana, ascendancy; `unknown` = the dimension is not known for that build; --backfill computes the missing BuildCard.foundation of held-out cards first, one cached PoB run each, so the mana dimension and with it the control side are known). Presence from the ablation plan only, no tier until analyze ablate runs - predict in the lab ledger first',
   'corpus principles [--min-in 3] [--min-share 0.6] [--min-lift 0.4] [--top 30] [--keep-tautologies] [--no-config] [--record N] [--out f.json]': 'WP7: conditional principle candidates from corpus ablations x BuildCard contexts (skill family, hit/DoT, damage type, defense pool, mana source, ascendancy): component carries builds in a context and rarely outside it (or the reverse), with supporting builds and counterexamples; config tautologies (flag tied by definition to the context: Shocked x Lightning, Withered x Chaos, an ascendancy whose nodes read the condition) move to filtered with kind and reason, --keep-tautologies keeps them ranked and flagged, --no-config filters every config flag; --record N writes the top N as lab hypotheses (verification hypothesis)'
 };

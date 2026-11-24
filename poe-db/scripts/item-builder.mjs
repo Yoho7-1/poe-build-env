@@ -390,7 +390,7 @@ export function itemCommand(rest) {
     }
     return result;
   }
-  throw new Error('Use item build | item pool | item check | item help');
+  throw new Error('Use item build | item pool | item check | item appraise | item help');
 }
 
 export const itemHelp = {

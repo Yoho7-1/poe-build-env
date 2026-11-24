@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { projectRoot, readJson, atomicJson, flags } from './workspace.mjs';
 import { compactQuery } from './compact-query.mjs';
 import { bootstrap, doctor, backup } from './environment.mjs';
-import { queryMechanics, buildMechanics } from './mechanics.mjs';
+import { queryMechanics, buildMechanics, mechanicGaps, mechanicValidate } from './mechanics.mjs';
 import { loadBuild, createBuild, updateBuild, appendBuildEvent, briefBuild } from './build-store.mjs';
 import { inspectBuild, runPob, compareResults, scenarios, decodeBuild } from './pob.mjs';
 import { pobBuildCommand, pobHelp } from './pob-cli.mjs';
@@ -13,18 +13,55 @@ import { referenceDb,importExample,exampleQuery,importPrices,priceQuery,importCr
 import { dataCommands, dataCommand, dataHelp } from './data-cli.mjs';
 import { cli as craftSim } from '../experiments/craft-lab/v2/cli.mjs';
 import { itemCommand, itemHelp } from './item-builder.mjs';
+import { appraiseCommand, appraiseHelp } from './item-appraise.mjs';
 import { priceCommand, priceHelp, priceOperations } from './price-refresh.mjs';
 import { observeCommand, observeHelp } from './observations.mjs';
+import { labCommand, labHelp } from './lab.mjs';
+import { benchCommand, benchHelp } from './lab-bench.mjs';
+import { cardCommand, cardHelp } from './build-card.mjs';
+import { corpusCommand, corpusHelp } from './corpus.mjs';
+import { learnCommand, learnHelp } from './corpus-learn.mjs';
+import { discoverCommand, discoverHelp } from './corpus-discover.mjs';
+import { noveltyCommand, noveltyHelp } from './novelty.mjs';
+import { designCommand, designHelp } from './design-generate.mjs';
+
+// `agent.mjs <group> [operation] --help` (or `-h`): the help entries of that group, narrowed to the operation if given.
+export function groupHelp(command, rest) {
+  const all = agent(['help']).commands;
+  const op = rest.find(x => !x.startsWith('-') && x !== 'help');
+  const group = Object.fromEntries(Object.entries(all).filter(([k]) => k === command || k.startsWith(`${command} `) || k.split('|').some(p => p.trim().startsWith(`${command} `))));
+  if (!Object.keys(group).length) throw new Error(`Unknown command: ${command}; run agent.mjs help`);
+  const narrowed = op ? Object.fromEntries(Object.entries(group).filter(([k]) => new RegExp(`(^|[ |])${op.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([ |]|$)`).test(k.slice(command.length)))) : {};
+  return { command, operation: op ?? null, commands: Object.keys(narrowed).length ? narrowed : group };
+}
+// Machine-readable error class for the CLI wrapper; the message stays the human explanation.
+export function errorCode(message) {
+  if (/Revision conflict|locked/i.test(message)) return 'conflict';
+  if (/ needs |exceeds the supporting evidence|requires --reason|cannot change after|Only observation evidence/i.test(message)) return 'gate';
+  if (/not found|does not exist|ENOENT/i.test(message)) return 'not_found';
+  if (/^Unknown (command|option)|^Use |required|must be|Missing value|^--/i.test(message)) return 'usage';
+  if (/Change error|Calculation requires|engine/i.test(message)) return 'engine';
+  return 'error';
+}
 
 export function agent(args) {
   const [command,...rest] = args;
+  if(command&&command!=='help'&&command!=='craftsim'&&(rest.includes('--help')||rest.includes('-h')))return groupHelp(command,rest.filter(x=>x!=='--help'&&x!=='-h'));
   if(command==='query') return compactQuery(rest);
   if(command==='bootstrap') return bootstrap(rest[0] ?? 'main');
   if(command==='analyze') return analyze(rest);
   if(command==='eval') return evaluate(rest);
   if(dataCommands.has(command)) return dataCommand(command,rest);
+  if(command==='item'&&rest[0]==='appraise') return appraiseCommand(rest.slice(1));
   if(command==='item') return itemCommand(rest);
   if(command==='observe') return observeCommand(rest);
+  if(command==='corpus'&&['ablate-all','learn','insights'].includes(rest[0])) return learnCommand(rest);
+  if(command==='corpus'&&rest[0]==='discover') return discoverCommand(rest);
+  if(command==='corpus'&&rest[0]==='novelty') return noveltyCommand(rest);
+  if(command==='corpus') return corpusCommand(rest);
+  if(command==='lab'&&rest[0]==='bench') return benchCommand(rest.slice(1));
+  if(command==='lab') return labCommand(rest);
+  if(command==='design') return designCommand(rest);
   // price status|refresh (freshness, network refresh) live in price-refresh.mjs; list|get|import stay below.
   if(command==='price'&&priceOperations.has(rest[0])) return priceCommand(rest);
   if(command==='doctor') {
@@ -56,10 +93,13 @@ export function agent(args) {
     } finally {db.close();}
   }
   if(command==='mechanic') {
+    if(rest[0]==='gaps'){const o=flags(rest.slice(1),['status','axis'],['full']);return mechanicGaps(o.positional[0]??null,{status:o.options.status??null,axis:o.options.axis??null,full:!!o.options.full});}
+    if(rest[0]==='validate'){const o=flags(rest.slice(1),['scenario','rules','out'],['run']);return mechanicValidate(o.positional[0],{run:!!o.options.run,scenario:o.options.scenario??'sustained',rules:o.options.rules?o.options.rules.split(','):null,out:o.options.out??null});}
     const {positional,options}=flags(rest,['limit'],['related']);
     if(positional[0]==='build')return buildMechanics();
     return queryMechanics(positional[0] ?? 'list',positional.slice(1).join(' '),{limit:options.limit==null?5:Number(options.limit),related:!!options.related});
   }
+  if(command==='build'&&rest[0]==='card') return cardCommand(rest.slice(1));
   if(command==='build') {
     const {positional,options}=flags(rest,['file','expected-revision','name','scenario','changes'],['full']);
     const [operation,id='main']=positional;
@@ -118,6 +158,8 @@ export function agent(args) {
     'backup [label]':'Consistent local SQLite snapshots, build state and knowledge cards',
     'query <existing query syntax> [--view brief|full] [--fields a,b]':'Compact data interface; search defaults to five results',
     'mechanic list|search <text>|get <id> [--related]':'Versioned explanations with source links and conditions',
+    'mechanic gaps [id] [--status not_modelled|partial|config_assumed] [--axis A] [--full]':'Registry of mechanics PoB does not (fully) calculate: what PoB does, the gap, approximate model, validator rules, danger axes',
+    'mechanic validate <prototype.json|build.xml> [--run] [--rules a,b] [--out f.json]':'Executable mechanic preconditions/conflicts (Profane Bloom curse, curse limit, Blasphemy hex, CI life recovery, EB+MoM, corpses, ascendancy budget, config charges); --run adds PoB explode sources/curse limit/recovery',
     'build init <id> --name <name>':'Create without overwriting',
     'build show [id] [--full]':'Durable state across sessions',
     'build update|decision|calculation <id> --file file.json --expected-revision N':'Validated changes with revision conflict protection',
@@ -131,8 +173,17 @@ export function agent(args) {
     ...analysisHelp,
     ...dataHelp,
     ...itemHelp,
+    ...appraiseHelp,
     ...priceHelp,
-    ...observeHelp
+    ...observeHelp,
+    ...labHelp,
+    ...benchHelp,
+    ...cardHelp,
+    ...corpusHelp,
+    ...learnHelp,
+    ...discoverHelp,
+    ...noveltyHelp,
+    ...designHelp
     ,'example list|get <id>|import --file descriptor.json':'Audited reference/synthetic/historical PoB library'
     ,'price list|get <exact name>|import --file snapshot.json':'Offline dated price observations; --variant, --corrupted true|false, --links, --gem-level, --gem-quality, --base-type, --history; platform pc by default'
     ,'craft list|get <id>|import --file plan.json':'Recorded craft plans; identifiers are checked, probabilities are not simulated (simulate with craftsim)'
@@ -147,5 +198,5 @@ if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.
     const result=await agent(process.argv.slice(2));
     process.stdout.write(JSON.stringify(result,null,2)+'\n');
     if(result.ready===false)process.exitCode=1;
-  } catch(error) {process.stderr.write(JSON.stringify({error:error.message})+'\n');process.exitCode=1;}
+  } catch(error) {process.stderr.write(JSON.stringify({error:error.message,code:errorCode(error.message)})+'\n');process.exitCode=1;}
 }

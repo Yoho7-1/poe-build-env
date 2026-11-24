@@ -1,18 +1,15 @@
 // Engine-backed analysis operations: Node Power, stat weights, upgrade ranking and boss survival from a build file.
 // One baseline calculation fixes the calculation contract; every candidate must match it.
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { randomUUID } from 'node:crypto';
-import { runPob, decodeBuild } from './pob.mjs';
-import { loadTree, readXmlSpec } from './tree-graph.mjs';
+import { runPob } from './pob.mjs';
+import { loadTree } from './tree-graph.mjs';
 import { referenceDb, priceQuery } from './reference-store.mjs';
 import { evaluateCandidates, cacheMisses, AnalysisCache } from './analysis-core.mjs';
 import { rankRows, flagTradeoffs, attachPrice, budgetSummary, rankByPrice } from './analysis-rank.mjs';
-import { nodeCandidates, notableOrKeystone } from './analysis-nodes.mjs';
 import { packageInteraction } from './analysis-upgrades.mjs';
 import { bossChanges, evaluateSurvival } from './analysis-bosses.mjs';
-import { runBatch, batchRunner, defaultConcurrency } from './analysis-engine.mjs';
+import { runBatch, batchRunner, runVariants, variantRunner, defaultConcurrency } from './analysis-engine.mjs';
 
 const disclaimer = 'Numeric engine experiment; not a game test. Check configuration, requirements, engine warnings and the actual availability of every change.';
 
@@ -36,39 +33,28 @@ const compactRow = r => ({ rank: r.rank, id: r.id, label: r.label, cost: r.cost,
   deltas: Object.fromEntries(Object.entries(r.deltas ?? {}).map(([k, d]) => [k, { before: d.before, after: d.after, pct: d.pct == null ? null : Math.round(d.pct * 100) / 100 }])),
   tradeoffs: r.tradeoffs, review: /(keystone)/.test(r.label ?? '') ? 'Keystone: inspect the PoB condition it assumes (e.g. Elemental Overload is treated as active whenever crit chance > 0).' : undefined, new_warnings: r.new_warnings?.length ? r.new_warnings : undefined, path: r.extra?.path, price: r.price });
 
-function withTempXml(file, fn) {
-  const xml = decodeBuild(fs.readFileSync(file)).xml;
-  const tmp = path.join(os.tmpdir(), `poe-analysis-${randomUUID()}.xml`);
-  fs.writeFileSync(tmp, xml);
-  try { return fn(tmp); } finally { fs.rmSync(tmp, { force: true }); }
-}
 
-export function analyzeNodes({ file, scenario = 'sustained', metric = 'dps', radius = 3, top = 10, include = 'notable', base = {}, concurrency = defaultConcurrency, limit = 200 }) {
+// Node Power through PoB itself: the engine lists unallocated notables/keystones within pathDist <= radius and
+// evaluates each with its calculator (addNodes along node.path, as PoB's power report); a few processes in total.
+export function analyzeNodes({ file, scenario = 'sustained', metric = 'dps', radius = 3, top = 10, include = 'notable', base = {}, concurrency = defaultConcurrency, limit = 500 }) {
   const started = Date.now();
-  const t = loadTree();
-  const spec = withTempXml(file, readXmlSpec);
-  if (spec.treeVersion && spec.treeVersion !== '3_30') throw new Error(`Tree ${spec.treeVersion} is not 3_30; migrate first`);
-  const cls = t.classes[spec.classId];
-  if (!cls) throw new Error('Class of the active tree spec is unknown');
-  const allocated = new Set([String(cls.start), ...spec.nodes.filter(id => { const n = t.nodes.get(id); return n && !n.ascendancy; }).map(String)]);
-  const adjacency = new Map([...t.nodes].map(([id, n]) => [String(id), [...n.links].map(String)]));
-  const info = new Map([...t.nodes].map(([id, n]) => [String(id), { name: n.name, kind: n.type, ascendancy: n.ascendancy,
-    is_class_start: n.type === 'class_start', is_mastery: n.type === 'mastery', blocked: n.proxy || n.eligibility !== 'tree_defined' || n.type === 'ascendancy_start' }]));
-  const filter = include === 'all' ? i => i.kind !== 'jewel_socket' : notableOrKeystone;
-  const found = nodeCandidates({ allocated, adjacency, nodes: info, radius, include: filter, limit });
-  const candidates = found.map(c => ({ id: c.id, label: `${c.name} (${c.kind})`, cost: c.cost, meta: { graph_path: c.path },
-    changes: { ...base, tree: { ...(base.tree ?? {}), allocate: [Number(c.id)], allow_over_budget: true } } }));
+  if (base.tree || base.jewels || base.sets || base.remove_nodes) throw new Error('analyze nodes evaluates the saved tree; apply tree edits with pob run --save-xml first');
   const baseline = baselineRun(file, scenario, base);
-  const extract = r => { const a = r.edit_report?.tree?.allocated?.[0]; return a ? { points: a.points, path: a.path.map(p => p.name) } : null; };
-  const evaluated = runCandidates({ file, scenario, baseline, candidates, kind: 'nodes', metricsWanted: ['dps', 'ehp', 'maxhit', 'life', 'mana_sustain'], concurrency, extract });
-  // The engine path is authoritative for cost; the graph BFS only selects candidates.
-  const rows = flagTradeoffs(evaluated.rows.map(r => r.extra?.points ? { ...r, cost: { points: r.extra.points, graph_points: r.cost?.points } } : r));
+  const types = include === 'all' ? ['Notable', 'Keystone', 'Normal'] : ['Notable', 'Keystone'];
+  const vr = runVariants({ file, scenario, base, nodePower: { max_dist: radius, types }, concurrency });
+  const t = loadTree();
+  const ids = [...vr.results.keys()].filter(id => id.startsWith('add:')).sort((a, b) => Number(a.slice(4)) - Number(b.slice(4))).slice(0, limit);
+  const candidates = ids.map(id => { const node = t.nodes.get(Number(id.slice(4))); const v = vr.results.get(id);
+    return { id: id.slice(4), label: `${node?.name ?? id} (${node?.type ?? 'node'})`, cost: { points: v.points }, changes: { variant: id, base }, meta: { path: (v.added_nodes ?? []).map(n => n.name) } }; });
+  const evaluated = evaluateCandidates({ baseline, candidates, runner: variantRunner(vr), metricsWanted: ['dps', 'ehp', 'maxhit', 'life', 'mana_sustain'], cache: new AnalysisCache(), kind: 'nodes-v2',
+    extract: r => ({ points: r.points, path: (r.added_nodes ?? []).map(n => n.name) }) });
+  const rows = flagTradeoffs(evaluated.rows.map(r => ({ ...r, cost: r.extra?.points ? { points: r.extra.points } : r.cost })));
   const ranked = rankRows(rows, { metric, per: 'points', top });
   return { game: 'poe1', patch: '3.30', analysis: 'node_power', metric, scenario, radius, include,
-    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, dps_basis: evaluated.dps_basis, contract: evaluated.contract, class: cls.name },
+    baseline: { calculation_id: baseline.calculation_id, values: evaluated.baseline_values, dps_basis: evaluated.dps_basis, contract: evaluated.contract, class: baseline.class },
     candidates: candidates.length, top: ranked.top.map(compactRow), excluded: ranked.excluded,
-    timing: { total_ms: Date.now() - started, engine_runs: evaluated.engine.runs, concurrency: evaluated.engine.concurrency, cache: evaluated.cache },
-    assumptions: ['Each candidate is added on top of the current tree with allow_over_budget: true (points beyond the budget are hypothetical).', 'Cost = points of the path PoB actually allocated; small nodes on the path contribute to the gain.'],
+    timing: { total_ms: Date.now() - started, engine_runs: vr.runs, variants: vr.variants, concurrency, cache: evaluated.cache },
+    assumptions: ['Candidates and paths come from PoB (pathDist, node.path); each is evaluated with the PoB calculator (addNodes) on top of the current tree; points beyond the budget are hypothetical.', 'Cost = nodes on the PoB path; small nodes on the path contribute to the gain.'],
     disclaimer };
 }
 

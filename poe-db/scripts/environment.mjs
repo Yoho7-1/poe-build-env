@@ -5,15 +5,17 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { dbRoot, projectRoot, readJson, hashFile, atomicJson, safeId } from './workspace.mjs';
 import { loadBuild, briefBuild } from './build-store.mjs';
+import { ledgerBrief } from './lab.mjs';
 import { runPob, smokeEngine } from './pob.mjs';
+import { checkResolveOverrides } from './source-cache.mjs';
 import { loadCatalog as loadCraftCatalog } from '../experiments/craft-lab/v2/catalog.mjs';
 
-export function bootstrap(id = 'main') {
+export function bootstrap(id = 'main', { buildsDirectory = undefined, ledger = undefined } = {}) {
   const lock = readJson(path.join(dbRoot, 'environment.lock.json'));
   return { game: lock.game, patch: lock.patch, mode: lock.mode, root: projectRoot, network_required: false,
-    versions: lock.versions, snapshots: lock.snapshots, build: briefBuild(loadBuild(id)),
+    versions: lock.versions, snapshots: lock.snapshots, build: briefBuild(loadBuild(id, buildsDirectory)), lab: ledgerBrief(ledger),
     commands: { query: 'agent.mjs query knowledge gem Fireball --level 20', mechanics: 'agent.mjs mechanic search "урон"',
-      calculate: 'agent.mjs pob run <file.xml> --scenario sustained', references:'agent.mjs example list',prices:'agent.mjs price get <exact name>',state: `agent.mjs build show ${id}` },
+      calculate: 'agent.mjs pob run <file.xml> --scenario sustained', references:'agent.mjs example list',prices:'agent.mjs price get <exact name>',state: `agent.mjs build show ${id}`, research: 'agent.mjs lab list | lab stats' },
     rules: ['Reference/client presence does not prove league acquisition.', 'Unknown values remain null; alternatives are not simultaneous.',
       'Gem numeric units are source-native; quality requires explicit handling.', 'Preserve activation conditions and report missing evidence.',
       'A PoB calculation is conditional, not an in-game test.', 'Historical originals and local migrations are separate; quarantined references are invalid.',
@@ -113,6 +115,7 @@ export function doctor({ deep = false } = {}) {
     for(const manifest of manifests)for (const source of manifest.sources) if (hashFile(path.resolve(dbRoot, source.file)) !== source.sha256) throw new Error(`Hash mismatch: ${source.file}`);
     return { verified_files: manifests.reduce((n,m)=>n+m.sources.length,0) };
   });
+  if(deep)check('network-overrides',()=>checkResolveOverrides());
   if(deep)check('pob-control',()=>{
     const expected=readJson(path.join(dbRoot,'fixtures/fireball-control.expected.json'));
     // noCache: a cached control result must not hide a broken engine.

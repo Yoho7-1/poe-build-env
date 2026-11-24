@@ -6,8 +6,9 @@ import path from 'node:path';
 import { runBatch, defaultConcurrency } from './analysis-engine.mjs';
 import { canonicalJson, effectiveDps } from './analysis-core.mjs';
 import { buildEncounter, cleanSpec, mergeChanges, parseEnemy, isBossOnly } from './encounter.mjs';
-import { loadEnemyDb, bandOfTier } from './enemy-db.mjs';
+import { loadEnemyDb, bandOfTier, enemyLife } from './enemy-db.mjs';
 import { loadBossScenarios, dotOf } from './analysis-bosses.mjs';
+import { approximateModels, enemyResistsOf, parseThorns } from './mechanic-models.mjs';
 export { dotOf };
 
 const types = ['Physical', 'Fire', 'Cold', 'Lightning', 'Chaos'];
@@ -113,6 +114,19 @@ export function buildChecks(axes, o) {
   return axes.map(axis => { const [status, evidence] = rules[axis]?.() ?? ['manual', 'Not calculated; judge from playstyle and gear.']; return { axis, status, evidence }; });
 }
 
+// WP9 approximate models (mechanic-models.mjs) for one encounter result: a separate block, never merged into PoB numbers.
+export function approximationsFor(encounter, result, db, { thornsTexts = null } = {}) {
+  const config = encounter.changes?.config ?? {};
+  const level = config.enemyLevel ?? encounter.map?.area_level ?? null;
+  const targets = db && level ? Object.fromEntries(['normal', 'magic'].map(a => [a, enemyLife(db, a, level).value])) : {};
+  const texts = thornsTexts ?? (encounter.modifiers ?? []).map(m => m.text ?? '');
+  return approximateModels({ output: result.output, explodeMods: result.explode_mods, kind: encounter.enemy.kind, life: encounter.life, targets,
+    enemyResists: enemyResistsOf(config, 'None'), thorns: parseThorns(texts) });
+}
+
+let enemyDbCache = null;
+const cachedEnemyDb = () => (enemyDbCache ??= loadEnemyDb());
+
 function summarize(encounter, result, clean) {
   const o = result.output;
   const axes = [...new Set(encounter.not_modelled.flatMap(n => n.axes).concat(encounter.modifiers.flatMap(m => m.axes ?? [])))];
@@ -120,6 +134,7 @@ function summarize(encounter, result, clean) {
     damage: { ...damageOf(o, encounter.life, result.minion_output), on_kill_explosions: explosionsOf(result.explode_mods, encounter.life) }, defence: defenceOf(o), modifiers: encounter.modifiers, not_modelled: encounter.not_modelled,
     build_checks: buildChecks(axes, o), assumptions: encounter.assumptions,
     engine_warnings: result.engine_warnings ?? [], unparsed_custom_mods: result.unparsed_custom_mods ?? [] };
+  try { row.approximations = approximationsFor(encounter, result, cachedEnemyDb()); } catch (e) { row.approximations = { error: String(e.message ?? e) }; }
   if (encounter.enemy.kind === 'damage_over_time') {
     // A degen skill has no configured hit: replace the hit verdict with the degen assessment.
     row.defence.dot = dotOf(o, encounter.enemy.dot_raw_dps);
@@ -227,6 +242,10 @@ export function analyzeReport({ file, scenario = 'sustained', tier = 16, bossTie
   const run = runAll({ file, scenario, jobs: encounters, base, concurrency });
   const matrix = encounters.map((e, i) => { const r = summarize(e, run.results[i], null); return { label: r.label, calculation_id: r.calculation_id, enemy: r.enemy, damage: r.damage, defence: r.defence, assumptions: r.assumptions }; });
   const sweeps = sweepTiers.map(t => analyzeMapModSweep({ file, scenario, tier: t, enemy: 'rare', base, concurrency }));
+  const rareIndex = encounters.findIndex(e => e.enemy.archetype === 'rare');
+  const thornsBand = bandOfTier(Math.max(...sweepTiers, tier));
+  const thornsTexts = Object.values(db.map_mods).filter(m => (m.danger_axes ?? []).some(a => a.startsWith('reflect')) && m.tiers[thornsBand]).map(m => m.tiers[thornsBand].text);
+  const approximations = rareIndex >= 0 ? { encounter: encounters[rareIndex].label, thorns_band: thornsBand, ...approximationsFor(encounters[rareIndex], run.results[rareIndex], db, { thornsTexts }) } : null;
   const hits = matrix.filter(m => m.defence.hits_to_die != null);
   const worst = hits.slice().sort((a, b) => a.defence.hits_to_die - b.defence.hits_to_die)[0] ?? null;
   const weakest = Object.entries(matrix.reduce((acc, m) => { if (m.defence.weakest_type) acc[m.defence.weakest_type] = (acc[m.defence.weakest_type] ?? 0) + 1; return acc; }, {})).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
@@ -234,7 +253,7 @@ export function analyzeReport({ file, scenario = 'sustained', tier = 16, bossTie
     summary: { worst_encounter: worst ? { label: worst.label, hits_to_die: worst.defence.hits_to_die, verdict: worst.defence.verdict, dominant_type: worst.defence.dominant_type } : null,
       one_shots: matrix.filter(m => m.defence.verdict === 'one_shot').map(m => m.label), dangerous: matrix.filter(m => ['dangerous', 'degen_dangerous'].includes(m.defence.verdict)).map(m => m.label),
       weakest_max_hit_type: weakest, map_mods_to_avoid: Object.fromEntries(sweeps.map(s => [s.band, s.mods.filter(m => m.verdict === 'avoid').map(m => m.name)])) },
-    matrix, sweeps, thresholds,
+    matrix, sweeps, approximations, thresholds,
     timing: { engine_runs: run.runs + sweeps.reduce((a, s) => a + s.timing.engine_runs, 0) }, disclaimer };
 }
 
@@ -259,6 +278,7 @@ export function markdownReport(report) {
     const first = report.matrix[0];
     if (first) push('', `Max hit (${first.label}): ${Object.entries(first.defence.max_hit).map(([t, v]) => `${t} ${fmt(v)}`).join(', ')}.`);
     for (const sw of report.sweeps) push('', ...markdownSweep(sw, 3));
+    if (report.approximations) push('', ...markdownApprox(report.approximations, 2, `${report.approximations.encounter}; thorns: моды ${report.approximations.thorns_band}`));
   } else if (report.analysis === 'map_mod_sweep') push(...markdownSweep(report, 2));
   else if (report.analysis === 'encounter') {
     push(`# ${report.label}`, '', `Сборка: ${report.build_file}, сценарий \`${report.scenario}\`.`, '');
@@ -271,10 +291,26 @@ export function markdownReport(report) {
     if (report.modifiers.length) { push('## Моды карты', ''); for (const m of report.modifiers) push(`- **${m.name}** (${m.method}): ${String(m.text ?? m.status).replace(/\n/g, '; ')}`); push(''); }
     const checks = report.build_checks.filter(c => c.status !== 'ok');
     if (checks.length) { push('## Не рассчитано движком — проверить', ''); for (const c of checks) push(`- ${c.axis} (${c.status}): ${c.evidence}`); push(''); }
+    if (report.approximations?.models) push(...markdownApprox(report.approximations, 2), '');
     if (report.assumptions.length) { push('## Допущения', ''); for (const a of report.assumptions) push(`- ${a}`); push(''); }
   }
   push('', `_${report.disclaimer}_`, '');
   return out.join('\n');
+}
+
+function markdownApprox(a, level, context = null) {
+  const h = '#'.repeat(level), lines = [`${h} Приближённые модели вне PoB (WP9)`, ''];
+  if (context) lines.push(`Основа: ${context}.`, '');
+  lines.push(`_${a.disclaimer}_`, '');
+  for (const m of a.models ?? []) {
+    if (!m.applicable) { lines.push(`- **${m.id}**: не применимо — ${m.reason}`); continue; }
+    const r = m.result;
+    if (m.id === 'recoup_sustain') lines.push(`- **recoup_sustain** (confidence ${m.confidence}): входящий урон ${fmt(r.taken_per_s)}/с; recoup life ${fmt(r.life_recoup_per_s)}/с; восстановление без recoup ${fmt(r.recovery_without_recoup_per_s)}/с (покрытие ${fmt(r.sustain_ratio_without)}), с recoup ${fmt(r.recovery_with_recoup_per_s)}/с (покрытие ${fmt(r.sustain_ratio_with)}); первые ${m.inputs.recoup_duration_s} с без recoup: ${fmt(r.first_window_unrecovered)}.`);
+    else if (m.id === 'on_kill_explosions') { lines.push(`- **on_kill_explosions** (confidence ${m.confidence}): ${r.chain_possible}.`); for (const x of r.rows) lines.push(`  - ${x.source_name ?? x.source ?? "explosion"}: ${x.percent_of_enemy_life}% жизни как ${x.damage_type}, шанс ${fmt(x.chance_pct)}%, урон ${fmt(x.damage_per_explosion ?? x.damage_per_explosion_range?.join('-'))}; доля жизни normal/magic: ${fmt(x.fraction_of_target_life.normal)}/${fmt(x.fraction_of_target_life.magic)}; взрывов normal на normal: ${fmt(x.normal_explosions_to_kill_normal)}.`); }
+    else if (m.id === 'thorns_retaliation') lines.push(`- **thorns_retaliation** (confidence ${m.confidence}): ${fmt(r.damage_per_trigger)} урона за срабатывание, ${fmt(r.triggers_to_empty_pool)} срабатываний до пустого пула, восстановление держит ${fmt(r.sustainable_triggers_per_s)}/с; итог ${r.verdict}.`);
+    else if (m.id === 'degen_tolerance') lines.push(`- **degen_tolerance** (confidence ${m.confidence}): выдерживаемый дегген ${m.result.rows.map(x => `${x.type} ${fmt(x.tolerance_dps)}/с`).join(', ')}; слабейший ${r.weakest_type}.`);
+  }
+  return lines;
 }
 
 function markdownSweep(sw, level) {

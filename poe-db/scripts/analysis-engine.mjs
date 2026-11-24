@@ -44,6 +44,47 @@ export function runBatch({ file, scenario = 'sustained', changesList, concurrenc
 }
 const parseError = text => { try { return JSON.parse(text.trim().split('\n').pop()).error; } catch { return text.trim().slice(0, 2000) || 'unknown error'; } };
 
+// Output keys returned per PoB comparison variant: everything the analysis metrics and side-effect checks read.
+export const variantKeys = ['FullDPS', 'CombinedDPS', 'TotalDPS', 'TotalDot', 'TotalDotDPS', 'AverageDamage', 'Speed', 'TotalIgniteDPS', 'IgniteDPS', 'TotalPoisonDPS', 'PoisonDPS', 'BleedDPS', 'DecayDPS',
+  'Life', 'EnergyShield', 'Mana', 'Ward', 'TotalEHP', 'PhysicalMaximumHitTaken', 'FireMaximumHitTaken', 'ColdMaximumHitTaken', 'LightningMaximumHitTaken', 'ChaosMaximumHitTaken',
+  'ManaRegenRecovery', 'ManaRegen', 'ManaLeechGainRate', 'ManaPerSecondCost', 'FireResist', 'ColdResist', 'LightningResist', 'ChaosResist', 'EffectiveMovementSpeedMod',
+  'Str', 'Dex', 'Int', 'ReqStr', 'ReqDex', 'ReqInt'];
+
+// PoB comparison variants (calculator removeNodes/addNodes) computed in a few processes instead of one process per
+// variant: the variants are split into `concurrency` chunks, each chunk is one ordinary `pob run`. Optional
+// node_power lets PoB enumerate unallocated nodes by its own pathDist (shards across the chunks).
+// Returns Map(variant id -> result shaped like a pob run result: contract fields of the chunk + variant output).
+export function runVariants({ file, scenario = 'sustained', base = {}, variants = [], nodePower = null, concurrency = defaultConcurrency }) {
+  const chunks = Math.max(1, Math.min(concurrency, nodePower ? concurrency : Math.ceil(variants.length / 8)));
+  const changesList = Array.from({ length: chunks }, (_, i) => {
+    const part = variants.filter((_, k) => k % chunks === i);
+    const c = { ...base, variant_keys: variantKeys };
+    if (part.length) c.variants = part;
+    if (nodePower) c.node_power = { ...nodePower, shard: { index: i, count: chunks } };
+    return c;
+  }).filter(c => c.variants || c.node_power);
+  const batch = runBatch({ file, scenario, changesList, concurrency });
+  const out = new Map();
+  for (const changes of changesList) {
+    const r = batch.results.get(canonicalJson(changes));
+    if (!r || r.error) throw new Error(`Variant batch failed: ${r?.error ?? 'no result'}`);
+    for (const [id, v] of Object.entries(r.variants ?? {})) {
+      out.set(id, v.skipped ? { skipped: v.skipped, removed_nodes: v.removed_nodes } : {
+        input_sha256: r.input_sha256, calculation_contract_sha256: r.calculation_contract_sha256, engine: r.engine, scenario: r.scenario,
+        calculation_id: `${r.calculation_id}#${id}`, output: v.output ?? {}, minion_output: v.minion_output, removed_nodes: v.removed_nodes ? { method: 'pob_misc_calculator_removeNodes', nodes: v.removed_nodes } : undefined,
+        added_nodes: v.added_nodes, points: v.points, engine_warnings: r.engine_warnings ?? [], unparsed_item_modifiers: r.unparsed_item_modifiers ?? [], skill_disabled_reason: r.skill_disabled_reason ?? null, variant: true });
+    }
+  }
+  return { results: out, runs: batch.runs, elapsed_ms: batch.elapsed_ms, variants: out.size };
+}
+// Runner for evaluateCandidates over variants: candidate.changes = { variant: <id> }.
+export const variantRunner = vr => changes => {
+  const r = vr.results.get(changes.variant);
+  if (!r) throw new Error(`Variant ${changes.variant} was not computed`);
+  if (r.skipped) throw new Error(`Variant ${changes.variant} skipped: ${r.skipped}`);
+  return r;
+};
+
 // Runner adapter for evaluateCandidates: returns the precomputed result or throws its error.
 export function batchRunner(batch) {
   return changes => {

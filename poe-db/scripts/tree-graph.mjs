@@ -463,3 +463,6 @@ export function treeCommand(args) {
   if (operation === 'classes') return { classes: t.classes.map(c => ({ name: c.name, start: c.start, ascendancies: c.ascendancies })), points: t.points, source: { tree: '3.30.0', sha256: t.sha256 } };
   throw new Error('Use tree path|cost|near|search|node|classes');
 }
+
+// Building blocks for incremental allocation (design generator): roots, 0-1 BFS distances and one shortest connection.
+export { rootsFor, distances, connectOne };

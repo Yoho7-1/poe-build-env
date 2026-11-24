@@ -15,6 +15,8 @@ import { atlasCombatNodes } from './atlas-combat.mjs';
 import { progressionCommand, progressionHelp } from './analysis-progression.mjs';
 import { candidatesCommand, candidatesHelp, analyzeAutoUpgrades, autoUpgradeOptions } from './analysis-candidates.mjs';
 import { analyzeEncounter, analyzeMapModSweep, analyzeReport, writeMarkdown } from './analysis-encounter.mjs';
+import { ablateCommand, ablationHelp } from './analysis-ablation.mjs';
+import { interactionsCommand, interactionsHelp } from './analysis-interactions.mjs';
 
 const readResults = list => list.split(',').map(f => f.trim()).filter(Boolean).flatMap(f => {
   const full = path.resolve(f);
@@ -33,6 +35,8 @@ export function analyze(args) {
   // Sub-commands with their own option sets parse their arguments themselves.
   if (args[0] === 'progression') return progressionCommand(args.slice(1));
   if (args[0] === 'candidates') return candidatesCommand(args.slice(1));
+  if (args[0] === 'ablate') return ablateCommand(args.slice(1));
+  if (args[0] === 'interactions') return interactionsCommand(args.slice(1));
   const { positional, options } = flags(args, ['boss', 'tier', 'results', 'changes', 'out-dir', 'out', 'candidates', 'metric', 'scenario', 'radius', 'probes', 'top', 'include', 'concurrency',
     'enemy', 'map-tier', 'mods', 'map-mod-effect', 'delirium', 'level', 'enemy-life', 'boss-tier', 'md', 'search', 'band', 'method', 'sweep-tiers', 'damage-profile', 'pantheon-major', 'pantheon-minor', 'atlas', 'auto', 'slot', 'group', 'replace', 'limit', 'quality'], ['plan', 'full', 'exclude-awakened']);
   const [operation, ...rest] = positional;
@@ -139,6 +143,8 @@ export function analyze(args) {
 
 export const analysisHelp = {
   ...candidatesHelp,
+  ...ablationHelp,
+  ...interactionsHelp,
   ...Object.fromEntries(Object.entries(progressionHelp).map(([k, v]) => [`analyze ${k}`, v])),
   'analyze enemies [build]':'Enemy database: archetypes (normal..uber), map tiers, 111 map mods with engine coverage, boss skills; "build" regenerates scenarios/enemies.json',
   'analyze enemy <normal|magic|rare|unique|map_boss|pinnacle|uber|boss:Name[:Skill]> [--map-tier N] [--mods a,b] [--map-mod-effect P] [--delirium P] [--level L]':'Encounter definition and the exact PoB changes it produces (no engine run)',

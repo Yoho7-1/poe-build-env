@@ -4,9 +4,14 @@
   "commit": "a41fec6c20f822a658ae5df1273e8c69d5969bac",
   "scope": "Headless subset: Lua source, standard 3.28–3.30 trees and runtime; optional pinned Timeless data. No updater or GUI assets.",
   "timeless_types": [
-    "GloriousVanity"
+    "GloriousVanity",
+    "LethalPride",
+    "BrutalRestraint",
+    "MilitantFaith",
+    "ElegantHubris",
+    "HeroicTragedy"
   ],
-  "verified_at": "2026-11-23T19:46:25.074Z",
+  "verified_at": "2026-11-24T06:41:33.488Z",
   "files": [
     {
       "file": "LICENSE.md",
@@ -1257,6 +1262,18 @@
       "bytes": 5830
     },
     {
+      "file": "src/Data/TimelessJewelData/BrutalRestraint.zip",
+      "git_blob_sha1": "3a6e4728e278d2203165845e63643a5f82f4ad11",
+      "sha256": "aacad0903efca6777669b3f06b6a7ddcfa103cafee13b8297126ea8526fb9c85",
+      "bytes": 2131422
+    },
+    {
+      "file": "src/Data/TimelessJewelData/ElegantHubris.zip",
+      "git_blob_sha1": "e4996a451a9d5ebd4dd1d414e9462ae3b646d72f",
+      "sha256": "d2a73134f2b8ea8260602d16270c9ef54c5f41eef87958f02c927e8a587799eb",
+      "bytes": 2504244
+    },
+    {
       "file": "src/Data/TimelessJewelData/GloriousVanity.zip.part0",
       "git_blob_sha1": "0e3436cf31ea39bddf84a34e12ee1ff8de579599",
       "sha256": "f18541b1be2ca2b91d5c5ab45bb95d4b3769ce6c33f481ec1ded5618dc3499fa",
@@ -1287,6 +1304,12 @@
       "bytes": 1858225
     },
     {
+      "file": "src/Data/TimelessJewelData/HeroicTragedy.zip",
+      "git_blob_sha1": "69aa5cec47575ec24c48f2a11c59a103a3f69d8a",
+      "sha256": "461d5ca14d9f90e7c263c777735936587ac047fc1ff9bc9cff7be68fddf24561",
+      "bytes": 2181337
+    },
+    {
       "file": "src/Data/TimelessJewelData/LegionPassives.lua",
       "git_blob_sha1": "4b6e953d8d405840f776f4701689f649ddf1f22a",
       "sha256": "22a564b8687b5a0442d648ecdf809e52316ff893eeaa362f72edc55dc57e3274",
@@ -1297,6 +1320,18 @@
       "git_blob_sha1": "609becb7b760b77eb196c31712f6006768526937",
       "sha256": "a87af421e6607758b37ea841eb1b8409d9ec7bfb184ca6305654686959d69c44",
       "bytes": 2274
+    },
+    {
+      "file": "src/Data/TimelessJewelData/LethalPride.zip",
+      "git_blob_sha1": "7b07b878d9b30c66a131b1aae2abf6f798b304d6",
+      "sha256": "533d47d174b9baf7747cf74b9f3271a44429384a8ba2da9bbe262c3f513d9d3c",
+      "bytes": 2273641
+    },
+    {
+      "file": "src/Data/TimelessJewelData/MilitantFaith.zip",
+      "git_blob_sha1": "8314a09bdebd55895f8243d5abb2cbcbb237c5a1",
+      "sha256": "4b2ddcffdf991dfb9ff42ae2f87c4745804e082ccfcd43f4475616f0c234c6c7",
+      "bytes": 862690
     },
     {
       "file": "src/Data/TimelessJewelData/NodeIndexMapping.lua",

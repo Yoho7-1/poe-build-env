@@ -128,9 +128,91 @@ build.configTab:BuildModList()
 build.buildFlag = true
 for i=1,3 do runCallback('OnFrame') end
 assertHealthy('calculation')
+-- remove_nodes: PoB's own node comparison (PassiveTreeView tooltip): the misc calculator with
+-- override.removeNodes drops the stats of allocated nodes without editing the tree; with_dependents also drops
+-- node.depends, as PoB shows for "this node and the nodes that depend on it".
+local overrideOutput, removedNodes
+if request.remove_nodes then
+  local rm, seen = {}, {}
+  removedNodes = {}
+  for _, ref in ipairs(request.remove_nodes) do
+    local node = build.spec.allocNodes[ref.node]
+    assert(node, 'Change error: remove_nodes node ' .. tostring(ref.node) .. ' is not allocated')
+    assert(node.type ~= 'ClassStart' and node.type ~= 'AscendClassStart', 'Change error: start nodes cannot be removed')
+    local list = ref.with_dependents and (node.depends or { node }) or { node }
+    local dependents = 0
+    for _, n in pairs(node.depends or {}) do if n.id ~= node.id then dependents = dependents + 1 end end
+    for _, n in pairs(list) do
+      if not seen[n.id] then seen[n.id] = true; rm[n] = true; table.insert(removedNodes, { id = n.id, name = n.dn or n.name, type = n.type, requested = n.id == node.id, dependents = n.id == node.id and dependents or nil }) end
+    end
+  end
+  local calcFunc = build.calcsTab:GetMiscCalculator()
+  overrideOutput = calcFunc({ removeNodes = rm })
+  table.sort(removedNodes, function(a, b) return a.id < b.id end)
+end
+-- variants / node_power: many PoB comparison calculations in one process (the primitive PoB's own Node Power and
+-- tree tooltips use): calcFunc{removeNodes, addNodes}. add_nodes allocates along node.path, the shortest path PoB
+-- itself computed; the tree is never edited. Only the requested output keys are returned per variant.
+local variantResults
+if request.variants or request.node_power then
+  local calcFunc = build.calcsTab:GetMiscCalculator()
+  local keys = request.variant_keys or {}
+  local function numeric(src)
+    if type(src) ~= 'table' then return nil end
+    local out = {}
+    for _, k in ipairs(keys) do local v = src[k]; if type(v)=='number' and v==v and v~=math.huge and v~=-math.huge then out[k]=v end end
+    return out
+  end
+  local variants = {}
+  for _, v in ipairs(request.variants or {}) do table.insert(variants, v) end
+  if request.node_power then
+    local np = request.node_power
+    local types = {}
+    for _, t in ipairs(np.types or { 'Notable', 'Keystone' }) do types[t] = true end
+    local ids = {}
+    for id, node in pairs(build.spec.nodes) do
+      if not node.alloc and types[node.type] and not node.ascendancyName and node.path and node.pathDist and node.pathDist <= np.max_dist
+        and node.modKey ~= '' and not build.calcsTab.mainEnv.grantedPassives[id] then table.insert(ids, id) end
+    end
+    table.sort(ids)
+    local shard = np.shard or { index = 0, count = 1 }
+    for i, id in ipairs(ids) do if (i - 1) % shard.count == shard.index then table.insert(variants, { id = 'add:' .. id, add_nodes = { id } }) end end
+  end
+  variantResults = {}
+  for _, v in ipairs(variants) do
+    local rm, add, removed, added = {}, {}, {}, {}
+    local skip
+    for _, ref in ipairs(v.remove_nodes or {}) do
+      local node = build.spec.allocNodes[ref.node]
+      assert(node, 'Change error: variant ' .. v.id .. ': node ' .. tostring(ref.node) .. ' is not allocated')
+      local list = ref.with_dependents and (node.depends or { node }) or { node }
+      local dependents = 0
+      for _, n in pairs(node.depends or {}) do if n.id ~= node.id then dependents = dependents + 1 end end
+      if ref.with_dependents and dependents == 0 then skip = 'no_dependents' end
+      for _, n in pairs(list) do if not rm[n] then rm[n] = true; table.insert(removed, { id = n.id, name = n.dn or n.name, type = n.type, requested = n.id == node.id, dependents = n.id == node.id and dependents or nil }) end end
+    end
+    for _, id in ipairs(v.add_nodes or {}) do
+      local node = build.spec.nodes[id]
+      assert(node and not node.alloc, 'Change error: variant ' .. v.id .. ': node ' .. tostring(id) .. ' is unknown or already allocated')
+      assert(node.path, 'Change error: variant ' .. v.id .. ': no path to node ' .. tostring(id))
+      for _, n in ipairs(node.path) do if not add[n] then add[n] = true; table.insert(added, { id = n.id, name = n.dn or n.name, type = n.type }) end end
+    end
+    if skip then
+      variantResults[v.id] = { skipped = skip, removed_nodes = removed }
+    else
+      local out = calcFunc({ removeNodes = next(rm) and rm or nil, addNodes = next(add) and add or nil })
+      variantResults[v.id] = { output = numeric(out), minion_output = numeric(out.Minion), removed_nodes = #removed > 0 and removed or nil, added_nodes = #added > 0 and added or nil, points = #added > 0 and #added or nil }
+    end
+  end
+end
 local output = {}
-for key,value in pairs(build.calcsTab.mainOutput) do
+for key,value in pairs(overrideOutput or build.calcsTab.mainOutput) do
   if type(value)=='number' and value==value and value~=math.huge and value~=-math.huge then output[key]=value end
+end
+-- Attack skills keep per-hand values (per-type hit averages, speed, crit) in sub-tables; export them as MainHand:Key.
+for _, hand in ipairs({ 'MainHand', 'OffHand' }) do
+  local t = (overrideOutput or build.calcsTab.mainOutput)[hand]
+  if type(t) == 'table' then for key,value in pairs(t) do if type(value)=='number' and value==value and value~=math.huge and value~=-math.huge then output[hand .. ':' .. key]=value end end end
 end
 local groups = {}
 for i,group in ipairs(build.skillsTab.socketGroupList) do
@@ -164,9 +246,55 @@ result.applied_supports={}
 local mainSkill=build.calcsTab.mainEnv and build.calcsTab.mainEnv.player.mainSkill
 if mainSkill then
   result.skill_disabled_reason=mainSkill.disableReason
+  local ge = mainSkill.activeEffect and mainSkill.activeEffect.grantedEffect
+  if ge then result.main_skill = { name = ge.name, id = ge.id, minion = mainSkill.minion and true or false } end
   for _,effect in ipairs(mainSkill.effectList or {}) do
     if effect.grantedEffect.support then table.insert(result.applied_supports,{id=effect.grantedEffect.id,name=effect.grantedEffect.name,level=effect.level,quality=effect.quality}) end
   end
+end
+-- BuildCard: PoB's own conversion table of the main skill (fractions after scaling and rounding; skillCfg and per hand)
+-- and per-active-skill flags for the button estimate. Read-only and guarded: a failure only leaves the fields empty.
+do
+  local ok, err = pcall(function()
+    local function convTable(t)
+      if type(t) ~= 'table' then return nil end
+      local out = {}
+      for _, from in ipairs({ 'Physical', 'Lightning', 'Cold', 'Fire', 'Chaos' }) do
+        local row = t[from]
+        if type(row) == 'table' then
+          local r = { mult = row.mult, conversion = {}, gain = {} }
+          for to, v in pairs(row.conversion or {}) do if type(v) == 'number' and v > 0 then r.conversion[to] = v end end
+          for to, v in pairs(row.gain or {}) do if type(v) == 'number' and v > 0 then r.gain[to] = v end end
+          out[from] = r
+        end
+      end
+      return out
+    end
+    if mainSkill then
+      result.conversion = { skill = convTable(mainSkill.conversionTable),
+        main_hand = mainSkill.weapon1Cfg and convTable(mainSkill.weapon1Cfg.conversionTable) or nil,
+        off_hand = mainSkill.weapon2Cfg and convTable(mainSkill.weapon2Cfg.conversionTable) or nil,
+        minion = mainSkill.minion and mainSkill.minion.mainSkill and convTable(mainSkill.minion.mainSkill.conversionTable) or nil }
+    end
+    local env = build.calcsTab.mainEnv
+    local groupIndex = {}
+    for i, g in ipairs(build.skillsTab.socketGroupList) do groupIndex[g] = i end
+    result.active_skills = {}
+    for _, s in ipairs(env and env.player and env.player.activeSkillList or {}) do
+      local ge = s.activeEffect and s.activeEffect.grantedEffect
+      local types, flags = s.skillTypes or {}, s.skillFlags or {}
+      local function has(name) return SkillType[name] and types[SkillType[name]] and true or false end
+      local srcTriggered = s.activeEffect and s.activeEffect.srcInstance and s.activeEffect.srcInstance.triggered
+      table.insert(result.active_skills, { name = ge and ge.name, id = ge and ge.id, group = s.socketGroup and groupIndex[s.socketGroup] or nil,
+        main = s == mainSkill, from_item = ge and ge.fromItem and true or false, disabled = flags.disable and true or false,
+        triggered = (s.skillData and (s.skillData.triggered or s.skillData.triggeredByUnique)) and true or (has('Triggered') or has('InbuiltTrigger') or (ge and ge.triggered) or srcTriggered) and true or false,
+        totem = flags.totem and true or false, trap = flags.trap and true or false, mine = flags.mine and true or false, minion = has('CreatesMinion'),
+        brand = has('Brand'), aura = has('Aura'), reserves = has('HasReservation'), herald = has('Herald'), banner = has('Banner'), link = has('Link'), stance = has('Stance'),
+        golem = has('Golem'), vaal = has('Vaal'), channel = has('Channel'), warcry = has('Warcry'), guard = has('Guard'), movement = has('Travel') or has('Blink'),
+        mark = has('Mark'), cooldown = has('Cooldown'), instant = has('Instant'), buff = has('Buff'), owner_cannot_use = has('OwnerCannotUse') })
+    end
+  end)
+  if not ok then result.card_export_error = tostring(err) end
 end
 -- On-kill explosion sources (Profane Bloom, item mods): raw ExplodeMod entries, unevaluated conditions included,
 -- so the analysis can scale them by the encounter enemy's life (PoB uses monsterLifeTable[enemyLevel]).
@@ -188,10 +316,14 @@ do
   end
 end
 local minion=build.calcsTab.mainEnv and build.calcsTab.mainEnv.minion
-if minion and minion.output then
+-- With remove_nodes the player output comes from the override calculation; its minion output is output.Minion.
+local minionSource = overrideOutput and (type(overrideOutput.Minion)=='table' and overrideOutput.Minion or nil) or (minion and minion.output)
+if minionSource then
   result.minion_output={}
-  for key,value in pairs(minion.output) do if type(value)=='number' and value==value and value~=math.huge and value~=-math.huge then result.minion_output[key]=value end end
+  for key,value in pairs(minionSource) do if type(value)=='number' and value==value and value~=math.huge and value~=-math.huge then result.minion_output[key]=value end end
 end
+if removedNodes then result.removed_nodes = { method = 'pob_misc_calculator_removeNodes', nodes = removedNodes, minion_output = minionSource and 'override' or 'unavailable' } end
+if variantResults then result.variants = variantResults end
 result.unparsed_item_modifiers = {}
 result.equipped_items = {}
 for slotName,slot in pairs(build.itemsTab.slots) do

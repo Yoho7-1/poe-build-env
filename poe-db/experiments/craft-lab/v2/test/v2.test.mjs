@@ -237,7 +237,7 @@ test('PoB export, training and CLI', () => {
 test('agent.mjs exposes the simulator as craftsim and doctor checks it', async () => {
   const { agent } = await import('../../../../scripts/agent.mjs');
   assert.equal(agent(['craftsim', 'status']).model.id, 'craft-lab-v2');
-  assert.ok(agent(['help']).commands[Object.keys(agent(['help']).commands).find(k => k.startsWith('craftsim'))]);
+  assert.ok(agent(['help', '--full']).commands[Object.keys(agent(['help', '--full']).commands).find(k => k.startsWith('craftsim'))]);
   const s = agent(['craftsim', 'new', '--file', (await import('node:url')).fileURLToPath(new URL('../examples/body-life-es.json', import.meta.url))]);
   assert.equal(s.session.revision, 0);
 });
